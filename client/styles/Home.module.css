@@ -12,12 +12,12 @@
   height: 28.25rem;
   position: absolute;
   top: 10px;
-  border-radius: 1%;
+  background-color: black;
+  border-radius: 6.5%;
 }
 
-.calculator h1{
+.calculator h3{
   padding: 1.5%;
-  background-color: grey;
 }
 
 @media (max-width: 700px){
@@ -27,21 +27,43 @@
 }
 
 .calculatorScreen{
-  background-color: black;
-  min-width: 80%;
-  min-height: 20%;
+  background-color: grey;
+  max-width: 80%;
+  min-height: 5rem;
+  margin: auto;
+}
+
+.calculatorScreen span{
+  position: relative;
+  top: 1rem;
+  z-index: 1;
+  font-size: 2.4rem;
 }
 
 .calculatorKeypad{
   background-color: black;
-  min-width: 80%;
+  min-width: 75%;
   min-height: 70%;
   display: flex!important;
   flex-wrap: wrap;
+  padding: 2%;
 }
 
-.calcBtn{
-  flex: 1 0 25%; /* explanation below */  
+.calcBtn, .calcBtnZero{
+  flex: 1 0 24%; 
+  background-color: black;
+  min-height: 3.5rem;
+  font-size: 2rem;
+  border: white 1px solid
+}
+  
+.calcBtnZero{
+  flex: 2 0 48% !important; 
+}
+
+.calcBtnZero span{
+  position: relative;
+  right: 25%;
 }
 
 .footer {
@@ -50,11 +72,13 @@
   bottom: 0;
   height: 4.5rem;
   border-radius: 1%;
+  background-color: red;
+  font-size: 0.9rem;
 }
 
-.iconContainer a{
-  font-size:1.3rem!important;
-  padding: 0%;
-  width: 1rem !important;
-  height: 1rem!important;
+.footer a{
+  font-size:1.3rem;
+  padding: 0.5%;
+  width: 1rem ;
+  height: 1rem;
 }

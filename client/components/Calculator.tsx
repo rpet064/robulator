@@ -5,32 +5,33 @@ import calculatorButtonInfo from './calculatorButtons.json'
 export default function Calculator(){
     return (
         <div className={styles.calculator}>
-          <h1>Cal_cpp_ulator</h1>
+          <h3>Hello Calculator</h3>
           <div>
-            <div className={styles.calculatorScreen}>              
+            <div className={styles.calculatorScreen}>     
+              <span>50 + 10 = 60</span>        
             </div>
             <div className={styles.calculatorKeypad}>
               {calculatorButtonInfo.rowOne.map((calcBtnSymbol, index) => 
-                    <div key={index} className={styles.calcBtn}>{calcBtnSymbol}</div>
+                    <button key={index} className={styles.calcBtn}>{calcBtnSymbol}</button>
                   )}
                 {calculatorButtonInfo.rowTwo.map((calcBtnSymbol, index) => 
-                    <div key={index} className={styles.calcBtn}>{calcBtnSymbol}</div>
+                    <button key={index} className={styles.calcBtn}>{calcBtnSymbol}</button>
                   )}                
                 {calculatorButtonInfo.rowThree.map((calcBtnSymbol, index) => 
-                    <div key={index} className={styles.calcBtn}>{calcBtnSymbol}</div>
+                    <button key={index} className={styles.calcBtn}>{calcBtnSymbol}</button>
                   )}                
                 {calculatorButtonInfo.rowFour.map((calcBtnSymbol, index) => 
-                    <div key={index} className={styles.calcBtn}>{calcBtnSymbol}</div>
+                    <button key={index} className={styles.calcBtn}>{calcBtnSymbol}</button>
                   )}                
-                  <div>
+                  <button className={styles.calcBtnZero}>
+                    <span>{calculatorButtonInfo.rowFive[0]}</span>
+                  </button>
+                  <button className={styles.calcBtn}>
                     {calculatorButtonInfo.rowFive[1]}
-                  </div>
-                  <div>
+                  </button>
+                  <button className={styles.calcBtn}>
                     {calculatorButtonInfo.rowFive[2]}
-                  </div>
-                  <div>
-                    {calculatorButtonInfo.rowFive[3]}
-                  </div>
+                  </button>
             </div>
           </div>
         </div>

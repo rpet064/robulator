@@ -11,11 +11,10 @@ library.add(faGithub, faLinkedin, faEnvelope);
 export default function Footer(){
     return (
         <div className={styles.footer}>
-            <p>Learn more about the creator</p>
             <a title="Github" href="https://github.com/rpet064"><FontAwesomeIcon icon={faGithub} /></a>
             <a title="Linkedin" href="https://www.linkedin.com/in/robert-pether-ba9968113"><FontAwesomeIcon icon={faLinkedin} /></a>
             <a title="Email" href="mailto:rpether@hotmail.co.nz"><FontAwesomeIcon icon={faEnvelope} /></a>
-            <p>Copyright Robert Pether {new Date().getFullYear()}</p>
+            <p>© Robert Pether {new Date().getFullYear()}</p>
         </div>
     )
 }
