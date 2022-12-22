@@ -10,11 +10,115 @@ export default function Calculator(){
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState('');
 
+  // clear calculator input arrays
   const clearNumbers = () => {
     setFirstCalculatorInput([]);
     setOperator('');
     setSecondCalculatorInput([]);
   }
+
+  // handle number input logic - this function checks if the first or second number is currently
+  // being inputted, then adds to array accordingly
+  const onInputNumber = (e: any) => {
+    if (operator === ''){
+    setFirstCalculatorInput(firstCalculatorInput => [...firstCalculatorInput, e.target.value]);
+    } else {
+    setSecondCalculatorInput(secondCalculatorInput => [...secondCalculatorInput, e.target.value]);
+    }      
+  }
+
+  // handle change to % input logic - this function checks if the first or second number is currently
+  // inputted, then changes the array to a number string, divides, then puts back into array
+  const changeToPercentage = (e: any) => {
+    let originalNumber = 0;
+    let dividedNumberString = '';
+    if (operator === ''){
+      if (firstCalculatorInput.length){
+        originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''));
+        dividedNumberString = (originalNumber / 100).toString()
+        setFirstCalculatorInput([dividedNumberString]);
+
+      // This function will return 0 if user hasn't inputted numbers in first (current) array
+      } else { setFirstCalculatorInput(['0']);}
+    } else {
+      if (secondCalculatorInput.length){
+      originalNumber = parseInt(secondCalculatorInput.toString().replaceAll(',', ''));
+      setSecondCalculatorInput([dividedNumberString]);
+      
+      // This function will return 0 if user hasn't inputted numbers in second (current) array
+      } else { setFirstCalculatorInput(['0']);
+    }
+  }
+}
+
+  // handle number input logic - this function checks if the first or second number is currently
+  // being inputted, then checks if array is empty
+  const onInputDecimal = (e: any) => {
+    if (operator === ''){
+      if (firstCalculatorInput.length){
+        
+        // add decimal like normal to first array
+        onInputNumber(e)
+      } else {
+
+        // add 0. to first array (as it's empty)
+        setFirstCalculatorInput(['0.'])
+      }
+    } else {
+      if (secondCalculatorInput.length){
+
+        // add decimal like normal to second array
+        onInputNumber(e)
+      } else {
+        
+        // add 0. to second array (as it's empty)
+        setSecondCalculatorInput(['0.'])
+      }
+    }      
+  }
+
+  // handle operator input logic
+  const onInputOperator = (e: any) => {
+    if (operator === ''){
+      setOperator(e.target.value);
+    } else {
+      alert('Submit for solving')
+      clearNumbers();
+    }      
+  }
+
+  // handle sign change logic - checks if currently first or second array, then checks
+  // the sign at the front of the array (if the number is positive or negative) - the values
+  //  are taken from the hook and then added back in as useState hooks are immutable
+  const changeSign = (e: any) => {
+    if (operator === ''){
+      var originalArray = firstCalculatorInput;
+      if (firstCalculatorInput[0] === "-"){
+
+        // remove "-" from front of first array making it "positive"
+        originalArray = originalArray.slice(1);
+        setFirstCalculatorInput(originalArray);
+      } else {
+
+        // add "-" to front of first array making it "negative"
+        originalArray.unshift("-");
+        setFirstCalculatorInput(originalArray);
+      }
+    } else { 
+      var originalArray = secondCalculatorInput;
+      if (secondCalculatorInput[0] === "-"){
+
+        // remove "-" from front of second array making it "positive"
+        originalArray = originalArray.slice(1);
+        setSecondCalculatorInput(originalArray);
+      } else {
+
+        // add "-" to front of second array making it "negative"
+        originalArray.unshift("-");
+        setSecondCalculatorInput(originalArray);
+    }     
+  }
+}
 
   // const solveEquation = async () => {
   //   setIsLoading(true);
@@ -46,27 +150,6 @@ export default function Calculator(){
   //   }
   //   setCalculatorInput([]);
   // };
-
-  // handle number input logic
-  const onInputNumber = (e: any) => {
-    if (operator === ''){
-    setFirstCalculatorInput(firstCalculatorInput => [...firstCalculatorInput, e.target.value]);
-    } else {
-    setSecondCalculatorInput(secondCalculatorInput => [...secondCalculatorInput, e.target.value]);
-    }      
-  }
-    
-
-
-
-  //   if (e.target.value === 'AC'){
-  //     setCalculatorInput([]);
-  //   } else if (e.target.value === '+/-'){
-  //    var currentNumber = e.target.value;
-  //   } else {
-  //     setCalculatorInput(calculatorInput => [...calculatorInput, e.target.value]);
-  //   }
-  // }
 
     return (
         <div className={styles.calculator}>
