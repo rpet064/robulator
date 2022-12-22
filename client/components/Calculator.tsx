@@ -2,6 +2,9 @@ import styles from '../styles/Home.module.css';
 import calculatorButtonInfo from './calculatorButtons.json';
 import { useState } from 'react';
 
+const numArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const operatorArray = ["+", "-", "×", "÷"];
+
 export default function Calculator(){
   const [firstCalculatorInput, setFirstCalculatorInput] = useState<string[]>([]);
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([]);
@@ -19,17 +22,17 @@ export default function Calculator(){
 
   // handle number input logic - this function checks if the first or second number is currently
   // being inputted, then adds to array accordingly
-  const onInputNumber = (e: any) => {
+  const onInputNumber = (userInput: string) => {
     if (operator === ''){
-    setFirstCalculatorInput(firstCalculatorInput => [...firstCalculatorInput, e.target.value]);
+      setFirstCalculatorInput(firstCalculatorInput => [...firstCalculatorInput, userInput]);
     } else {
-    setSecondCalculatorInput(secondCalculatorInput => [...secondCalculatorInput, e.target.value]);
+      setSecondCalculatorInput(secondCalculatorInput => [...secondCalculatorInput, userInput]);
     }      
   }
 
   // handle change to % input logic - this function checks if the first or second number is currently
   // inputted, then changes the array to a number string, divides, then puts back into array
-  const changeToPercentage = (e: any) => {
+  const changeToPercentage = (userInput: string) => {
     let originalNumber = 0;
     let dividedNumberString = '';
     if (operator === ''){
@@ -44,7 +47,7 @@ export default function Calculator(){
       if (secondCalculatorInput.length){
       originalNumber = parseInt(secondCalculatorInput.toString().replaceAll(',', ''));
       setSecondCalculatorInput([dividedNumberString]);
-      
+
       // This function will return 0 if user hasn't inputted numbers in second (current) array
       } else { setFirstCalculatorInput(['0']);
     }
@@ -53,12 +56,12 @@ export default function Calculator(){
 
   // handle number input logic - this function checks if the first or second number is currently
   // being inputted, then checks if array is empty
-  const onInputDecimal = (e: any) => {
+  const onInputDecimal = (userInput: string) => {
     if (operator === ''){
       if (firstCalculatorInput.length){
         
         // add decimal like normal to first array
-        onInputNumber(e)
+        onInputNumber(userInput)
       } else {
 
         // add 0. to first array (as it's empty)
@@ -68,7 +71,7 @@ export default function Calculator(){
       if (secondCalculatorInput.length){
 
         // add decimal like normal to second array
-        onInputNumber(e)
+        onInputNumber(userInput)
       } else {
         
         // add 0. to second array (as it's empty)
@@ -78,9 +81,13 @@ export default function Calculator(){
   }
 
   // handle operator input logic
-  const onInputOperator = (e: any) => {
+  const onInputOperator = (userInput: string) => {
     if (operator === ''){
-      setOperator(e.target.value);
+      if (firstCalculatorInput.length === 0){
+        alert('please enter a number first')
+      } else {
+      setOperator(userInput);
+    }
     } else {
       alert('Submit for solving')
       clearNumbers();
@@ -90,7 +97,7 @@ export default function Calculator(){
   // handle sign change logic - checks if currently first or second array, then checks
   // the sign at the front of the array (if the number is positive or negative) - the values
   //  are taken from the hook and then added back in as useState hooks are immutable
-  const changeSign = (e: any) => {
+  const changeSign = (userInput: string) => {
     if (operator === ''){
       var originalArray = firstCalculatorInput;
       if (firstCalculatorInput[0] === "-"){
@@ -151,35 +158,29 @@ export default function Calculator(){
   //   setCalculatorInput([]);
   // };
 
+  const handleUserInput = (userInput: string) => {
+    if (numArray.includes(userInput)){
+      onInputNumber(userInput);
+    } else if (operatorArray.includes(userInput)){
+      onInputOperator(userInput);
+      }
+    }
+  
+
     return (
         <div className={styles.calculator}>
           <div>
             <div className={styles.calculatorScreen}>     
-            {/* {!isLoading && <span>{firstCalculatorInput} {operator} {secondCalculatorInput}</span>}
-              {isLoading && <span>Loading....</span>} */}
+            {<span>{firstCalculatorInput} {operator} {secondCalculatorInput}</span>}
+              {isLoading && <span>Loading....</span>}
             </div>
             <div className={styles.calculatorKeypad}>
-              {/* {calculatorButtonInfo.rowOne.map((calcBtnSymbol, index) => 
-                    <button onClick={onChangeHandler} value={calcBtnSymbol} key={index} className={styles.calcBtn}>{calcBtnSymbol}</button>
-                  )}
-                {calculatorButtonInfo.rowTwo.map((calcBtnSymbol, index) => 
-                    <button onClick={onChangeHandler} value={calcBtnSymbol} key={index} className={styles.calcBtn}>{calcBtnSymbol}</button>
-                  )}                
-                {calculatorButtonInfo.rowThree.map((calcBtnSymbol, index) => 
-                    <button onClick={onChangeHandler} value={calcBtnSymbol} key={index} className={styles.calcBtn}>{calcBtnSymbol}</button>
-                  )}                
-                {calculatorButtonInfo.rowFour.map((calcBtnSymbol, index) => 
-                    <button onClick={onChangeHandler} value={calcBtnSymbol} key={index} className={styles.calcBtn}>{calcBtnSymbol}</button>
-                  )}                
-                  <button onClick={onChangeHandler} value={calculatorButtonInfo.rowFive[0]} className={styles.calcBtnZero}>
-                    <span>{calculatorButtonInfo.rowFive[0]}</span>
-                  </button>
-                  <button onClick={onChangeHandler} value={calculatorButtonInfo.rowFive[1]} className={styles.calcBtn}>
-                    {calculatorButtonInfo.rowFive[1]}
-                  </button>
-                  <button onClick={solveEquation} className={styles.calcBtn}>
-                    {calculatorButtonInfo.rowFive[2]}
-                  </button> */}
+            {calculatorButtonInfo.map((info, index) => {
+              return (
+              <button onClick={() => handleUserInput(info.symbol)} key={index} className={styles.calcBtn}>{info.symbol}</button>
+              )
+            })
+            }
             </div>
           </div>
         </div>

@@ -41,7 +41,7 @@
     },
     {
         "symbol": "6",
-        "function": "onInputNumber"
+        "function": "onInputNumber()"
     },
     {
         "symbol": "-",
