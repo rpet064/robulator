@@ -1,7 +1,78 @@
-{
-    "rowOne": ["AC","+/-","%","÷"],
-    "rowTwo": ["7","8","9", "×"],
-    "rowThree": [ "4", "5", "6", "-"],
-    "rowFour": ["1", "2", "3", "+"],
-    "rowFive": ["0", ".", "="]
-}
+[
+    {
+        "symbol": "AC",
+        "function": "clearNumbers"
+    },
+    {
+        "symbol": "+/-",
+        "function": "changeSign"
+    },
+    {
+        "symbol": "%",
+        "function": "changeToPercentage"
+    },
+    {
+        "symbol": "÷",
+        "function": "onInputOperator"
+    },
+    {
+        "symbol": "7",
+        "function": "onInputNumber"
+    },
+    {
+        "symbol": "8",
+        "function": "onInputNumber"
+    },
+    {
+        "symbol": "9",
+        "function": "onInputNumber"
+    },
+    {
+        "symbol": "×",
+        "function": "onInputOperator"
+    },
+    {
+        "symbol": "4",
+        "function": "onInputNumber"
+    },
+    {
+        "symbol": "5",
+        "function": "onInputNumber"
+    },
+    {
+        "symbol": "6",
+        "function": "onInputNumber"
+    },
+    {
+        "symbol": "-",
+        "function": "onInputOperator"
+    },
+    {
+        "symbol": "1",
+        "function": "onInputNumber"
+    },
+    {
+        "symbol": "2",
+        "function": "onInputNumber"
+    },
+    {
+        "symbol": "3",
+        "function": "onInputNumber"
+    },
+    {
+        "symbol": "+",
+        "function": "onInputOperator"
+    },
+    {
+        "symbol": "0",
+        "function": "onInputNumber"
+    },
+    {
+        "symbol": ".",
+        "function": "onInputDecimal"
+    },
+    {
+        "symbol": "=",
+        "function": "onSubmitEquation"
+    }
+]
