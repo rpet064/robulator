@@ -16,21 +16,17 @@
   border-radius: 6.5%;
 }
 
-.calculator h3{
-  padding: 1.5%;
-}
-
 @media (max-width: 700px){
   .calculator {
     width: 30rem;
-  } 
+  }   
 }
 
 .calculatorScreen{
   background-color: grey;
   max-width: 80%;
-  min-height: 5rem;
-  margin: auto;
+  min-height: 6rem;
+  margin: 3% auto;
 }
 
 .calculatorScreen span{
@@ -55,6 +51,10 @@
   min-height: 3.5rem;
   font-size: 2rem;
   border: white 1px solid
+}
+
+.calcBtn:active, .calcBtnZero:active{
+  border: white 4px solid
 }
   
 .calcBtnZero{
