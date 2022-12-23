@@ -24,8 +24,10 @@ const solveEquation = (firstNumber:number, operator:string, secondNumber:number)
     if (req.method === 'POST') {
 
       // catches post req body - sends to solve equation to be solved, then answer sent back to app
-      const {firstNumber, operator, secondNumber} = req.body
-      let answer = solveEquation(parseInt(firstNumber), operator, parseInt(secondNumber));
+      const {firstNumber, operator, secondNumber} = req.body;
+      
+      // join array of strings into String, then change strings into numbers 
+      let answer = solveEquation(parseInt(firstNumber.join('')), operator, parseInt(secondNumber.join('')));
       res.status(200).json({ "answer": answer });
     } else {
 
