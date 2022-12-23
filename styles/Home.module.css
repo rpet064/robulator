@@ -12,7 +12,7 @@
   height: 100%;
   position: absolute;
   top: 0px;
-  background-color: black;
+  background-color: #181D31;
 }
 
 @media (max-width: 700px){
@@ -57,10 +57,10 @@
 .calcBtn{
   flex: 1 0 24%; 
   background-color: #FFFAE7;
-  color: black;
+  color: #181D31;
   min-height: 5rem;
   font-size: 3.5rem;
-  border: black 1px solid;
+  border: #181D31 1px solid;
 }
 
 @media (max-width: 800px){
@@ -97,5 +97,5 @@
 }
 
 .calcBtn:active{
-  border: black 4px solid;
+  border: #181D31 4px solid;
 }

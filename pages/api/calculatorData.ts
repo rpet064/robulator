@@ -19,10 +19,12 @@ const solveEquation = (firstNumber:number, operator:string, secondNumber:number)
 
       // catches post req body - sends to solve equation to be solved, then answer sent back to app
       const {firstNumber, operator, secondNumber} = req.body;
+      console.log(firstNumber + secondNumber)
       
       // join array of strings into String, then change strings into numbers 
-      let answer = solveEquation(parseInt(firstNumber.join('')), operator, parseInt(secondNumber.join('')));
-      res.status(200).json({ "answer": answer });
+      let answer = solveEquation(parseFloat(firstNumber.join('')), operator, parseFloat(secondNumber.join('')))!;
+      let roundedAnswer = answer.toFixed(2);
+      res.status(200).json({ "answer": roundedAnswer });
     } else {
 
       // GET request when page first loaded sends button data

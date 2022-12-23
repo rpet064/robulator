@@ -69,13 +69,30 @@ export default function Calculator(){
   const onInputNumber = (userInput: string) => {
     if (operator === ''){
 
-      // ignore if first input is 0 (to avoid uneccessary inputs)
+      // ignore if first input is 0 (to avoid uneccessary)
       if (userInput !== "0" || firstCalculatorInput.length){
         setFirstCalculatorInput(firstCalculatorInput => [...firstCalculatorInput, userInput]);
       }
     } else {
       setSecondCalculatorInput(secondCalculatorInput => [...secondCalculatorInput, userInput]);
     }      
+  }
+
+  const onSquareRoot = () => {
+    let originalNumber = 0;
+    let dividedNumberString = "";
+    if (operator === ''){
+      if (firstCalculatorInput.length){
+        originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''));
+        dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString();
+        setFirstCalculatorInput([dividedNumberString]);
+    }} else {
+      if (secondCalculatorInput.length){
+        originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''));
+        dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString();
+        setSecondCalculatorInput([dividedNumberString]);
+      }
+    }
   }
 
   // handle change to % input logic - this function checks if the first or second number is currently
@@ -102,28 +119,31 @@ export default function Calculator(){
   }
 }
 
-  // handle number input logic - this function checks if the first or second number is currently
+   // handle number input logic - this function checks if the first or second number is currently
   // being inputted, then checks if array is empty
   const onInputDecimal = (userInput: string) => {
     if (operator === ''){
-      if (firstCalculatorInput.length){
-        
-        // add decimal like normal to first array
-        onInputNumber(userInput)
-      } else {
+      if (!firstCalculatorInput.length){
 
         // add 0. to first array (as it's empty)
         setFirstCalculatorInput(['0.'])
-      }
-    } else {
-      if (secondCalculatorInput.length){
-
-        // add decimal like normal to second array
-        onInputNumber(userInput)
-      } else {
         
+      } else if (!firstCalculatorInput.includes(".")){
+
+        // add decimal like normal to first array
+        onInputNumber(userInput)
+      }
+
+    } else {
+      if (!secondCalculatorInput.length){
+
         // add 0. to second array (as it's empty)
         setSecondCalculatorInput(['0.'])
+
+      } else if (!secondCalculatorInput.includes(".")) {
+        
+        // add decimal like normal to second array
+        onInputNumber(userInput)
       }
     }      
   }
@@ -137,8 +157,7 @@ export default function Calculator(){
       setOperator(userInput);
     }
     } else {  
-      alert('Submit for solving')
-      clearNumbers();
+      solveEquation();
     }      
   }
 
@@ -198,6 +217,8 @@ export default function Calculator(){
         onInputDecimal(".");
       } else if (userInput === "=") {
         solveEquation();
+      } else if (userInput === "√") {
+        onSquareRoot();
       }
   } else {
 
