@@ -93,7 +93,7 @@ export default function Calculator(){
       setSecondCalculatorInput([dividedNumberString]);
 
       // This function will return 0 if user hasn't inputted numbers in second (current) array
-      } else { setFirstCalculatorInput(['0']);
+      } else { setSecondCalculatorInput(['0']);
     }
   }
 }
