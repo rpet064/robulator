@@ -8,7 +8,7 @@ export default function Calculator(){
   const [firstCalculatorInput, setFirstCalculatorInput] = useState<string[]>([]);
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([]);
   const [operator, setOperator] = useState('');
-  const [postResponse, setPostResponse] = useState({});
+  const [postResponse, setPostResponse] = useState({"answer": "placeholder"});
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState('');
   const [btnData, setBtnData] = useState([]);
@@ -175,7 +175,7 @@ export default function Calculator(){
   const handleUserInput = (userInput: string) => {
 
     // clears answer from post request (so user can input another equation) 
-    setPostResponse({});
+    setPostResponse({"answer": "placeholder"});
 
     // checks that the equation isn't too big (max length excluding operator is 16)
     if (firstCalculatorInput.length +  secondCalculatorInput.length < 16){
@@ -212,9 +212,8 @@ export default function Calculator(){
         <div className={styles.calculator}>
           <div>
             <div className={styles.calculatorScreen}>     
-            {Object.keys(postResponse).length === 0 && !isLoading && <span>{firstCalculatorInput} {operator} {secondCalculatorInput}</span>}
-            {isLoading && <span>Loading....</span>}
-            {Object.keys(postResponse).length !== 0 && !isLoading && <span>{postResponse.answer}</span>}
+            {(postResponse.answer === "placeholder") && !isLoading && <span>{firstCalculatorInput} {operator} {secondCalculatorInput}</span>}
+            {!(postResponse.answer === "placeholder") && !isLoading && <span>{postResponse.answer}</span>}
             </div>
             <div className={styles.calculatorKeypad}>
             {btnData.map((symbol, index) => {
