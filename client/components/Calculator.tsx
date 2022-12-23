@@ -1,5 +1,4 @@
 import styles from '../styles/Home.module.css';
-import calculatorButtonInfo from './calculatorButtons.json';
 import { useState, useEffect } from 'react';
 
 const numArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
@@ -12,11 +11,51 @@ export default function Calculator(){
   const [postResponse, setPostResponse] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState('');
+  const [btnData, setBtnData] = useState([]);
 
+  // useEffect fetch btn data to be displayed on calculator keys
   useEffect(() => {
-    console.log(firstCalculatorInput);
-    console.log(secondCalculatorInput);
-  }, [firstCalculatorInput, secondCalculatorInput])
+    fetch(`/api/calculatorData`)
+    .then(response => response.json())
+      .then((usefulData) => {
+        setIsLoading(false);
+        setBtnData(usefulData.btnData);
+      })
+      .catch((e) => {
+        console.error(`An error occurred: ${e}`)
+      });
+  }, []);
+
+  // useEffect takes number arrays & symbol to be calculated to post to sever
+    const solveEquation = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/calculatorData', {
+        method: 'POST',
+        body: JSON.stringify({
+          firstNumber: firstCalculatorInput,
+          operator: operator,
+          secondNumber: secondCalculatorInput
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      setPostResponse(result);
+    } catch (err: any) {
+      setErr(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+    clearNumbers();
+  };
 
   // clear calculator input arrays
   const clearNumbers = () => {
@@ -132,40 +171,15 @@ export default function Calculator(){
   }
 }
 
-  // const solveEquation = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     const response = await fetch('https://reqres.in/api/users', {
-  //       method: 'POST',
-  //       body: JSON.stringify({
-  //         equation: calculatorInput,
-  //       }),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Accept: 'application/json',
-  //       },
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`Error! status: ${response.status}`);
-  //     }
-
-  //     const result = await response.json();
-
-  //     console.log('result is: ', JSON.stringify(result, null, 4));
-
-  //     setPostResponse(result);
-  //   } catch (err: any) {
-  //     setErr(err.message);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  //   setCalculatorInput([]);
-  // };
-
-
+  // this const catches userinput from button and triggers correct function accordingly
   const handleUserInput = (userInput: string) => {
+
+    // clears answer from post request (so user can input another equation) 
+    setPostResponse({});
+
+    // checks that the equation isn't too big (max length excluding operator is 16)
     if (firstCalculatorInput.length +  secondCalculatorInput.length < 16){
+
       if (numArray.includes(userInput)){
         onInputNumber(userInput);
       } else if (operatorArray.includes(userInput)){
@@ -179,13 +193,17 @@ export default function Calculator(){
       } else if (userInput === ".") {
         onInputDecimal(".");
       } else if (userInput === "=") {
-        alert("submitting")
-    }
+        solveEquation();
+      }
   } else {
+
+    // clears screen when is full
     if (userInput === "AC") {
       clearNumbers();
     } else {
-        alert("More integers cannot be added to calculator");
+
+      // will trigger alert if user tries to add more numbers
+      alert("More integers cannot be added to calculator");
       }
     }
   }
@@ -194,13 +212,14 @@ export default function Calculator(){
         <div className={styles.calculator}>
           <div>
             <div className={styles.calculatorScreen}>     
-            {<span>{firstCalculatorInput} {operator} {secondCalculatorInput}</span>}
-              {isLoading && <span>Loading....</span>}
+            {Object.keys(postResponse).length === 0 && !isLoading && <span>{firstCalculatorInput} {operator} {secondCalculatorInput}</span>}
+            {isLoading && <span>Loading....</span>}
+            {Object.keys(postResponse).length !== 0 && !isLoading && <span>{postResponse.answer}</span>}
             </div>
             <div className={styles.calculatorKeypad}>
-            {calculatorButtonInfo.map((info, index) => {
+            {btnData.map((symbol, index) => {
               return (
-              <button onClick={() => handleUserInput(info.symbol)} key={index} className={styles.calcBtn}>{info.symbol}</button>
+              <button onClick={() => handleUserInput(symbol)} key={index} className={styles.calcBtn}>{symbol}</button>
               )
             })
             }
