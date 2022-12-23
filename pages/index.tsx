@@ -3,7 +3,6 @@ import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '../styles/Home.module.css'
 import Calculator from '../components/Calculator'
-import Footer from '../components/Footer'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -19,7 +18,6 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <Calculator />
-        <Footer />
       </main>
     </>
   )

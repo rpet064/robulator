@@ -9,76 +9,93 @@
 
 .calculator {
   width: 40rem;
-  height: 28.25rem;
+  height: 100%;
   position: absolute;
-  top: 10px;
+  top: 0px;
   background-color: black;
-  border-radius: 6.5%;
 }
 
 @media (max-width: 700px){
   .calculator {
-    width: 30rem;
+    width: 27.5rem;
   }   
 }
 
 .calculatorScreen{
-  background-color: grey;
   max-width: 80%;
-  min-height: 6rem;
-  margin: 3% auto;
+  min-height: 7rem;
+  margin: 2.5% auto;
 }
 
 .calculatorScreen span{
   position: relative;
-  top: 1.5rem;
+  top: 1rem;
   z-index: 1;
-  font-size: 2.4rem;
+  font-size: 5.25rem;
+}
+
+@media (max-width: 800px){
+  .calculatorScreen span{
+    font-size: 3.5rem;
+  }
 }
 
 .calculatorKeypad{
-  background-color: black;
   min-width: 75%;
-  min-height: 70%;
+  min-height: 100%;
   display: flex!important;
   flex-wrap: wrap;
-  padding: 2%;
+  padding: 0 0.1%;
 }
 
-.calcBtn, .calcBtnZero{
+@media (max-width: 800px){
+  .calculatorKeypad{
+    min-height: 80%;
+  }
+}
+
+.calcBtn{
   flex: 1 0 24%; 
-  background-color: black;
-  min-height: 3.5rem;
-  font-size: 2rem;
-  border: white 1px solid
+  background-color: #FFFAE7;
+  color: black;
+  min-height: 5rem;
+  font-size: 3.5rem;
+  border: black 1px solid;
 }
 
-.calcBtn:active, .calcBtnZero:active{
-  border: white 4px solid
-}
-  
-.calcBtnZero{
-  flex: 2 0 48% !important; 
+@media (max-width: 800px){
+  .calcBtn{
+    font-size: 3rem;
+  }
 }
 
-.calcBtnZero span{
-  position: relative;
-  right: 25%;
+.calculatorKeypad button:nth-child(-n+3){
+  background-color: #0779E4!important;
+  color: #FFFAE7;
 }
 
-.footer {
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  height: 2.5rem;
-  border-radius: 1%;
-  background-color: red;
-  font-size: 0.9rem;
+.calculatorKeypad button:nth-child(-n+3):active{
+  border: #FFFAE7 4px solid;
 }
 
-.footer a{
-  font-size:1rem;
-  padding: 0.5%;
-  width: 1rem ;
-  height: 1rem;
+.calculatorKeypad button:nth-child(4n){
+  background-color: #9951FF!important;
+  color: #FFFAE7;
+}
+
+.calculatorKeypad button:nth-child(4n):active{
+  border: #FFFAE7 4px solid;
+}
+
+.calculatorKeypad button:nth-child(20){
+  background-color: #C21010!important;
+  color: #FFFAE7;
+}
+
+.calculatorKeypad button:nth-child(20):active{
+  border: #FFFAE7 4px solid;
+}
+
+.calcBtn:active{
+  border: black 4px solid;
 }

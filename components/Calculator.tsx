@@ -68,7 +68,11 @@ export default function Calculator(){
   // being inputted, then adds to array accordingly
   const onInputNumber = (userInput: string) => {
     if (operator === ''){
-      setFirstCalculatorInput(firstCalculatorInput => [...firstCalculatorInput, userInput]);
+
+      // ignore if first input is 0 (to avoid uneccessary inputs)
+      if (userInput !== "0" || firstCalculatorInput.length){
+        setFirstCalculatorInput(firstCalculatorInput => [...firstCalculatorInput, userInput]);
+      }
     } else {
       setSecondCalculatorInput(secondCalculatorInput => [...secondCalculatorInput, userInput]);
     }      
@@ -178,7 +182,7 @@ export default function Calculator(){
     setPostResponse({"answer": "placeholder"});
 
     // checks that the equation isn't too big (max length excluding operator is 16)
-    if (firstCalculatorInput.length +  secondCalculatorInput.length < 16){
+    if (firstCalculatorInput.length +  secondCalculatorInput.length < 10){
 
       if (numArray.includes(userInput)){
         onInputNumber(userInput);
@@ -200,6 +204,8 @@ export default function Calculator(){
     // clears screen when is full
     if (userInput === "AC") {
       clearNumbers();
+    } else if (userInput === "="){
+      solveEquation();
     } else {
 
       // will trigger alert if user tries to add more numbers
@@ -215,7 +221,7 @@ export default function Calculator(){
             {(postResponse.answer === "placeholder") && !isLoading && <span>{firstCalculatorInput} {operator} {secondCalculatorInput}</span>}
             {!(postResponse.answer === "placeholder") && !isLoading && <span>{postResponse.answer}</span>}
             </div>
-            <div className={styles.calculatorKeypad}>
+            <div id="calculatorKeypad" className={styles.calculatorKeypad}>
             {btnData.map((symbol, index) => {
               return (
               <button onClick={() => handleUserInput(symbol)} key={index} className={styles.calcBtn}>{symbol}</button>

@@ -8,13 +8,7 @@ const solveEquation = (firstNumber:number, operator:string, secondNumber:number)
   } else if (operator === "-"){
     return firstNumber - secondNumber;
   } else if (operator === "÷"){
-
-    // will return "0 is indivisible" if user tries to divide 0 by a number
-    if (firstNumber === 0){
-      return "0 is indivisible";
-    } else {
       return firstNumber / secondNumber;
-    }
   } else if (operator === "×"){
     return firstNumber * secondNumber;
   }
