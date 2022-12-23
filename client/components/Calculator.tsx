@@ -1,8 +1,8 @@
 import styles from '../styles/Home.module.css';
 import calculatorButtonInfo from './calculatorButtons.json';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-const numArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const numArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 const operatorArray = ["+", "-", "×", "÷"];
 
 export default function Calculator(){
@@ -12,6 +12,11 @@ export default function Calculator(){
   const [postResponse, setPostResponse] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState('');
+
+  useEffect(() => {
+    console.log(firstCalculatorInput);
+    console.log(secondCalculatorInput);
+  }, [firstCalculatorInput, secondCalculatorInput])
 
   // clear calculator input arrays
   const clearNumbers = () => {
@@ -32,7 +37,7 @@ export default function Calculator(){
 
   // handle change to % input logic - this function checks if the first or second number is currently
   // inputted, then changes the array to a number string, divides, then puts back into array
-  const changeToPercentage = (userInput: string) => {
+  const changeToPercentage = () => {
     let originalNumber = 0;
     let dividedNumberString = '';
     if (operator === ''){
@@ -88,7 +93,7 @@ export default function Calculator(){
       } else {
       setOperator(userInput);
     }
-    } else {
+    } else {  
       alert('Submit for solving')
       clearNumbers();
     }      
@@ -97,32 +102,32 @@ export default function Calculator(){
   // handle sign change logic - checks if currently first or second array, then checks
   // the sign at the front of the array (if the number is positive or negative) - the values
   //  are taken from the hook and then added back in as useState hooks are immutable
-  const changeSign = (userInput: string) => {
+  const changeSign = () => {
     if (operator === ''){
       var originalArray = firstCalculatorInput;
       if (firstCalculatorInput[0] === "-"){
 
         // remove "-" from front of first array making it "positive"
         originalArray = originalArray.slice(1);
-        setFirstCalculatorInput(originalArray);
+        setFirstCalculatorInput([...originalArray]);
       } else {
 
         // add "-" to front of first array making it "negative"
         originalArray.unshift("-");
-        setFirstCalculatorInput(originalArray);
+        setFirstCalculatorInput([...originalArray]);
       }
-    } else { 
+    } else {
       var originalArray = secondCalculatorInput;
       if (secondCalculatorInput[0] === "-"){
 
         // remove "-" from front of second array making it "positive"
         originalArray = originalArray.slice(1);
-        setSecondCalculatorInput(originalArray);
+        setSecondCalculatorInput([...originalArray]);
       } else {
 
         // add "-" to front of second array making it "negative"
         originalArray.unshift("-");
-        setSecondCalculatorInput(originalArray);
+        setSecondCalculatorInput([...originalArray]);
     }     
   }
 }
@@ -158,14 +163,32 @@ export default function Calculator(){
   //   setCalculatorInput([]);
   // };
 
+
   const handleUserInput = (userInput: string) => {
-    if (numArray.includes(userInput)){
-      onInputNumber(userInput);
-    } else if (operatorArray.includes(userInput)){
+    if (firstCalculatorInput.length +  secondCalculatorInput.length < 16){
+      if (numArray.includes(userInput)){
+        onInputNumber(userInput);
+      } else if (operatorArray.includes(userInput)){
       onInputOperator(userInput);
+      } else if (userInput === "AC") {
+        clearNumbers();
+      } else if (userInput === "+/-") {
+        changeSign();
+      } else if (userInput === "%") {
+        changeToPercentage();
+      } else if (userInput === ".") {
+        onInputDecimal(".");
+      } else if (userInput === "=") {
+        alert("submitting")
+    }
+  } else {
+    if (userInput === "AC") {
+      clearNumbers();
+    } else {
+        alert("More integers cannot be added to calculator");
       }
     }
-  
+  }
 
     return (
         <div className={styles.calculator}>
