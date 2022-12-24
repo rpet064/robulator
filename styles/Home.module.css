@@ -38,7 +38,7 @@
 
 @media (max-width: 700px){
   .calculatorScreen span{
-    top: 2.25rem;
+    top: 3rem;
     font-size: 4rem;
   }
 }
@@ -68,8 +68,8 @@
 
 @media (max-width: 700px){
   .calcBtn{
-    font-size: 3.75rem;
-    min-height: 6.5rem;
+    font-size: 3.5rem;
+    min-height: 6.25rem;
   }
 }
 

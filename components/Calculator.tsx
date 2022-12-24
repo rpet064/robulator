@@ -239,7 +239,7 @@ export default function Calculator(){
         <div className={styles.calculator}>
           <div>
             <div className={styles.calculatorScreen}>     
-            {(postResponse.answer === "placeholder") && !isLoading && <span>{firstCalculatorInput} {operator} {secondCalculatorInput}</span>}
+            {(postResponse.answer === "placeholder") && !isLoading && <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>}
             {!(postResponse.answer === "placeholder") && !isLoading && <span>{postResponse.answer}</span>}
             </div>
             <div id="calculatorKeypad" className={styles.calculatorKeypad}>
