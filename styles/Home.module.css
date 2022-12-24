@@ -3,7 +3,6 @@
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  height: -webkit-fill-available;
 }
 
 .calculator {
@@ -24,17 +23,17 @@
   margin: 2.5% auto;
 }
 
+@media (max-width: 700px){
+  .calculatorScreen{
+    min-height: 10rem; 
+  }
+}
+
 .calculatorScreen span{
   position: relative;
   top: 1rem;
   z-index: 1;
   font-size: 5.25rem;
-}
-
-@media (max-width: 800px){
-  .calculatorScreen span{
-    font-size: 3.5rem;
-  }
 }
 
 .calculatorKeypad{
@@ -47,7 +46,7 @@
 
 @media (max-width: 800px){
   .calculatorKeypad{
-    min-height: 80%;
+    min-height: 100%;
   }
 }
 
