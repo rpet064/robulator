@@ -34,11 +34,12 @@
   top: 1rem;
   z-index: 1;
   font-size: 5.25rem;
+  right: 2.5%;
 }
 
 @media (max-width: 700px){
   .calculatorScreen span{
-    top: 3rem;
+    top: 3.25rem;
     font-size: 4rem;
   }
 }
@@ -49,12 +50,6 @@
   display: flex!important;
   flex-wrap: wrap;
   padding: 0 0.1%;
-}
-
-@media (max-width: 700px){
-  .calculatorKeypad{
-    min-height: 100%;
-  }
 }
 
 .calcBtn{
@@ -69,7 +64,7 @@
 @media (max-width: 700px){
   .calcBtn{
     font-size: 3.5rem;
-    min-height: 6.25rem;
+    min-height: 6.2rem;
   }
 }
 
