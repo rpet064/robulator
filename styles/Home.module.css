@@ -36,6 +36,12 @@
   font-size: 5.25rem;
 }
 
+@media (max-width: 700px){
+  .calculatorScreen{
+    top: 1.5rem;
+  }
+}
+
 .calculatorKeypad{
   min-width: 75%;
   min-height: 100%;
@@ -44,7 +50,7 @@
   padding: 0 0.1%;
 }
 
-@media (max-width: 800px){
+@media (max-width: 700px){
   .calculatorKeypad{
     min-height: 100%;
   }
@@ -59,9 +65,10 @@
   border: #181D31 1px solid;
 }
 
-@media (max-width: 800px){
+@media (max-width: 700px){
   .calcBtn{
-    font-size: 3rem;
+    font-size: 3.5rem;
+    min-height: 5.5rem;
   }
 }
 
