@@ -25,7 +25,7 @@
 
 @media (max-width: 700px){
   .calculatorScreen{
-    min-height: 12.25rem; 
+    min-height: 12.3rem; 
   }
 }
 
@@ -38,7 +38,7 @@
 
 @media (max-width: 700px){
   .calculatorScreen span{
-    top: 4.1rem;
+    top: 6.1rem;
     font-size: 3.95rem;
     right: 3.5%;
   }
@@ -47,7 +47,7 @@
 @media (max-width: 700px){
   .calculatorScreen .answer-span{
     font-size: 4rem;
-    right: 0.1%;
+    left: 1%;
   }
 }
 
@@ -71,7 +71,7 @@
 @media (max-width: 700px){
   .calcBtn{
     font-size: 3rem;
-    min-height: 5.4rem;
+    min-height: 5.5rem;
   }
 }
 
