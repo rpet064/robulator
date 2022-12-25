@@ -47,7 +47,7 @@
 @media (max-width: 700px){
   .calculatorScreen .answer-span{
     font-size: 4rem;
-    left: 2%;
+    left: 3.5%;
   }
 }
 
@@ -71,7 +71,7 @@
 @media (max-width: 700px){
   .calcBtn{
     font-size: 3rem;
-    min-height: 5.55rem;
+    min-height: 5.6rem;
   }
 }
 
