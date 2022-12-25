@@ -240,7 +240,7 @@ export default function Calculator(){
           <div>
             <div className={styles.calculatorScreen}>     
             {(postResponse.answer === "placeholder") && !isLoading && <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>}
-            {!(postResponse.answer === "placeholder") && !isLoading && <span>{postResponse.answer}</span>}
+            {!(postResponse.answer === "placeholder") && !isLoading && <span className="answer-span">{postResponse.answer}</span>}
             </div>
             <div id="calculatorKeypad" className={styles.calculatorKeypad}>
             {btnData.map((symbol, index) => {
