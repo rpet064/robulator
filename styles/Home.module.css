@@ -25,13 +25,13 @@
 
 @media (max-width: 700px){
   .calculatorScreen{
-    min-height: 14rem; 
+    min-height: 12rem; 
   }
 }
 
 .calculatorScreen span{
   position: relative;
-  top: 2rem;
+  top: 2.5rem;
   z-index: 1;
   font-size: 5.25rem;
 }
@@ -64,7 +64,7 @@
 @media (max-width: 700px){
   .calcBtn{
     font-size: 3rem;
-    min-height: 5.1rem;
+    min-height: 5.3rem;
   }
 }
 
