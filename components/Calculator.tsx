@@ -8,7 +8,6 @@ export default function Calculator(){
   const [firstCalculatorInput, setFirstCalculatorInput] = useState<string[]>([]);
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([]);
   const [operator, setOperator] = useState('');
-  const [postResponse, setPostResponse] = useState({"answer": "placeholder"});
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState('');
   const [btnData, setBtnData] = useState([]);
@@ -17,9 +16,9 @@ export default function Calculator(){
   useEffect(() => {
     fetch(`/api/calculatorData`)
     .then(response => response.json())
-      .then((usefulData) => {
+      .then((data) => {
         setIsLoading(false);
-        setBtnData(usefulData.btnData);
+        setBtnData(data.btnData);
       })
       .catch((e) => {
         console.error(`An error occurred: ${e}`)
@@ -48,13 +47,17 @@ export default function Calculator(){
       }
 
       const result = await response.json();
-      setPostResponse(result);
+      setFirstCalculatorInput([result.answer]);
     } catch (err: any) {
       setErr(err.message);
+      console.log(err);
     } finally {
       setIsLoading(false);
     }
-    clearNumbers();
+
+    // clear operator and second input for new user input
+    setOperator('');
+    setSecondCalculatorInput([]);
   };
 
   // clear calculator input arrays
@@ -111,6 +114,7 @@ export default function Calculator(){
     } else {
       if (secondCalculatorInput.length){
       originalNumber = parseInt(secondCalculatorInput.toString().replaceAll(',', ''));
+      dividedNumberString = (originalNumber / 100).toString()
       setSecondCalculatorInput([dividedNumberString]);
 
       // This function will return 0 if user hasn't inputted numbers in second (current) array
@@ -197,9 +201,6 @@ export default function Calculator(){
   // this const catches userinput from button and triggers correct function accordingly
   const handleUserInput = (userInput: string) => {
 
-    // clears answer from post request (so user can input another equation) 
-    setPostResponse({"answer": "placeholder"});
-
     // checks that the equation isn't too big (max length excluding operator is 16)
     if (firstCalculatorInput.length +  secondCalculatorInput.length < 10){
 
@@ -237,10 +238,8 @@ export default function Calculator(){
 
     return (
         <div className={styles.calculator}>
-          <div>
             <div className={styles.calculatorScreen}>     
-            {(postResponse.answer === "placeholder") && !isLoading && <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>}
-            {!(postResponse.answer === "placeholder") && !isLoading && <span className="answer-span">{postResponse.answer}</span>}
+            {!isLoading && <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>}
             </div>
             <div id="calculatorKeypad" className={styles.calculatorKeypad}>
             {btnData.map((symbol, index) => {
@@ -251,6 +250,5 @@ export default function Calculator(){
             }
             </div>
           </div>
-        </div>
     )
 }
