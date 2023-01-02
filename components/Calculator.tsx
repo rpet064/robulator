@@ -27,6 +27,7 @@ export default function Calculator(){
 
   // useEffect takes number arrays & symbol to be calculated to post to sever
     const solveEquation = async () => {
+      if (secondCalculatorInput.length !== 0){
     setIsLoading(true);
     try {
       const response = await fetch('/api/calculatorData', {
@@ -53,11 +54,12 @@ export default function Calculator(){
       console.log(err);
     } finally {
       setIsLoading(false);
-    }
 
-    // clear operator and second input for new user input
+      // clear operator and second input for new user input
     setOperator('');
     setSecondCalculatorInput([]);
+    }
+    }
   };
 
   // clear calculator input arrays
@@ -239,7 +241,7 @@ export default function Calculator(){
     return (
         <div className={styles.calculator}>
             <div className={styles.calculatorScreen}>     
-            {!isLoading && <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>}
+            <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>
             </div>
             <div id="calculatorKeypad" className={styles.calculatorKeypad}>
             {btnData.map((symbol, index) => {
