@@ -7,7 +7,8 @@ const operatorArray = ["+", "-", "×", "÷"];
 export default function Calculator(){
   const [firstCalculatorInput, setFirstCalculatorInput] = useState<string[]>([]);
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([]);
-  const [operator, setOperator] = useState('');
+  const [totalEquation, setTotalEquation] = useState<string[]>([]);
+  const [operator, setOperator] = useState<String>("");
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState('');
   const [btnData, setBtnData] = useState([]);
@@ -25,8 +26,12 @@ export default function Calculator(){
       });
   }, []);
 
+    // useEffect(() => {
+    //   setTotalEquation
+    // }, [firstCalculatorInput, operator, secondCalculatorInput])
+
   // useEffect takes number arrays & symbol to be calculated to post to sever
-    const solveEquation = async () => {
+    const solveEquation = async (newOperator: String) => {
       if (secondCalculatorInput.length !== 0){
     setIsLoading(true);
     try {
@@ -56,7 +61,7 @@ export default function Calculator(){
       setIsLoading(false);
 
       // clear operator and second input for new user input
-    setOperator('');
+    setOperator(newOperator);
     setSecondCalculatorInput([]);
     }
     }
@@ -163,7 +168,7 @@ export default function Calculator(){
       setOperator(userInput);
     }
     } else {  
-      solveEquation();
+      solveEquation(userInput);
     }      
   }
 
@@ -219,7 +224,10 @@ export default function Calculator(){
       } else if (userInput === ".") {
         onInputDecimal(".");
       } else if (userInput === "=") {
-        solveEquation();
+
+      // No additional operator has been selected, so will send an empty
+      // string to replace the existing operator
+        solveEquation("");
       } else if (userInput === "√") {
         onSquareRoot();
       }
@@ -229,7 +237,7 @@ export default function Calculator(){
     if (userInput === "AC") {
       clearNumbers();
     } else if (userInput === "="){
-      solveEquation();
+      solveEquation("");
     } else {
 
       // will trigger alert if user tries to add more numbers
