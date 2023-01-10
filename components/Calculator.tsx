@@ -7,8 +7,8 @@ const operatorArray = ["+", "-", "×", "÷"];
 export default function Calculator(){
   const [firstCalculatorInput, setFirstCalculatorInput] = useState<string[]>([]);
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([]);
-  const [totalEquation, setTotalEquation] = useState<string[]>([]);
-  const [operator, setOperator] = useState<String>("");
+  const [prevInput, setPrevInput] = useState<string[]>([]);
+  const [operator, setOperator] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState('');
   const [btnData, setBtnData] = useState([]);
@@ -26,52 +26,70 @@ export default function Calculator(){
       });
   }, []);
 
-    // useEffect(() => {
-    //   setTotalEquation
-    // }, [firstCalculatorInput, operator, secondCalculatorInput])
+  // this function updates the logged history of calculations 
+  const updatePrevArray = () => {
+    var prev_equation_string = ''
+
+    // Store the first input if there are no previous inputs
+    if (prevInput.length === 0){
+      var prev_equation = [firstCalculatorInput.join(''), " ", operator, " ", (secondCalculatorInput.join(''))]
+      prev_equation_string = prev_equation.toString().replaceAll(',', '')
+      setPrevInput(prevInput => [...prevInput, prev_equation_string])
+
+    // Adds an equals, as the first input is now the answer
+    } else {
+      var prev_equation = [" = ", firstCalculatorInput.join(''), " ", operator, " ", (secondCalculatorInput.join(''))]
+      prev_equation_string = prev_equation.toString().replaceAll(',', '')
+      setPrevInput(prevInput => [...prevInput, prev_equation_string])
+    }
+  }
+
 
   // useEffect takes number arrays & symbol to be calculated to post to sever
-    const solveEquation = async (newOperator: String) => {
+    const solveEquation = async (newOperator: string) => {
       if (secondCalculatorInput.length !== 0){
-    setIsLoading(true);
-    try {
-      const response = await fetch('/api/calculatorData', {
-        method: 'POST',
-        body: JSON.stringify({
-          firstNumber: firstCalculatorInput,
-          operator: operator,
-          secondNumber: secondCalculatorInput
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      });
 
-      if (!response.ok) {
-        throw new Error(`Error! status: ${response.status}`);
-      }
+        updatePrevArray()
+        setIsLoading(true);
+        try {
+          const response = await fetch('/api/calculatorData', {
+            method: 'POST',
+            body: JSON.stringify({
+              firstNumber: firstCalculatorInput,
+              operator: operator,
+              secondNumber: secondCalculatorInput
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+            },
+          });
 
-      const result = await response.json();
-      setFirstCalculatorInput([result.answer]);
-    } catch (err: any) {
-      setErr(err.message);
-      console.log(err);
-    } finally {
-      setIsLoading(false);
+          if (!response.ok) {
+            throw new Error(`Error! status: ${response.status}`);
+          }
 
-      // clear operator and second input for new user input
-    setOperator(newOperator);
-    setSecondCalculatorInput([]);
-    }
-    }
-  };
+          const result = await response.json();
+          setFirstCalculatorInput([result.answer]);
+        } catch (err: any) {
+          setErr(err.message);
+          console.log(err);
+        } finally {
+          setIsLoading(false);
+        
+        // clear operator and second input for new user input
+        setOperator(newOperator);
+        setSecondCalculatorInput([]);
+        }
+        }
+      };
 
   // clear calculator input arrays
   const clearNumbers = () => {
-    setFirstCalculatorInput([]);
-    setOperator('');
-    setSecondCalculatorInput([]);
+    setFirstCalculatorInput([])
+    setOperator('')
+    setSecondCalculatorInput([])
+    setPrevInput([])
   }
 
   // handle number input logic - this function checks if the first or second number is currently
@@ -89,6 +107,8 @@ export default function Calculator(){
   }
 
   const onSquareRoot = () => {
+
+    // error when negative number is square rooted
     let originalNumber = 0;
     let dividedNumberString = "";
     if (operator === ''){
@@ -96,13 +116,32 @@ export default function Calculator(){
         originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''));
         dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString();
         setFirstCalculatorInput([dividedNumberString]);
+
+        // Adds the equation to the history of calculations
+        if (prevInput.length == 0){
+          setPrevInput(prevInput => [ ...prevInput, dividedNumberString] )
+        } else {
+          setPrevInput([dividedNumberString])
+        }
+
     }} else {
+
+      // Needs fixing
       if (secondCalculatorInput.length){
         originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''));
         dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString();
         setSecondCalculatorInput([dividedNumberString]);
+
+        // Adds the equation to the history of calculations - Needs fixing
+       if (prevInput.length == 0){
+        setPrevInput(prevInput => [ ...prevInput, dividedNumberString] )
+      } else {
+        var prev_equation = [firstCalculatorInput, " ", operator, " ", dividedNumberString].toString().replaceAll(',', '')
+        setPrevInput([prev_equation])
+      }
       }
     }
+    
   }
 
   // handle change to % input logic - this function checks if the first or second number is currently
@@ -116,16 +155,26 @@ export default function Calculator(){
         dividedNumberString = (originalNumber / 100).toString()
         setFirstCalculatorInput([dividedNumberString]);
 
-      // This function will return 0 if user hasn't inputted numbers in first (current) array
-      } else { setFirstCalculatorInput(['0']);}
+        // Adds the equation to the history of calculations
+        if (prevInput.length == 0){
+          setPrevInput(prevInput => [ ...prevInput, dividedNumberString] )
+        } else {
+          setPrevInput([dividedNumberString])
+        }
+      } else {
+        alert("Please add a number first")
+    }
     } else {
       if (secondCalculatorInput.length){
       originalNumber = parseInt(secondCalculatorInput.toString().replaceAll(',', ''));
       dividedNumberString = (originalNumber / 100).toString()
       setSecondCalculatorInput([dividedNumberString]);
 
-      // This function will return 0 if user hasn't inputted numbers in second (current) array
-      } else { setSecondCalculatorInput(['0']);
+      // Adds the equation to the history of calculations
+        var prev_equation = [firstCalculatorInput, " ", operator, " ", dividedNumberString].toString().replaceAll(',', '')
+        setPrevInput([prev_equation])
+      } else {  
+        alert("Please add a number first")
     }
   }
 }
@@ -248,8 +297,13 @@ export default function Calculator(){
 
     return (
         <div className={styles.calculator}>
-            <div className={styles.calculatorScreen}>     
-            <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>
+            <div className={styles.calculatorScreen}>
+              <div className={styles.mainScreen}> 
+                <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>
+              </div>
+              <div className={styles.miniScreen}> 
+                <span>{prevInput}</span>
+              </div>
             </div>
             <div id="calculatorKeypad" className={styles.calculatorKeypad}>
             {btnData.map((symbol, index) => {
