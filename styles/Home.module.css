@@ -31,14 +31,14 @@
 
 .calculatorScreen .mainScreen span{
   position: relative;
-  top: 2rem;
+  top: 1.5rem;
   z-index: 1;
   font-size: 5.25rem;
 }
 
 @media (max-width: 700px){
-  .calculatorScreen .mainScreen span{
-    top: 6.1rem;
+  .mainScreen{
+    top: 3rem;
     font-size: 3.95rem;
     right: 3.5%;
   }
@@ -47,8 +47,15 @@
 .miniScreen{
   font-size: 2rem;
   position: relative;
-  top: 2.5rem;
+  top: 1.5rem;
+}
 
+@media (max-width: 700px){
+  .miniScreen{
+    position: relati  ve;
+    top: 2.25rem;
+    right: 0.5%;
+  }
 }
 
 @media (max-width: 700px){
