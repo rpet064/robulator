@@ -12,19 +12,20 @@ export default function Calculator(){
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState('');
   const [btnData, setBtnData] = useState([]);
+  const [answerOverwritten, setAnswerOverwritten] = useState(false);
 
   // useEffect fetch btn data to be displayed on calculator keys
   useEffect(() => {
     fetch(`/api/calculatorData`)
     .then(response => response.json())
       .then((data) => {
-        setIsLoading(false);
-        setBtnData(data.btnData);
+        setIsLoading(false)
+        setBtnData(data.btnData)
       })
       .catch((e) => {
         console.error(`An error occurred: ${e}`)
-      });
-  }, []);
+      })
+  }, [])
 
   // this function updates the logged history of calculations 
   const updatePrevArray = () => {
@@ -66,20 +67,25 @@ export default function Calculator(){
           });
 
           if (!response.ok) {
-            throw new Error(`Error! status: ${response.status}`);
+            throw new Error(`Error! status: ${response.status}`)
           }
 
           const result = await response.json();
           setFirstCalculatorInput([result.answer]);
         } catch (err: any) {
-          setErr(err.message);
-          console.log(err);
+          setErr(err.message)
+          console.log(err)
         } finally {
           setIsLoading(false);
         
         // clear operator and second input for new user input
-        setOperator(newOperator);
-        setSecondCalculatorInput([]);
+        if (newOperator === operator) {
+          setOperator(newOperator)
+        } else {
+          setOperator("")
+        }
+        setSecondCalculatorInput([])
+        setAnswerOverwritten(false)
         }
         }
       };
@@ -90,17 +96,33 @@ export default function Calculator(){
     setOperator('')
     setSecondCalculatorInput([])
     setPrevInput([])
+    setAnswerOverwritten(false)
   }
 
   // handle number input logic - this function checks if the first or second number is currently
   // being inputted, then adds to array accordingly
   const onInputNumber = (userInput: string) => {
-    if (operator === ''){
+    if (operator === ""){
 
-      // ignore if first input is 0 (to avoid uneccessary)
-      if (userInput !== "0" || firstCalculatorInput.length){
-        setFirstCalculatorInput(firstCalculatorInput => [...firstCalculatorInput, userInput]);
+      // ignores 0 inputs on first input && checks if the answer hasn't been overriden
+      // and there is no answer
+      if ((userInput !== "0") && (!answerOverwritten && prevInput.length === 0)){
+        setFirstCalculatorInput(firstCalculatorInput => [...firstCalculatorInput, userInput])
+
+      // overwrites answer with a new input if second array has no input
+      } else if (firstCalculatorInput.length > 0 && secondCalculatorInput.length === 0) {
+
+        // check if array has alreay been overwritten with one number
+        if (answerOverwritten && firstCalculatorInput.length !== 0){
+          setFirstCalculatorInput(firstCalculatorInput => [...firstCalculatorInput, userInput])
+          
+        } else {
+          setFirstCalculatorInput([userInput])
+          setAnswerOverwritten(true)
+        }
       }
+
+    // Expected to catch cases where there is already a first number input & operator inputted
     } else {
       setSecondCalculatorInput(secondCalculatorInput => [...secondCalculatorInput, userInput]);
     }      
