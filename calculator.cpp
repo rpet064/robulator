@@ -1,58 +1,36 @@
 #include <iostream>
 #include <string> 
 using namespace std;
+#include "calculator.h"
+#include <cmath>
+#include <iomanip>
 
-int addNum(int first_num, int second_num)
-{
-    return first_num + second_num;
-}
-
-int subtractNum(int first_num, int second_num)
-{
-        return first_num - second_num;
-}
-
-int multiplyNum(int first_num, int second_num)
-{
-        return first_num * second_num;
-}
-
-int divideNum(int first_num, int second_num)
-{
-    return first_num / second_num;
-}
-
-void calculateAnswer(string operation, int first_num, int second_num)
+int calculateAnswer(string operation, double first_num, double second_num)
 {
     int answer{};
     if (operation == "+" )
     {
-        answer = addNum(first_num, second_num);
+        answer = first_num + second_num;
     } 
     else if (operation == "-" )
     {
-        answer = subtractNum(first_num, second_num);
+        answer = first_num - second_num;
     }
     else if (operation == "*" )
     {
-        answer = multiplyNum(first_num, second_num);
+        answer = first_num * second_num;
     }
     else if (operation == "/" )
     {
-        answer = divideNum(first_num, second_num);
-    } else {
-
-        // end function if user inputs unsupported operator 
-        std::cout << "Sorry, at this stage only +, -, / or * can be used \n";
-        return;
-    }
-    std::cout << first_num << operation << second_num << "=" << answer << "\n";
+        answer = floor(first_num / second_num);
+    } 
+    return answer;
 }
 
 // gets numeric value from user and returns to main
 int getNumValue()
 {
-    int userInput {};
+    double userInput {};
     std::cout << "Please enter a number" << "\n";
     std::cin >> userInput;
     return userInput;
@@ -60,14 +38,23 @@ int getNumValue()
 
 int main()
 {
-    int first_num {};
-        first_num = getNumValue();
+    // Assign first number from input
+    double first_num {};
+    first_num = getNumValue();
+
+    // Assign operator number from input
     string operation = "";
     std::cout << "What would you like to do with it? \n";
-    std::cin >> operation;    
-    int second_num {};
+    std::cin >> operation;
+
+    // Assign second number from input
+    double second_num {};
     second_num = getNumValue();
-    calculateAnswer(operation, first_num, second_num);
+
+    // Calculate and pring answer
+    std::cout << setprecision(13);
+    double answer = calculateAnswer(operation, first_num, second_num);
+    std::cout << answer;
 
     // catch if user puts in letter instead of number
     if (!std::cin.good())

@@ -1,83 +1,66 @@
 import styles from '../styles/Home.module.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import symbolsArray from './symbolsArray';
 
 const numArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 const operatorArray = ["+", "-", "×", "÷"];
 
-export default function Calculator(){
+export default function Calculator() {
   const [firstCalculatorInput, setFirstCalculatorInput] = useState<string[]>([]);
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([]);
   const [prevInput, setPrevInput] = useState<string[]>([]);
-  const [operator, setOperator] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [err, setErr] = useState('');
-  const [btnData, setBtnData] = useState([]);
-  const [answerOverwritten, setAnswerOverwritten] = useState(false);
+  const [operator, setOperator] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [err, setErr] = useState<string>("");
+  const [showAnswer, setShowAnswer] = useState<boolean>(false);
 
-  // useEffect fetch btn data to be displayed on calculator keys
-  useEffect(() => {
-    fetch(`/api/calculatorData`)
-    .then(response => response.json())
-      .then((data) => {
-        setIsLoading(false)
-        setBtnData(data.btnData)
-      })
-      .catch((e) => {
-        console.error(`An error occurred: ${e}`)
-      })
-  }, [])
 
   // this function updates the logged history of calculations 
-  const updatePrevArray = () => {
+  const updatePrevArray = (answer: string) => {
     var prev_equation_string = ''
 
     // Store the first input if there are no previous inputs
-    if (prevInput.length === 0){
-      var prev_equation = [firstCalculatorInput.join(''), " ", operator, " ", (secondCalculatorInput.join(''))]
-      prev_equation_string = prev_equation.toString().replaceAll(',', '')
-      setPrevInput(prevInput => [...prevInput, prev_equation_string])
+    var prev_equation = [firstCalculatorInput.join(''), " ", operator, " ", (secondCalculatorInput.join('')), " ", " = ", answer]
+    prev_equation_string = prev_equation.toString().replaceAll(',', '')
+    setPrevInput(prevInput => [...prevInput, prev_equation_string])
+    alert(prevInput)
 
-    // Adds an equals, as the first input is now the answer
-    } else {
-      var prev_equation = [" = ", firstCalculatorInput.join(''), " ", operator, " ", (secondCalculatorInput.join(''))]
-      prev_equation_string = prev_equation.toString().replaceAll(',', '')
-      setPrevInput(prevInput => [...prevInput, prev_equation_string])
-    }
   }
 
+  // posts equation to api backend to be solved
+  const solveEquation = async (newOperator: string) => {
+    if (secondCalculatorInput.length !== 0) {
 
-  // useEffect takes number arrays & symbol to be calculated to post to sever
-    const solveEquation = async (newOperator: string) => {
-      if (secondCalculatorInput.length !== 0){
+      setIsLoading(true);
+      try {
+        const response = await fetch('/api/calculatorData', {
+          method: 'POST',
+          body: JSON.stringify({
+            firstNumber: firstCalculatorInput,
+            operator: operator,
+            secondNumber: secondCalculatorInput
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        });
 
-        updatePrevArray()
-        setIsLoading(true);
-        try {
-          const response = await fetch('/api/calculatorData', {
-            method: 'POST',
-            body: JSON.stringify({
-              firstNumber: firstCalculatorInput,
-              operator: operator,
-              secondNumber: secondCalculatorInput
-            }),
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-            },
-          });
+        if (!response.ok) {
+          throw new Error(`Error! status: ${response.status}`)
+        }
 
-          if (!response.ok) {
-            throw new Error(`Error! status: ${response.status}`)
-          }
+        const result = await response.json();
+        setShowAnswer(true);
+        setFirstCalculatorInput([result.answer]);
+        // send answer to be added to equation
+        updatePrevArray(result.answer)
+      } catch (err: any) {
+        setErr(err.message)
+        console.log(err)
+      } finally {
+        setIsLoading(false);
 
-          const result = await response.json();
-          setFirstCalculatorInput([result.answer]);
-        } catch (err: any) {
-          setErr(err.message)
-          console.log(err)
-        } finally {
-          setIsLoading(false);
-        
         // clear operator and second input for new user input
         if (newOperator === operator) {
           setOperator(newOperator)
@@ -85,10 +68,9 @@ export default function Calculator(){
           setOperator("")
         }
         setSecondCalculatorInput([])
-        setAnswerOverwritten(false)
-        }
-        }
-      };
+      }
+    }
+  }
 
   // clear calculator input arrays
   const clearNumbers = () => {
@@ -96,36 +78,35 @@ export default function Calculator(){
     setOperator('')
     setSecondCalculatorInput([])
     setPrevInput([])
-    setAnswerOverwritten(false)
+    setShowAnswer(false)
   }
 
-  // handle number input logic - this function checks if the first or second number is currently
+  // this function checks if the first or second number is currently 
   // being inputted, then adds to array accordingly
   const onInputNumber = (userInput: string) => {
-    if (operator === ""){
+    if (operator === "") {
 
-      // ignores 0 inputs on first input && checks if the answer hasn't been overriden
-      // and there is no answer
-      if ((userInput !== "0") && (!answerOverwritten && prevInput.length === 0)){
+      // ignores 0 inputs on first input && check if answer is inside first input array
+      if ((userInput !== "0") && (showAnswer)) {
+
+        // if answer is inside, overwrite and set array to false (answer has been written over)
+        setFirstCalculatorInput([userInput])
+        setShowAnswer(false)
+
+        // add input to first input array
+      } else {
         setFirstCalculatorInput(firstCalculatorInput => [...firstCalculatorInput, userInput])
-
-      // overwrites answer with a new input if second array has no input
-      } else if (firstCalculatorInput.length > 0 && secondCalculatorInput.length === 0) {
-
-        // check if array has alreay been overwritten with one number
-        if (answerOverwritten && firstCalculatorInput.length !== 0){
-          setFirstCalculatorInput(firstCalculatorInput => [...firstCalculatorInput, userInput])
-          
-        } else {
-          setFirstCalculatorInput([userInput])
-          setAnswerOverwritten(true)
-        }
       }
 
-    // Expected to catch cases where there is already a first number input & operator inputted
+      // Add to second array, as first array and operator have already been inputted
     } else {
-      setSecondCalculatorInput(secondCalculatorInput => [...secondCalculatorInput, userInput]);
-    }      
+
+      if (secondCalculatorInput.length > 0) {
+        setSecondCalculatorInput([userInput])
+      } else {
+        setSecondCalculatorInput(secondCalculatorInput => [...secondCalculatorInput, userInput]);
+      }
+    }
   }
 
   const onSquareRoot = () => {
@@ -133,37 +114,28 @@ export default function Calculator(){
     // error when negative number is square rooted
     let originalNumber = 0;
     let dividedNumberString = "";
-    if (operator === ''){
-      if (firstCalculatorInput.length){
+    if (operator === '') {
+      if (firstCalculatorInput.length) {
         originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''));
         dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString();
         setFirstCalculatorInput([dividedNumberString]);
 
         // Adds the equation to the history of calculations
-        if (prevInput.length == 0){
-          setPrevInput(prevInput => [ ...prevInput, dividedNumberString] )
+        if (prevInput.length == 0) {
+          setPrevInput(prevInput => [...prevInput, dividedNumberString])
         } else {
           setPrevInput([dividedNumberString])
         }
-
-    }} else {
+      }
+    } else {
 
       // Needs fixing
-      if (secondCalculatorInput.length){
+      if (secondCalculatorInput.length) {
         originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''));
         dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString();
         setSecondCalculatorInput([dividedNumberString]);
-
-        // Adds the equation to the history of calculations - Needs fixing
-       if (prevInput.length == 0){
-        setPrevInput(prevInput => [ ...prevInput, dividedNumberString] )
-      } else {
-        var prev_equation = [firstCalculatorInput, " ", operator, " ", dividedNumberString].toString().replaceAll(',', '')
-        setPrevInput([prev_equation])
-      }
       }
     }
-    
   }
 
   // handle change to % input logic - this function checks if the first or second number is currently
@@ -171,85 +143,80 @@ export default function Calculator(){
   const changeToPercentage = () => {
     let originalNumber = 0;
     let dividedNumberString = '';
-    if (operator === ''){
-      if (firstCalculatorInput.length){
+    if (operator === '') {
+      if (firstCalculatorInput.length) {
         originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''));
         dividedNumberString = (originalNumber / 100).toString()
         setFirstCalculatorInput([dividedNumberString]);
 
         // Adds the equation to the history of calculations
-        if (prevInput.length == 0){
-          setPrevInput(prevInput => [ ...prevInput, dividedNumberString] )
+        if (prevInput.length == 0) {
+          setPrevInput(prevInput => [...prevInput, dividedNumberString])
         } else {
           setPrevInput([dividedNumberString])
         }
       } else {
         alert("Please add a number first")
-    }
+      }
     } else {
-      if (secondCalculatorInput.length){
-      originalNumber = parseInt(secondCalculatorInput.toString().replaceAll(',', ''));
-      dividedNumberString = (originalNumber / 100).toString()
-      setSecondCalculatorInput([dividedNumberString]);
+      if (secondCalculatorInput.length) {
+        originalNumber = parseInt(secondCalculatorInput.toString().replaceAll(',', ''));
+        dividedNumberString = (originalNumber / 100).toString()
+        setSecondCalculatorInput([dividedNumberString]);
 
-      // Adds the equation to the history of calculations
-        var prev_equation = [firstCalculatorInput, " ", operator, " ", dividedNumberString].toString().replaceAll(',', '')
-        setPrevInput([prev_equation])
-      } else {  
-        alert("Please add a number first")
+      }
     }
   }
-}
 
-   // handle number input logic - this function checks if the first or second number is currently
+  // handle number input logic - this function checks if the first or second number is currently
   // being inputted, then checks if array is empty
   const onInputDecimal = (userInput: string) => {
-    if (operator === ''){
-      if (!firstCalculatorInput.length){
+    if (operator === '') {
+      if (!firstCalculatorInput.length) {
 
         // add 0. to first array (as it's empty)
         setFirstCalculatorInput(['0.'])
-        
-      } else if (!firstCalculatorInput.includes(".")){
+
+      } else if (!firstCalculatorInput.includes(".")) {
 
         // add decimal like normal to first array
         onInputNumber(userInput)
       }
 
     } else {
-      if (!secondCalculatorInput.length){
+      if (!secondCalculatorInput.length) {
 
         // add 0. to second array (as it's empty)
         setSecondCalculatorInput(['0.'])
 
       } else if (!secondCalculatorInput.includes(".")) {
-        
+
         // add decimal like normal to second array
         onInputNumber(userInput)
       }
-    }      
+    }
   }
 
   // handle operator input logic
   const onInputOperator = (userInput: string) => {
-    if (operator === ''){
-      if (firstCalculatorInput.length === 0){
+    if (operator === '') {
+      if (firstCalculatorInput.length === 0) {
         alert('please enter a number first')
       } else {
-      setOperator(userInput);
-    }
-    } else {  
+        setOperator(userInput);
+      }
+    } else {
       solveEquation(userInput);
-    }      
+    }
   }
 
   // handle sign change logic - checks if currently first or second array, then checks
   // the sign at the front of the array (if the number is positive or negative) - the values
   //  are taken from the hook and then added back in as useState hooks are immutable
   const changeSign = () => {
-    if (operator === ''){
+    if (operator === '') {
       var originalArray = firstCalculatorInput;
-      if (firstCalculatorInput[0] === "-"){
+      if (firstCalculatorInput[0] === "-") {
 
         // remove "-" from front of first array making it "positive"
         originalArray = originalArray.slice(1);
@@ -262,7 +229,7 @@ export default function Calculator(){
       }
     } else {
       var originalArray = secondCalculatorInput;
-      if (secondCalculatorInput[0] === "-"){
+      if (secondCalculatorInput[0] === "-") {
 
         // remove "-" from front of second array making it "positive"
         originalArray = originalArray.slice(1);
@@ -272,20 +239,20 @@ export default function Calculator(){
         // add "-" to front of second array making it "negative"
         originalArray.unshift("-");
         setSecondCalculatorInput([...originalArray]);
-    }     
+      }
+    }
   }
-}
 
   // this const catches userinput from button and triggers correct function accordingly
   const handleUserInput = (userInput: string) => {
 
     // checks that the equation isn't too big (max length excluding operator is 16)
-    if (firstCalculatorInput.length +  secondCalculatorInput.length < 10){
+    if (firstCalculatorInput.length + secondCalculatorInput.length < 10) {
 
-      if (numArray.includes(userInput)){
+      if (numArray.includes(userInput)) {
         onInputNumber(userInput);
-      } else if (operatorArray.includes(userInput)){
-      onInputOperator(userInput);
+      } else if (operatorArray.includes(userInput)) {
+        onInputOperator(userInput);
       } else if (userInput === "AC") {
         clearNumbers();
       } else if (userInput === "+/-") {
@@ -296,45 +263,42 @@ export default function Calculator(){
         onInputDecimal(".");
       } else if (userInput === "=") {
 
-      // No additional operator has been selected, so will send an empty
-      // string to replace the existing operator
+        // No additional operator has been selected, so will send an empty
+        // string to replace the existing operator
         solveEquation("");
       } else if (userInput === "√") {
         onSquareRoot();
       }
-  } else {
-
-    // clears screen when is full
-    if (userInput === "AC") {
-      clearNumbers();
-    } else if (userInput === "="){
-      solveEquation("");
     } else {
 
-      // will trigger alert if user tries to add more numbers
-      alert("More integers cannot be added to calculator");
+      // clears screen when is full
+      if (userInput === "AC") {
+        clearNumbers();
+      } else if (userInput === "=") {
+        solveEquation("");
+      } else {
+
+        // will trigger alert if user tries to add more numbers
+        alert("More integers cannot be added to calculator");
       }
     }
   }
 
-    return (
-        <div className={styles.calculator}>
-            <div className={styles.calculatorScreen}>
-              <div className={styles.mainScreen}> 
-                <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>
-              </div>
-              <div className={styles.miniScreen}> 
-                <span>{prevInput}</span>
-              </div>
-            </div>
-            <div id="calculatorKeypad" className={styles.calculatorKeypad}>
-            {btnData.map((symbol, index) => {
-              return (
-              <button onClick={() => handleUserInput(symbol)} key={index} className={styles.calcBtn}>{symbol}</button>
-              )
-            })
-            }
-            </div>
-          </div>
-    )
+  return (
+    <div className={styles.calculator}>
+      <div className={styles.calculatorScreen}>
+        <div className={styles.mainScreen}>
+          <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>
+        </div>
+      </div>
+      <div id="calculatorKeypad" className={styles.calculatorKeypad}>
+        {symbolsArray.map((symbol, index) => {
+          return (
+            <button onClick={() => handleUserInput(symbol)} key={index} className={styles.calcBtn}>{symbol}</button>
+          )
+        })
+        }
+      </div>
+    </div>
+  )
 }

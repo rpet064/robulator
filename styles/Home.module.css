@@ -44,20 +44,6 @@
   }
 }
 
-.miniScreen{
-  font-size: 2rem;
-  position: relative;
-  top: 1.5rem;
-}
-
-@media (max-width: 700px){
-  .miniScreen{
-    position: relati  ve;
-    top: 2.25rem;
-    right: 0.5%;
-  }
-}
-
 @media (max-width: 700px){
   .calculatorScreen {
     font-size: 4rem;
