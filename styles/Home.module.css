@@ -26,6 +26,22 @@
 @media (max-width: 700px){
   .calculatorScreen{
     min-height: 12.3rem; 
+        font-size: 4rem;
+    left: 3.5%;
+  }
+}
+
+.calculatorScreen .miniScreen span{
+  position: relative;
+  top: 0.75rem;
+  z-index: 1;
+  font-size: 1.5rem;
+}
+
+@media (max-width: 700px){
+  .miniScreen span{
+    top: 0rem!important;
+    font-size: 1.75rem!important;
   }
 }
 
@@ -37,17 +53,8 @@
 }
 
 @media (max-width: 700px){
-  .mainScreen{
-    top: 3rem;
-    font-size: 3.95rem;
-    right: 3.5%;
-  }
-}
-
-@media (max-width: 700px){
-  .calculatorScreen {
-    font-size: 4rem;
-    left: 3.5%;
+  .mainScreen span{
+    top: 0rem!important;
   }
 }
 

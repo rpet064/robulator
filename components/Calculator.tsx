@@ -8,23 +8,21 @@ const operatorArray = ["+", "-", "×", "÷"];
 export default function Calculator() {
   const [firstCalculatorInput, setFirstCalculatorInput] = useState<string[]>([]);
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([]);
-  const [prevInput, setPrevInput] = useState<string[]>([]);
+  const [prevInput, setPrevInput] = useState<string>("");
   const [operator, setOperator] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [err, setErr] = useState<string>("");
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
 
 
-  // this function updates the logged history of calculations 
-  const updatePrevArray = (answer: string) => {
+  // this function stores the last equation 
+  const updatePrevArray = () => {
     var prev_equation_string = ''
 
     // Store the first input if there are no previous inputs
-    var prev_equation = [firstCalculatorInput.join(''), " ", operator, " ", (secondCalculatorInput.join('')), " ", " = ", answer]
+    var prev_equation = [firstCalculatorInput.join(''), "  ", operator, "  ", (secondCalculatorInput.join('')), "  ", "  =  "]
     prev_equation_string = prev_equation.toString().replaceAll(',', '')
-    setPrevInput(prevInput => [...prevInput, prev_equation_string])
-    alert(prevInput)
-
+    setPrevInput(prev_equation_string)
   }
 
   // posts equation to api backend to be solved
@@ -54,7 +52,7 @@ export default function Calculator() {
         setShowAnswer(true);
         setFirstCalculatorInput([result.answer]);
         // send answer to be added to equation
-        updatePrevArray(result.answer)
+        updatePrevArray()
       } catch (err: any) {
         setErr(err.message)
         console.log(err)
@@ -77,8 +75,31 @@ export default function Calculator() {
     setFirstCalculatorInput([])
     setOperator('')
     setSecondCalculatorInput([])
-    setPrevInput([])
+    setPrevInput("")
     setShowAnswer(false)
+  }
+
+  // This function checks 
+  const deletePrevInput = () => {
+    // Removes last inputted number from first input array
+    if (operator === "") {
+
+      let new_input: Array<string>
+      new_input = firstCalculatorInput.splice(-1)
+      setFirstCalculatorInput(new_input)
+
+
+    // Removes last inputted number from second input array
+    } else if (secondCalculatorInput.length > 0) {
+
+      let new_input: Array<string>
+      new_input = secondCalculatorInput.splice(-1)
+      setSecondCalculatorInput(new_input)
+
+    // Catches exception where user wants to delete the operator
+    } else {
+      setOperator("")
+    }
   }
 
   // this function checks if the first or second number is currently 
@@ -91,6 +112,7 @@ export default function Calculator() {
 
         // if answer is inside, overwrite and set array to false (answer has been written over)
         setFirstCalculatorInput([userInput])
+        setPrevInput("")
         setShowAnswer(false)
 
         // add input to first input array
@@ -101,7 +123,7 @@ export default function Calculator() {
       // Add to second array, as first array and operator have already been inputted
     } else {
 
-      if (secondCalculatorInput.length > 0) {
+      if (secondCalculatorInput.length === 0) {
         setSecondCalculatorInput([userInput])
       } else {
         setSecondCalculatorInput(secondCalculatorInput => [...secondCalculatorInput, userInput]);
@@ -119,53 +141,18 @@ export default function Calculator() {
         originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''));
         dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString();
         setFirstCalculatorInput([dividedNumberString]);
-
-        // Adds the equation to the history of calculations
-        if (prevInput.length == 0) {
-          setPrevInput(prevInput => [...prevInput, dividedNumberString])
-        } else {
-          setPrevInput([dividedNumberString])
-        }
       }
     } else {
 
       // Needs fixing
       if (secondCalculatorInput.length) {
-        originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''));
-        dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString();
-        setSecondCalculatorInput([dividedNumberString]);
+        originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''))
+        dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString()
+        setSecondCalculatorInput([dividedNumberString])
       }
     }
-  }
-
-  // handle change to % input logic - this function checks if the first or second number is currently
-  // inputted, then changes the array to a number string, divides, then puts back into array
-  const changeToPercentage = () => {
-    let originalNumber = 0;
-    let dividedNumberString = '';
-    if (operator === '') {
-      if (firstCalculatorInput.length) {
-        originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''));
-        dividedNumberString = (originalNumber / 100).toString()
-        setFirstCalculatorInput([dividedNumberString]);
-
-        // Adds the equation to the history of calculations
-        if (prevInput.length == 0) {
-          setPrevInput(prevInput => [...prevInput, dividedNumberString])
-        } else {
-          setPrevInput([dividedNumberString])
-        }
-      } else {
-        alert("Please add a number first")
-      }
-    } else {
-      if (secondCalculatorInput.length) {
-        originalNumber = parseInt(secondCalculatorInput.toString().replaceAll(',', ''));
-        dividedNumberString = (originalNumber / 100).toString()
-        setSecondCalculatorInput([dividedNumberString]);
-
-      }
-    }
+    let prevInputString = " √ "  + originalNumber
+    setPrevInput(prevInputString)
   }
 
   // handle number input logic - this function checks if the first or second number is currently
@@ -257,8 +244,8 @@ export default function Calculator() {
         clearNumbers();
       } else if (userInput === "+/-") {
         changeSign();
-      } else if (userInput === "%") {
-        changeToPercentage();
+      } else if (userInput === "C") {
+        deletePrevInput();
       } else if (userInput === ".") {
         onInputDecimal(".");
       } else if (userInput === "=") {
@@ -285,12 +272,22 @@ export default function Calculator() {
   }
 
   return (
+    // Calculator Screen
     <div className={styles.calculator}>
       <div className={styles.calculatorScreen}>
+        <div className={styles.miniScreen}>
+          <span>{prevInput}</span>
+        </div>
         <div className={styles.mainScreen}>
-          <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>
+            <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>
         </div>
       </div>
+
+      {/* Collapasable history of calculations containing */}
+      <div>
+
+      </div>
+      {/* Calculator Keypad */}
       <div id="calculatorKeypad" className={styles.calculatorKeypad}>
         {symbolsArray.map((symbol, index) => {
           return (
