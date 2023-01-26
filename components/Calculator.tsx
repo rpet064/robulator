@@ -26,7 +26,7 @@ export default function Calculator() {
   }
 
   // posts equation to api backend to be solved
-  const solveEquation = async (newOperator: string) => {
+  const solveEquation = async (newOperator: string) => { 
     if (secondCalculatorInput.length !== 0) {
 
       setIsLoading(true)
@@ -58,20 +58,43 @@ export default function Calculator() {
         console.log(err)
       } finally {
         setIsLoading(false)
-
-        // clear operator and second input for new user input
-        if (newOperator === operator) {
-          setOperator(newOperator)
-        } else {
-          setOperator("")
-        }
-        setSecondCalculatorInput([])
       }
+      clearNumbers(newOperator)
     }
   }
 
+  // manages the app inputs when the screen is full (max is 15 integers excl an operator)
+  const handleInputExceedsMaximum = (userInput: string) => {
+    if (userInput === "AC") {
+      resetCalculator()
+    } else if (userInput === "=") {
+      solveEquation("")
+    } else if (userInput === "C") {
+      deletePrevInput()
+    } else if (userInput === "√"){
+      onSquareRoot()
+    } else if (userInput === "+/-"){
+      changeSign()
+    } else {
+
+      // will trigger alert if user tries to add more numbers
+      alert("More integers cannot be added to calculator")
+    }
+  }
+
+
+  // this function will clear the second input and check if user has already
+  // inputted operator for new equation
+  const clearNumbers = (newOperator: string) => {
+
+    if (newOperator === "") {
+      setOperator(newOperator)
+    }
+    setSecondCalculatorInput([])
+  }
+
   // clear calculator input arrays
-  const clearNumbers = () => {
+  const resetCalculator = () => {
     setFirstCalculatorInput([])
     setOperator('')
     setSecondCalculatorInput([])
@@ -81,22 +104,21 @@ export default function Calculator() {
 
   // This function checks 
   const deletePrevInput = () => {
+    let arrayIntoString: string
+
     // Removes last inputted number from first input array
     if (operator === "") {
+      arrayIntoString = firstCalculatorInput.join('').slice(0, -1)
+      let stringIntoArray: Array<string> = arrayIntoString.split('')
+      setFirstCalculatorInput(stringIntoArray)
 
-      let new_input: Array<string>
-      new_input = firstCalculatorInput.splice(-1)
-      setFirstCalculatorInput(new_input)
-
-
-    // Removes last inputted number from second input array
+      // Removes last inputted number from second input array
     } else if (secondCalculatorInput.length > 0) {
+      arrayIntoString = secondCalculatorInput.join('').slice(0, -1)
+      let stringIntoArray: Array<string> = arrayIntoString.split('')
+      setSecondCalculatorInput(stringIntoArray)
 
-      let new_input: Array<string>
-      new_input = secondCalculatorInput.splice(-1)
-      setSecondCalculatorInput(new_input)
-
-    // Catches exception where user wants to delete the operator
+      // Catches exception where user wants to delete the operator
     } else {
       setOperator("")
     }
@@ -134,24 +156,57 @@ export default function Calculator() {
   const onSquareRoot = () => {
 
     // error when negative number is square rooted
-    let originalNumber = 0
+    let originalNumber, originalNumberNoNegative = 0
     let dividedNumberString = ""
+    let dividedNumberArray: string[]
+
     if (operator === '') {
       if (firstCalculatorInput.length) {
-        originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''))
-        dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString()
-        setFirstCalculatorInput([dividedNumberString])
+
+        // Check if there is a negative number
+        if (firstCalculatorInput.includes("-")){
+          originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''))
+          originalNumberNoNegative = parseInt(firstCalculatorInput.toString().replaceAll(',', '').replace('-', ''))
+
+          // Solves, rounds to 2d.p, adds negative sign back in and puts back into array
+          dividedNumberString = (Math.sqrt(originalNumberNoNegative)).toFixed(2).toString()
+
+          dividedNumberArray = dividedNumberString.split('')
+          dividedNumberArray.unshift("-")
+          setFirstCalculatorInput(dividedNumberArray)
+        } else {
+          originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''))
+          
+          // Solves, rounds to 2d.p & puts back into array
+          dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString()
+          dividedNumberArray = dividedNumberString.split('')
+          setFirstCalculatorInput(dividedNumberArray)
+        }
       }
     } else {
 
-      // Needs fixing
-      if (secondCalculatorInput.length) {
-        originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''))
-        dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString()
-        setSecondCalculatorInput([dividedNumberString])
+         // Check if there is a negative number
+        if (secondCalculatorInput.includes("-")){
+          originalNumber = parseInt(secondCalculatorInput.toString().replaceAll(',', ''))
+          originalNumberNoNegative = parseInt(secondCalculatorInput.toString().replaceAll(',', '').replace('-', ''))
+
+          // Solves, rounds to 2d.p, adds negative sign back in and puts back into array
+          dividedNumberString = (Math.sqrt(originalNumberNoNegative)).toFixed(2).toString()
+
+          dividedNumberArray = dividedNumberString.split('')
+          dividedNumberArray.unshift("-")
+          setSecondCalculatorInput(dividedNumberArray)
+        } else {
+          originalNumber = parseInt(secondCalculatorInput.toString().replaceAll(',', ''))
+          
+          // Solves, rounds to 2d.p & puts back into array
+          dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString()
+          dividedNumberArray = dividedNumberString.split('')
+          setSecondCalculatorInput(dividedNumberArray)
+        }
       }
-    }
-    let prevInputString = " √ "  + originalNumber
+    // Assign prev calculation to show on calculator screen
+    let prevInputString = " √ " + originalNumber
     setPrevInput(prevInputString)
   }
 
@@ -184,15 +239,21 @@ export default function Calculator() {
     }
   }
 
-  // handle operator input logic
+  // takes operator input
   const onInputOperator = (userInput: string) => {
     if (operator === '') {
+
+      // checks if a number has been inputted into equation
+      // before adding an operator
       if (firstCalculatorInput.length === 0) {
         alert('please enter a number first')
       } else {
         setOperator(userInput)
       }
     } else {
+
+      // Submits for solving and saves second operator for new calculation
+      setOperator(userInput)
       solveEquation(userInput)
     }
   }
@@ -233,15 +294,15 @@ export default function Calculator() {
   // this const catches userinput from button and triggers correct function accordingly
   const handleUserInput = (userInput: string) => {
 
-    // checks that the equation isn't too big (max length excluding operator is 16)
-    if (firstCalculatorInput.length + secondCalculatorInput.length < 10) {
+    // checks that the equation isn't too big (max length excluding operator is 15)
+    if (firstCalculatorInput.length + secondCalculatorInput.length < 14) {
 
       if (numArray.includes(userInput)) {
         onInputNumber(userInput)
       } else if (operatorArray.includes(userInput)) {
         onInputOperator(userInput)
       } else if (userInput === "AC") {
-        clearNumbers()
+        resetCalculator()
       } else if (userInput === "+/-") {
         changeSign()
       } else if (userInput === "C") {
@@ -257,17 +318,7 @@ export default function Calculator() {
         onSquareRoot()
       }
     } else {
-
-      // clears screen when is full
-      if (userInput === "AC") {
-        clearNumbers()
-      } else if (userInput === "=") {
-        solveEquation("")
-      } else {
-
-        // will trigger alert if user tries to add more numbers
-        alert("More integers cannot be added to calculator")
-      }
+      handleInputExceedsMaximum(userInput)
     }
   }
 
@@ -281,11 +332,6 @@ export default function Calculator() {
         <div className={styles.mainScreen}>
             <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>
         </div>
-      </div>
-
-      {/* Collapasable history of calculations containing */}
-      <div>
-
       </div>
       {/* Calculator Keypad */}
       <div id="calculatorKeypad" className={styles.calculatorKeypad}>
