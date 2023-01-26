@@ -1,18 +1,18 @@
-import styles from '../styles/Home.module.css';
-import { useState } from 'react';
-import symbolsArray from './symbolsArray';
+import styles from '../styles/Home.module.css'
+import { useState } from 'react'
+import symbolsArray from './symbolsArray'
 
-const numArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
-const operatorArray = ["+", "-", "×", "÷"];
+const numArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+const operatorArray = ["+", "-", "×", "÷"]
 
 export default function Calculator() {
-  const [firstCalculatorInput, setFirstCalculatorInput] = useState<string[]>([]);
-  const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([]);
-  const [prevInput, setPrevInput] = useState<string>("");
-  const [operator, setOperator] = useState("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [err, setErr] = useState<string>("");
-  const [showAnswer, setShowAnswer] = useState<boolean>(false);
+  const [firstCalculatorInput, setFirstCalculatorInput] = useState<string[]>([])
+  const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([])
+  const [prevInput, setPrevInput] = useState<string>("")
+  const [operator, setOperator] = useState("")
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [err, setErr] = useState<string>("")
+  const [showAnswer, setShowAnswer] = useState<boolean>(false)
 
 
   // this function stores the last equation 
@@ -29,7 +29,7 @@ export default function Calculator() {
   const solveEquation = async (newOperator: string) => {
     if (secondCalculatorInput.length !== 0) {
 
-      setIsLoading(true);
+      setIsLoading(true)
       try {
         const response = await fetch('/api/calculatorData', {
           method: 'POST',
@@ -42,22 +42,22 @@ export default function Calculator() {
             'Content-Type': 'application/json',
             Accept: 'application/json',
           },
-        });
+        })
 
         if (!response.ok) {
           throw new Error(`Error! status: ${response.status}`)
         }
 
-        const result = await response.json();
-        setShowAnswer(true);
-        setFirstCalculatorInput([result.answer]);
+        const result = await response.json()
+        setShowAnswer(true)
+        setFirstCalculatorInput([result.answer])
         // send answer to be added to equation
         updatePrevArray()
       } catch (err: any) {
         setErr(err.message)
         console.log(err)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
 
         // clear operator and second input for new user input
         if (newOperator === operator) {
@@ -126,7 +126,7 @@ export default function Calculator() {
       if (secondCalculatorInput.length === 0) {
         setSecondCalculatorInput([userInput])
       } else {
-        setSecondCalculatorInput(secondCalculatorInput => [...secondCalculatorInput, userInput]);
+        setSecondCalculatorInput(secondCalculatorInput => [...secondCalculatorInput, userInput])
       }
     }
   }
@@ -134,13 +134,13 @@ export default function Calculator() {
   const onSquareRoot = () => {
 
     // error when negative number is square rooted
-    let originalNumber = 0;
-    let dividedNumberString = "";
+    let originalNumber = 0
+    let dividedNumberString = ""
     if (operator === '') {
       if (firstCalculatorInput.length) {
-        originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''));
-        dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString();
-        setFirstCalculatorInput([dividedNumberString]);
+        originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''))
+        dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString()
+        setFirstCalculatorInput([dividedNumberString])
       }
     } else {
 
@@ -190,10 +190,10 @@ export default function Calculator() {
       if (firstCalculatorInput.length === 0) {
         alert('please enter a number first')
       } else {
-        setOperator(userInput);
+        setOperator(userInput)
       }
     } else {
-      solveEquation(userInput);
+      solveEquation(userInput)
     }
   }
 
@@ -202,30 +202,30 @@ export default function Calculator() {
   //  are taken from the hook and then added back in as useState hooks are immutable
   const changeSign = () => {
     if (operator === '') {
-      var originalArray = firstCalculatorInput;
+      var originalArray = firstCalculatorInput
       if (firstCalculatorInput[0] === "-") {
 
         // remove "-" from front of first array making it "positive"
-        originalArray = originalArray.slice(1);
-        setFirstCalculatorInput([...originalArray]);
+        originalArray = originalArray.slice(1)
+        setFirstCalculatorInput([...originalArray])
       } else {
 
         // add "-" to front of first array making it "negative"
-        originalArray.unshift("-");
-        setFirstCalculatorInput([...originalArray]);
+        originalArray.unshift("-")
+        setFirstCalculatorInput([...originalArray])
       }
     } else {
-      var originalArray = secondCalculatorInput;
+      var originalArray = secondCalculatorInput
       if (secondCalculatorInput[0] === "-") {
 
         // remove "-" from front of second array making it "positive"
-        originalArray = originalArray.slice(1);
-        setSecondCalculatorInput([...originalArray]);
+        originalArray = originalArray.slice(1)
+        setSecondCalculatorInput([...originalArray])
       } else {
 
         // add "-" to front of second array making it "negative"
-        originalArray.unshift("-");
-        setSecondCalculatorInput([...originalArray]);
+        originalArray.unshift("-")
+        setSecondCalculatorInput([...originalArray])
       }
     }
   }
@@ -237,36 +237,36 @@ export default function Calculator() {
     if (firstCalculatorInput.length + secondCalculatorInput.length < 10) {
 
       if (numArray.includes(userInput)) {
-        onInputNumber(userInput);
+        onInputNumber(userInput)
       } else if (operatorArray.includes(userInput)) {
-        onInputOperator(userInput);
+        onInputOperator(userInput)
       } else if (userInput === "AC") {
-        clearNumbers();
+        clearNumbers()
       } else if (userInput === "+/-") {
-        changeSign();
+        changeSign()
       } else if (userInput === "C") {
-        deletePrevInput();
+        deletePrevInput()
       } else if (userInput === ".") {
-        onInputDecimal(".");
+        onInputDecimal(".")
       } else if (userInput === "=") {
 
         // No additional operator has been selected, so will send an empty
         // string to replace the existing operator
-        solveEquation("");
+        solveEquation("")
       } else if (userInput === "√") {
-        onSquareRoot();
+        onSquareRoot()
       }
     } else {
 
       // clears screen when is full
       if (userInput === "AC") {
-        clearNumbers();
+        clearNumbers()
       } else if (userInput === "=") {
-        solveEquation("");
+        solveEquation("")
       } else {
 
         // will trigger alert if user tries to add more numbers
-        alert("More integers cannot be added to calculator");
+        alert("More integers cannot be added to calculator")
       }
     }
   }
