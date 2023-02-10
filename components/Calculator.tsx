@@ -17,7 +17,7 @@ export default function Calculator() {
 
   // this function stores the last equation 
   const updatePrevArray = () => {
-    var prev_equation_string = ''
+    var prev_equation_string = "             "
 
     // Store the first input if there are no previous inputs
     var prev_equation = [firstCalculatorInput.join(''), "  ", operator, "  ", (secondCalculatorInput.join('')), "  ", "  =  "]
