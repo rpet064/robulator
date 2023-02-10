@@ -27,7 +27,6 @@
   .calculatorScreen{
     min-height: 12.3rem; 
     font-size: 4rem;
-    left: 3.5%;
   }
 }
 
@@ -42,6 +41,7 @@
   .miniScreen span{
     top: 0rem!important;
     font-size: 1.75rem!important;
+    display: inline-block;
   }
 }
 
@@ -55,6 +55,7 @@
 @media (max-width: 700px){
   .mainScreen span{
     top: 0rem!important;
+    right: 0.5%;
   }
 }
 
