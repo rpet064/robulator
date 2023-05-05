@@ -2,6 +2,9 @@ import styles from '../styles/Home.module.css'
 import { useState } from 'react'
 import symbolsArray from './symbolsArray'
 import SolveEquation from './calculatorFunctions/equationSolver'
+import SquareFirstCalculation from './calculatorFunctions/firstCalculationSquarer'
+import SquareSecondCalculation from './calculatorFunctions/secondCalculationSquarer'
+
 
 const numArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 const operatorArray = ["+", "-", "×", "÷"]
@@ -141,57 +144,17 @@ export default function Calculator() {
   }
 
   const onSquareRoot = () => {
-
-    // error when negative number is square rooted
-    let originalNumber, originalNumberNoNegative = 0
-    let dividedNumberString = ""
-    let dividedNumberArray: string[]
-
+    let originalNumber, newOutput = []
     if (operator === '') {
-      if (firstCalculatorInput.length) {
-
-        // Check if there is a negative number
-        if (firstCalculatorInput.includes("-")){
-          originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''))
-          originalNumberNoNegative = parseInt(firstCalculatorInput.toString().replaceAll(',', '').replace('-', ''))
-
-          // Solves, rounds to 2d.p, adds negative sign back in and puts back into array
-          dividedNumberString = (Math.sqrt(originalNumberNoNegative)).toFixed(2).toString()
-
-          dividedNumberArray = dividedNumberString.split('')
-          dividedNumberArray.unshift("-")
-          setFirstCalculatorInput(dividedNumberArray)
-        } else {
-          originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''))
-          
-          // Solves, rounds to 2d.p & puts back into array
-          dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString()
-          dividedNumberArray = dividedNumberString.split('')
-          setFirstCalculatorInput(dividedNumberArray)
-        }
-      }
+      originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ''))
+      // ! used here to tell ts the output won't be null
+      newOutput = SquareFirstCalculation(firstCalculatorInput, originalNumber, firstCalculatorInput.length)!
+       setFirstCalculatorInput(newOutput)
     } else {
-
-         // Check if there is a negative number
-        if (secondCalculatorInput.includes("-")){
-          originalNumber = parseInt(secondCalculatorInput.toString().replaceAll(',', ''))
-          originalNumberNoNegative = parseInt(secondCalculatorInput.toString().replaceAll(',', '').replace('-', ''))
-
-          // Solves, rounds to 2d.p, adds negative sign back in and puts back into array
-          dividedNumberString = (Math.sqrt(originalNumberNoNegative)).toFixed(2).toString()
-
-          dividedNumberArray = dividedNumberString.split('')
-          dividedNumberArray.unshift("-")
-          setSecondCalculatorInput(dividedNumberArray)
-        } else {
-          originalNumber = parseInt(secondCalculatorInput.toString().replaceAll(',', ''))
-          
-          // Solves, rounds to 2d.p & puts back into array
-          dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString()
-          dividedNumberArray = dividedNumberString.split('')
-          setSecondCalculatorInput(dividedNumberArray)
-        }
-      }
+      originalNumber = parseInt(secondCalculatorInput.toString().replaceAll(',', ''))
+      newOutput = SquareSecondCalculation(secondCalculatorInput, originalNumber)
+      setSecondCalculatorInput(newOutput)
+    }
     // Assign prev calculation to show on calculator screen
     let prevInputString = " √ " + originalNumber
     setPrevInput(prevInputString)

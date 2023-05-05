@@ -1,4 +1,3 @@
-
 const SolveEquation = (firstNumber: number, operator: string, secondNumber:number) => {
     let answer = 0
     if (operator === "+"){
