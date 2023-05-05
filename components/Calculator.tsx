@@ -14,9 +14,7 @@ export default function Calculator() {
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([])
   const [prevInput, setPrevInput] = useState<string>("")
   const [operator, setOperator] = useState("")
-  const [err, setErr] = useState<string>("")
   const [showAnswer, setShowAnswer] = useState<boolean>(false)
-
 
   // this function stores the last equation 
   const updatePrevArray = () => {
@@ -55,23 +53,20 @@ export default function Calculator() {
 
   // manages the app inputs when the screen is full (max is 15 integers excl an operator)
   const handleInputExceedsMaximum = (userInput: string) => {
-    if (userInput === "AC") {
-      resetCalculator()
-    } else if (userInput === "=") {
-      solveEquation("")
-    } else if (userInput === "C") {
-      deletePrevInput()
-    } else if (userInput === "√"){
-      onSquareRoot()
-    } else if (userInput === "+/-"){
-      changeSign()
-    } else {
-
-      // will trigger alert if user tries to add more numbers
-      alert("More integers cannot be added to calculator")
+    switch (userInput){
+      case "AC": resetCalculator()
+        break
+      case "=": solveEquation(userInput)
+        break
+      case "C": deletePrevInput()
+        break
+      case "√": onSquareRoot()
+        break
+      case "+/-": changeSign()
+        break
+      default: alert("No more space for more numbers")
     }
   }
-
 
   // this function will clear the second input and check if user has already
   // inputted operator for new equation
