@@ -1,6 +1,7 @@
 import styles from '../styles/Home.module.css'
 import { useState } from 'react'
 import symbolsArray from './symbolsArray'
+import SolveEquation from './calculatorFunctions/equationSolver'
 
 const numArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 const operatorArray = ["+", "-", "×", "÷"]
@@ -10,7 +11,6 @@ export default function Calculator() {
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([])
   const [prevInput, setPrevInput] = useState<string>("")
   const [operator, setOperator] = useState("")
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [err, setErr] = useState<string>("")
   const [showAnswer, setShowAnswer] = useState<boolean>(false)
 
@@ -26,39 +26,26 @@ export default function Calculator() {
   }
 
   // posts equation to api backend to be solved
-  const solveEquation = async (newOperator: string) => { 
+  const solveEquation = async (newOperator: string) => {
     if (secondCalculatorInput.length !== 0) {
+        // this equation takes inputs from react from end and solves the equation
 
-      setIsLoading(true)
-      try {
-        const response = await fetch('/api/calculatorData', {
-          method: 'POST',
-          body: JSON.stringify({
-            firstNumber: firstCalculatorInput,
-            operator: operator,
-            secondNumber: secondCalculatorInput
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-        })
-
-        if (!response.ok) {
-          throw new Error(`Error! status: ${response.status}`)
-        }
-
-        const result = await response.json()
-        setShowAnswer(true)
-        setFirstCalculatorInput([result.answer])
-        // send answer to be added to equation
-        updatePrevArray()
-      } catch (err: any) {
-        setErr(err.message)
-        console.log(err)
-      } finally {
-        setIsLoading(false)
+    // join array of strings into String, then change strings into numbers
+      let firstInputAsFloat = parseFloat(firstCalculatorInput.join(''))
+      let secondInputAsFloat = parseFloat(secondCalculatorInput.join(''))
+      let answer = SolveEquation(firstInputAsFloat, operator, secondInputAsFloat)!;
+      
+    // bug in js floats returns strange answers - rounded to hide decimal inconsistency
+      
+      
+    // check decimal needed (not .00) - answer from multiplying large numbers causes displayed text to overflow div
+      if (answer.split('.')[1] === "00000"){
+        answer = answer.split('.')[0]
       }
+      setShowAnswer(true)
+      setFirstCalculatorInput([answer])
+      // send answer to be added to equation
+      updatePrevArray()
       clearNumbers(newOperator)
     }
   }
