@@ -18,15 +18,14 @@ export default function Calculator() {
 
   // this function stores the last equation 
   const updatePrevArray = () => {
-    var prev_equation_string = ""
+    let prev_equation_string = ""
 
     // Store the first input if there are no previous inputs
-    var prev_equation = [firstCalculatorInput.join(''), "  ", operator, "  ", (secondCalculatorInput.join('')), "  ", "  =  "]
+    let prev_equation = [firstCalculatorInput.join(''), "  ", operator, "  ", (secondCalculatorInput.join('')), "  ", "  =  "]
     prev_equation_string = prev_equation.toString().replaceAll(',', '')
     setPrevInput(prev_equation_string)
   }
 
-  // posts equation to api backend to be solved
   const solveEquation = async (newOperator: string) => {
     if (secondCalculatorInput.length !== 0) {
         // this equation takes inputs from react from end and solves the equation
@@ -34,17 +33,15 @@ export default function Calculator() {
     // join array of strings into String, then change strings into numbers
       let firstInputAsFloat = parseFloat(firstCalculatorInput.join(''))
       let secondInputAsFloat = parseFloat(secondCalculatorInput.join(''))
-      let answer = SolveEquation(firstInputAsFloat, operator, secondInputAsFloat)!;
-      
-    // bug in js floats returns strange answers - rounded to hide decimal inconsistency
-      
+      let answer = SolveEquation(firstInputAsFloat, operator, secondInputAsFloat)!;      
       
     // check decimal needed (not .00) - answer from multiplying large numbers causes displayed text to overflow div
       if (answer.split('.')[1] === "00000"){
         answer = answer.split('.')[0]
       }
+      let splitAnswer = answer.split("")
       setShowAnswer(true)
-      setFirstCalculatorInput([answer])
+      setFirstCalculatorInput(splitAnswer)
       // send answer to be added to equation
       updatePrevArray()
       clearNumbers(newOperator)
@@ -240,7 +237,7 @@ export default function Calculator() {
   const handleUserInput = (userInput: string) => {
 
     // checks that the equation isn't too big (max length excluding operator is 15)
-    if (firstCalculatorInput.length + secondCalculatorInput.length < 14) {
+    if (firstCalculatorInput.length + secondCalculatorInput.length < 11) {
 
       if (numArray.includes(userInput)) {
         onInputNumber(userInput)
