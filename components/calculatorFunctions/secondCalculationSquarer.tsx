@@ -13,16 +13,20 @@ const SquareSecondCalculation = (calculatorInput: string[], originalNumber: numb
     dividedNumberString = (Math.sqrt(originalNumberNoNegative)).toFixed(2).toString()
 
     dividedNumberArray = dividedNumberString.split('')
+
     dividedNumberArray.unshift("-")
 
     return dividedNumberArray
+
   } else {
+    
     // Solves, rounds to 2d.p & puts back into array
     dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString()
+
     dividedNumberArray = dividedNumberString.split('')
+
     return dividedNumberArray
   }
-
 }
 
 export default SquareSecondCalculation

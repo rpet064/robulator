@@ -8,23 +8,28 @@ const SquareFirstCalculation = (calculatorInput: string[], originalNumber: numbe
 
         // Check if there is a negative number
         if (calculatorInput.includes("-")){
+
           originalNumberNoNegative = parseInt(calculatorInput.toString().replaceAll(',', '').replace('-', ''))
 
           // Solves, rounds to 2d.p, adds negative sign back in and puts back into array
           dividedNumberString = (Math.sqrt(originalNumberNoNegative)).toFixed(2).toString()
 
           dividedNumberArray = dividedNumberString.split('')
+
           dividedNumberArray.unshift("-")
+
           return dividedNumberArray
+
         } else {
           
           // Solves, rounds to 2d.p & puts back into array
           dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString()
+
           dividedNumberArray = dividedNumberString.split('')
+
           return dividedNumberArray
         }
       }
 }
-
 export default SquareFirstCalculation
 
