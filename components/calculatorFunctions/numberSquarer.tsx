@@ -1,5 +1,5 @@
 
-const SquareFirstCalculation = (calculatorInput: string[], originalNumber: number, arrrayLength: number) => {
+const squareNumber = (calculatorInput: string[], originalNumber: number, arrrayLength: number) => {
     let originalNumberNoNegative = 0
     let dividedNumberString = ""
     let dividedNumberArray = []
@@ -31,5 +31,5 @@ const SquareFirstCalculation = (calculatorInput: string[], originalNumber: numbe
         }
       }
 }
-export default SquareFirstCalculation
+export default squareNumber
 

@@ -2,8 +2,7 @@ import styles from '../styles/Home.module.css'
 import { useState } from 'react'
 import symbolsArray from './symbolsArray'
 import SolveEquation from './calculatorFunctions/equationSolver'
-import SquareFirstCalculation from './calculatorFunctions/firstCalculationSquarer'
-import SquareSecondCalculation from './calculatorFunctions/secondCalculationSquarer'
+import squareNumber from './calculatorFunctions/numberSquarer'
 import removeTrailingZeros from './calculatorFunctions/removeTrailingZeros'
 
 
@@ -34,7 +33,6 @@ export default function Calculator() {
 
     setPrevInput(prevEquationString)
   }
-
 
   const solveEquation = async (newOperator: string) => {
     if (secondCalculatorInput.length !== 0) {
@@ -168,23 +166,67 @@ export default function Calculator() {
 
   const onSquareRoot = () => {
 
-    let originalNumber, newOutput = []
+    let originalNumber, answer = []
+    let calculationFinished = false;
+    let roundedAnswer = ""
 
-    if (operator === "") {
+    // Check if no numbers have been put in first calculation
+    if(firstCalculatorInput.length < 1) {
 
-      originalNumber = parseInt(firstCalculatorInput.toString().replaceAll(',', ""))
+      setFirstCalculatorInput(['0'])
 
-      newOutput = SquareFirstCalculation(firstCalculatorInput, originalNumber, firstCalculatorInput.length)!
+      calculationFinished = true
+    }
 
-       setFirstCalculatorInput(newOutput)
+    // Check if no numbers have been put in second calculation
+    if(secondCalculatorInput.length < 1 && operator !== "") {
 
-    } else {
+      setSecondCalculatorInput(['0'])
 
-      originalNumber = parseInt(secondCalculatorInput.toString().replaceAll(',', ""))
+      calculationFinished = true
+    }
 
-      newOutput = SquareSecondCalculation(secondCalculatorInput, originalNumber)
+    // Square number in first calculation if operator not yet set
+    // And calculation isn't already finished - i.e set to 0
+    if (operator === "" && !calculationFinished) {
 
-      setSecondCalculatorInput(newOutput)
+      originalNumber = firstCalculatorInput
+
+      // Change to number
+      let firstNumber = parseInt(originalNumber.toString().replaceAll(',', ""))
+
+      answer = squareNumber(originalNumber, firstNumber, originalNumber.length)!
+
+      roundedAnswer = removeTrailingZeros(answer.toString().replaceAll(',', ""))
+
+       setFirstCalculatorInput([roundedAnswer])
+
+    } else if(!calculationFinished) {
+
+      originalNumber = secondCalculatorInput
+
+      let secondNumber = parseInt(originalNumber.toString().replaceAll(',', ""))
+
+      answer = squareNumber(originalNumber, secondNumber, originalNumber.length)!
+
+      roundedAnswer = removeTrailingZeros(answer.toString().replaceAll(',', ""))
+
+       setSecondCalculatorInput([roundedAnswer])
+    }
+
+    // Check if undefined
+    if(originalNumber === undefined){
+
+      originalNumber = 0
+    }
+
+    // check if changed to number
+    let originalNumberIsArray = Array.isArray(originalNumber);
+
+    // If an array set to number
+    if(originalNumberIsArray){
+
+      originalNumber = originalNumber.toString().replaceAll(',', "")
     }
     // Assign prev calculation to show on calculator screen
     let prevInputString = " √ " + originalNumber
@@ -332,7 +374,7 @@ export default function Calculator() {
         onSquareRoot()
       }
     } else {
-      
+
       handleInputExceedsMaximum(userInput)
     }
   }
