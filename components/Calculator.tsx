@@ -234,36 +234,30 @@ export default function Calculator() {
     setPrevInput(prevInputString)
   }
 
-  // handle number input logic - this function checks if the first or second number is currently
-  // being inputted, then checks if array is empty
+  // handle decimal input logic
   const onInputDecimal = (userInput: string) => {
 
-    if (operator === "") {
-
-      if (!firstCalculatorInput.length) {
-
-        // add 0. to first array (as it's empty)
-        setFirstCalculatorInput(['0.'])
-
-      } else if (!firstCalculatorInput.includes(".")) {
-
-        // add decimal like normal to first array
-        onInputNumber(userInput)
-      }
-
-    } else {
-
-      if (!secondCalculatorInput.length) {
-
-        // add 0. to second array (as it's empty)
-        setSecondCalculatorInput(['0.'])
-
-      } else if (!secondCalculatorInput.includes(".")) {
-
-        // add decimal like normal to second array
-        onInputNumber(userInput)
-      }
+    // add 0. to first array (as it's empty)
+    if (firstCalculatorInput.length < 1) {
+      setFirstCalculatorInput(['0.'])
+      return;
     }
+
+    // add 0. to second array (as it's empty)
+    if (secondCalculatorInput.length < 1 && operator !== "") {
+      setSecondCalculatorInput(['0.'])
+      return;
+    }
+
+    // First number and doesn't already have decimal
+    if (operator === "" && !firstCalculatorInput.includes(".")) {
+        onInputNumber(userInput)
+
+    // Second number and doesn't already have decimal
+    } else if(operator !== "" && !secondCalculatorInput.includes(".")){
+      onInputNumber(userInput)
+    }
+    return;
   }
 
   // takes operator input
@@ -390,6 +384,7 @@ export default function Calculator() {
             <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>
         </div>
       </div>
+
       {/* Calculator Keypad */}
       <div id="calculatorKeypad" className={styles.calculatorKeypad}>
         {symbolsArray.map((symbol, index) => {
