@@ -1,10 +1,9 @@
 import styles from '../styles/Home.module.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import symbolsArray from './symbolsArray'
 import SolveEquation from './calculatorFunctions/equationSolver'
 import squareNumber from './calculatorFunctions/numberSquarer'
 import removeTrailingZeros from './calculatorFunctions/removeTrailingZeros'
-
 
 const numArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 const operatorArray = ["+", "-", "×", "÷"]
@@ -14,22 +13,62 @@ export default function Calculator() {
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([])
   const [prevInput, setPrevInput] = useState<string>("")
   const [operator, setOperator] = useState("")
-  const [showAnswer, setShowAnswer] = useState<boolean>(false)
+  const [isFirstCalculatorInput, setIsFirstCalculatorInput] = useState(true)
+  const [firstCalculatorInputHasAnswer, setFirstCalculatorInputHasAnswer] = useState(false)
+  const [overwriteNumber, setOverwriteNumber] = useState(false)
+
+  useEffect(() => {
+
+    // if operator is empty, then still on first equation
+    let isFirstEquation = operator.trim() === ""
+    setIsFirstCalculatorInput(isFirstEquation)
+  }, [operator])
+
+  useEffect(() => {
+
+    let firstElementIsZero = false;
+    let secondElementIsDecimalPoint = false;
+
+    // overwrite number if answer displayed
+    if(firstCalculatorInputHasAnswer){
+      setOverwriteNumber(true)
+      return;
+    }
+
+    if(isFirstCalculatorInput){
+      firstElementIsZero = firstCalculatorInput[0] === "0"
+      secondElementIsDecimalPoint = firstCalculatorInput[1] === "."
+
+    } else if(!isFirstCalculatorInput) {
+      firstElementIsZero = secondCalculatorInput[0] === "0"
+      secondElementIsDecimalPoint = secondCalculatorInput[1] === "."
+    }
+
+    console.log(firstElementIsZero)
+    console.log(secondElementIsDecimalPoint)
+    
+    if(firstElementIsZero && !secondElementIsDecimalPoint){
+      setOverwriteNumber(true)
+      return;
+    }
+    setOverwriteNumber(false)
+
+  }, [firstCalculatorInputHasAnswer, firstCalculatorInput, secondCalculatorInput])
 
   // this function stores the last equation 
   const updatePrevArray = () => {
 
-    const firstOperand = firstCalculatorInput.join("");
+    const firstOperand = firstCalculatorInput.join("")
 
-    const secondOperand = secondCalculatorInput.join("");
+    const secondOperand = secondCalculatorInput.join("")
 
-    const equationOperator = operator;
+    const equationOperator = operator
 
     // Construct the equation string
-    const equationString = `${firstOperand} ${equationOperator} ${secondOperand} =`;
+    const equationString = `${firstOperand} ${equationOperator} ${secondOperand} =`
 
     // Convert the array to a string and remove commas
-    const prevEquationString = equationString.replace(/,/g, "");
+    const prevEquationString = equationString.replace(/,/g, "")
 
     setPrevInput(prevEquationString)
   }
@@ -46,9 +85,9 @@ export default function Calculator() {
 
       let roundedAnswer = removeTrailingZeros(answer).split("")
       
-      setShowAnswer(true)
-
       setFirstCalculatorInput(roundedAnswer)
+
+      setFirstCalculatorInputHasAnswer(true)
 
       // send answer to be added to equation
       updatePrevArray()
@@ -96,7 +135,6 @@ export default function Calculator() {
     setOperator("")
     setSecondCalculatorInput([])
     setPrevInput("")
-    setShowAnswer(false)
   }
 
   // This function checks 
@@ -104,7 +142,7 @@ export default function Calculator() {
     let arrayIntoString: string
 
     // Removes last inputted number from first input array
-    if (operator === "") {
+    if (isFirstCalculatorInput) {
 
       arrayIntoString = firstCalculatorInput.join("").slice(0, -1)
 
@@ -129,36 +167,20 @@ export default function Calculator() {
 
   const onInputNumber = (userInput: string) => {
 
-
-    let overwriteNumber;
-
-    // If first number contains 0, and another number is added overwrite it
-    overwriteNumber = 
-    operator === "" 
-    && firstCalculatorInput[0] === "0" 
-    && userInput !== "." 
-    && firstCalculatorInput.length < 1
-
-    if(overwriteNumber){
+    // Overwrite number and return
+    if(overwriteNumber && isFirstCalculatorInput && userInput !== "."){
       setFirstCalculatorInput([userInput])
-      return;
-    }
+      setFirstCalculatorInputHasAnswer(false)
+      return
 
-    // If second number contains 0, and another number is added overwrite it
-    overwriteNumber =
-    operator !== ""
-    && secondCalculatorInput[0] === "0"
-    && userInput !== "."
-    && secondCalculatorInput.length < 1
-
-    if (overwriteNumber) {
+    } else if(overwriteNumber && userInput !== "."){
       setSecondCalculatorInput([userInput])
-      return;
+      return
     }
 
-    if(operator === ""){
+    if(isFirstCalculatorInput){
       setFirstCalculatorInput(firstCalculatorInput => [...firstCalculatorInput, userInput])
-      return;
+      return
     }
     setSecondCalculatorInput(secondCalculatorInput => [...secondCalculatorInput, userInput])
   }
@@ -166,7 +188,7 @@ export default function Calculator() {
   const onSquareRoot = () => {
 
     let originalNumber, answer = []
-    let calculationFinished = false;
+    let calculationFinished = false
     let roundedAnswer = ""
 
     // Check if no numbers have been put in first calculation
@@ -178,7 +200,7 @@ export default function Calculator() {
     }
 
     // Check if no numbers have been put in second calculation
-    if (secondCalculatorInput.length < 1 && operator !== "") {
+    if (secondCalculatorInput.length < 1 && isFirstCalculatorInput) {
 
       setSecondCalculatorInput(['0'])
 
@@ -187,7 +209,7 @@ export default function Calculator() {
 
     // Square number in first calculation if operator not yet set
     // And calculation isn't already finished - i.e set to 0
-    if (operator === "" && !calculationFinished) {
+    if (isFirstCalculatorInput && !calculationFinished) {
 
       originalNumber = firstCalculatorInput
 
@@ -220,7 +242,7 @@ export default function Calculator() {
     }
 
     // check if changed to number
-    let originalNumberIsArray = Array.isArray(originalNumber);
+    let originalNumberIsArray = Array.isArray(originalNumber)
 
     // If an array set to number
     if (originalNumberIsArray) {
@@ -242,15 +264,15 @@ export default function Calculator() {
     }
 
     // add 0 to second array (as it's empty)
-    if (secondCalculatorInput.length < 1 && operator !== "") {
+    if (secondCalculatorInput.length < 1 && !isFirstCalculatorInput) {
       setSecondCalculatorInput(['0'])
     }
 
     // check if decimal already exists in current array
-    if (operator === "" && firstCalculatorInput.includes(".")) {
+    if (isFirstCalculatorInput && firstCalculatorInput.includes(".")) {
       return
 
-    } else if (operator !== "" && secondCalculatorInput.includes(".")) {
+    } else if (!isFirstCalculatorInput && secondCalculatorInput.includes(".")) {
       return
     }
     onInputNumber(userInput)
@@ -262,17 +284,17 @@ export default function Calculator() {
     // Check first number is inputted before operator
     if (firstCalculatorInput.length < 1) {
       alert('please enter a number first')
-      return;
+      return
     }
 
     // Check second number is inputted before solving equation
-    if (secondCalculatorInput.length < 1 && operator !== "") {
+    if (secondCalculatorInput.length < 1 && !isFirstCalculatorInput) {
       alert('please enter a number first')
-      return;
+      return
     }
 
     // Equation is sufficent to solve
-    if (secondCalculatorInput.length > 0 && operator !== "") {
+    if (secondCalculatorInput.length > 0 && !isFirstCalculatorInput) {
       solveEquation(userInput)
     }
     setOperator(userInput)
@@ -281,7 +303,17 @@ export default function Calculator() {
   // handle changing number to negative/positive - sign logic
   const changeSign = () => {
 
-    if (operator === "") {
+    // Real numbers do not contain -0
+    if(isFirstCalculatorInput){
+      
+      if(firstCalculatorInput[0] === "0")
+        return;
+      
+      } else if(secondCalculatorInput[0] === "0"){
+        return;
+    }
+
+    if (isFirstCalculatorInput) {
 
       var originalArray = firstCalculatorInput
 
@@ -354,7 +386,7 @@ export default function Calculator() {
     }
 
   if(calculationComplete){
-    return;
+    return
   }
 
     // check current size of input
@@ -363,19 +395,19 @@ export default function Calculator() {
       return
     }
 
-    let endsWithPeriod = false;
+    let endsWithPeriod = false
 
    if(firstCalculatorInput.length > 0){
     endsWithPeriod = checkLastItemIsDecimal(firstCalculatorInput)
 
-   } else if(secondCalculatorInput.length > 1 && operator !== ""){
+   } else if(secondCalculatorInput.length > 1 && !isFirstCalculatorInput){
     endsWithPeriod = checkLastItemIsDecimal(secondCalculatorInput)
    }
 
     // Check last input on first number isn't a decimal
       if (endsWithPeriod) {
         alert('please enter a number first')
-        return;
+        return
       }
 
     // Calculations first need validation
@@ -393,8 +425,8 @@ export default function Calculator() {
 
   // Get last item in current number array to check if decimal
   function checkLastItemIsDecimal(array: string[]) {
-    let lastItem = array[array.length - 1];
-    return lastItem.endsWith(".");
+    let lastItem = array[array.length - 1]
+    return lastItem.endsWith(".")
   }
 
   return (
