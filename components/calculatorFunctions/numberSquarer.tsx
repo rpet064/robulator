@@ -1,36 +1,24 @@
 
-const squareNumber = (calculatorInput: string[], originalNumber: number, arrrayLength: number) => {
+const squareNumber = (calculatorInput: string[], originalNumber: number, arrayLength: number) => {
+  
+  if (arrayLength) {
+      const hasNegative = calculatorInput.includes("-");
+      const numberToSquare = hasNegative
+          ? parseInt(calculatorInput.join("").replace(/,/g, "").replace("-", ""))
+          : originalNumber;
 
-    let originalNumberNoNegative = 0
-    let dividedNumberString = ""
-    let dividedNumberArray = []
+      const squaredNumberString = (Math.sqrt(numberToSquare)).toFixed(2).toString();
+      const squaredNumberArray = squaredNumberString.split('');
 
-    if (arrrayLength) {
-
-        // Check if there is a negative number
-        if (calculatorInput.includes("-")){
-
-          originalNumberNoNegative = parseInt(calculatorInput.toString().replaceAll(',', '').replace('-', ''))
-
-          // Solves, rounds to 2d.p, adds negative sign back in and puts back into array
-          dividedNumberString = (Math.sqrt(originalNumberNoNegative)).toFixed(2).toString()
-
-          dividedNumberArray = dividedNumberString.split('')
-
-          dividedNumberArray.unshift("-")
-
-          return dividedNumberArray
-
-        } else {
-          
-          // Solves, rounds to 2d.p & puts back into array
-          dividedNumberString = (Math.sqrt(originalNumber)).toFixed(2).toString()
-
-          dividedNumberArray = dividedNumberString.split('')
-
-          return dividedNumberArray
-        }
+      if (hasNegative) {
+          squaredNumberArray.unshift("-");
       }
-}
-export default squareNumber
+
+      return squaredNumberArray;
+  }
+
+  return [];
+};
+
+export default squareNumber;
 
