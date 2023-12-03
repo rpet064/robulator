@@ -50,6 +50,19 @@
   top: 1.5rem;
   z-index: 1;
   font-size: 5.25rem;
+  cursor: pointer;
+  border-radius: 1rem;
+  padding: 0rem 0.5rem;
+}
+
+.calculatorScreen .mainScreen span:hover{
+  background-color: white;
+  color: #181D31;
+}
+
+.calculatorScreen .mainScreen span:active{
+  background-color: #0779E4;
+  color: white;
 }
 
 @media (max-width: 700px){
@@ -113,3 +126,4 @@
 .calcBtn:active{
   border: #181D31 4px solid;
 }
+

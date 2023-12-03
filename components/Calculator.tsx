@@ -443,6 +443,16 @@ export default function Calculator() {
     return lastItem.endsWith(".")
   }
 
+  function copyTextToClipboard(){
+    let textToCopy = firstCalculatorInput + operator + secondCalculatorInput
+
+    textToCopy = textToCopy.replaceAll(",", "")
+
+    navigator.clipboard.writeText(textToCopy)
+    
+    alert("Text copied to clipboard")
+  }
+
   return (
     // Calculator Screen
     <div className={styles.calculator}>
@@ -450,7 +460,7 @@ export default function Calculator() {
         <div className={styles.miniScreen}>
           <span>{prevInput}</span>
         </div>
-        <div className={styles.mainScreen}>
+        <div className={styles.mainScreen} onClick={copyTextToClipboard}>
           <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>
         </div>
       </div>
