@@ -50,8 +50,6 @@ export default function Calculator() {
       return;
     }
 
-    console.log(firstCalculatorInput.length)
-
     if(firstCalculatorInput[0] === "-" && firstCalculatorInput[1] === "0"  && firstCalculatorInput.length < 3){
       setOverwriteNumber(true)
       return
@@ -68,8 +66,9 @@ export default function Calculator() {
 
   // this function checks if the last input was an operator
   useEffect(() => {
-    setIsLastCalculationAnOperator(operator !== "" && secondCalculatorInput.length < 1)
-  }, [operator, secondCalculatorInput])
+    setIsLastCalculationAnOperator(operator !== "" && secondCalculatorInput.length < 1
+    || firstCalculatorInput[0] === "-" && secondCalculatorInput.length < 2)
+  }, [firstCalculatorInput, operator, secondCalculatorInput])
 
   // this function stores the last equation 
   const updatePrevArray = () => {
@@ -183,6 +182,12 @@ export default function Calculator() {
 
   const onInputNumber = (userInput: string) => {
 
+    // Overwrite is decimal added to answer
+    if(overwriteNumber && userInput === "."){
+      setFirstCalculatorInput(["0"])
+      setFirstCalculatorInputHasAnswer(false)
+      }
+
     // Overwrite number and return
     if (overwriteNumber && isFirstCalculatorInput && userInput !== ".") {
       setFirstCalculatorInput([userInput])
@@ -204,8 +209,6 @@ export default function Calculator() {
   const onSquareRoot = () => {
 
     let originalNumber, answer = []
-
-    let calculationFinished = false
 
     let roundedAnswer = ""
 
@@ -321,11 +324,15 @@ export default function Calculator() {
     // Real numbers do not contain -0
     if (isFirstCalculatorInput) {
 
-      if (firstCalculatorInput[0] === "0")
+      if (firstCalculatorInput[0] === "0" && firstCalculatorInput.length < 2) 
         return;
 
     } else if (secondCalculatorInput[0] === "0") {
       return;
+    }
+
+    if(overwriteNumber){
+      setFirstCalculatorInputHasAnswer(false)
     }
 
     if (isFirstCalculatorInput) {
@@ -420,8 +427,7 @@ export default function Calculator() {
       return
     }
 
-    // Calculations first need validation
-    if (operatorArray.includes(userInput)) {
+    if (operatorArray.includes(userInput) && !isLastCalculationAnOperator) {
       onInputOperator(userInput)
 
       // No additional operator selected, so equation is solved and operator is set to ""
