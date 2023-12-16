@@ -67,7 +67,7 @@ export default function Calculator() {
   // this function checks if the last input was an operator
   useEffect(() => {
     setIsLastCalculationAnOperator(operator !== "" && secondCalculatorInput.length < 1
-    || firstCalculatorInput[0] === "-" && secondCalculatorInput.length < 2)
+    || firstCalculatorInput[0] === "-" && firstCalculatorInput.length < 2)
   }, [firstCalculatorInput, operator, secondCalculatorInput])
 
   // this function stores the last equation 
@@ -324,7 +324,7 @@ export default function Calculator() {
     // Real numbers do not contain -0
     if (isFirstCalculatorInput) {
 
-      if (firstCalculatorInput[0] === "0" && firstCalculatorInput.length < 2) 
+      if (firstCalculatorInput[0] === "0" && firstCalculatorInput.length < 2)
         return;
 
     } else if (secondCalculatorInput[0] === "0") {
@@ -462,7 +462,7 @@ export default function Calculator() {
   return (
     // Calculator Screen
     <div className={styles.calculator}>
-      <div className={styles.calculatorScreen}>
+      <div className={styles.calculatorScreen }>
         <div className={styles.miniScreen}>
           <span>{prevInput}</span>
         </div>
