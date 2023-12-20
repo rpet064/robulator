@@ -4,6 +4,7 @@ import symbolsArray from './symbolsArray'
 import SolveEquation from './calculatorFunctions/equationSolver'
 import squareNumber from './calculatorFunctions/numberSquarer'
 import removeTrailingZeros from './calculatorFunctions/removeTrailingZeros'
+import toast, { Toaster } from 'react-hot-toast';
 
 const numArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 const operatorArray = ["+", "-", "×", "÷"]
@@ -17,6 +18,10 @@ export default function Calculator() {
   const [firstCalculatorInputHasAnswer, setFirstCalculatorInputHasAnswer] = useState(false)
   const [overwriteNumber, setOverwriteNumber] = useState(false)
   const [isLastCalculationAnOperator, setIsLastCalculationAnOperator] = useState(false)
+  const [isDecimalUnfinished, setIsDecimalUnfinished] = useState(false)
+
+  const notifyMessage = (toastMessage: string) => toast(toastMessage);
+  const errorMessage = (toastMessage: string) => toast.error(toastMessage);
 
   useEffect(() => {
 
@@ -27,13 +32,13 @@ export default function Calculator() {
 
   useEffect(() => {
 
-    let firstElementIsZero = false;
-    let secondElementIsDecimalPoint = false;
+    let firstElementIsZero = false
+    let secondElementIsDecimalPoint = false
 
     // overwrite number if answer displayed
     if (firstCalculatorInputHasAnswer) {
       setOverwriteNumber(true)
-      return;
+      return
     }
 
     if (isFirstCalculatorInput) {
@@ -47,7 +52,7 @@ export default function Calculator() {
 
     if (firstElementIsZero && !secondElementIsDecimalPoint) {
       setOverwriteNumber(true)
-      return;
+      return
     }
 
     if(firstCalculatorInput[0] === "-" && firstCalculatorInput[1] === "0"  && firstCalculatorInput.length < 3){
@@ -70,7 +75,15 @@ export default function Calculator() {
     || firstCalculatorInput[0] === "-" && firstCalculatorInput.length < 2)
   }, [firstCalculatorInput, operator, secondCalculatorInput])
 
-  // this function stores the last equation 
+  // Checks if currently contains unfinished decimal
+  useEffect(() => {
+    console.log(firstCalculatorInput.length < 3 && firstCalculatorInput[1] === ".")
+    setIsDecimalUnfinished(
+      firstCalculatorInput.length < 3 && firstCalculatorInput[1] === "." 
+    || secondCalculatorInput.length < 3 && secondCalculatorInput[1] === ".")
+  }, [firstCalculatorInput, secondCalculatorInput])
+
+  // this function stores the last equation
   const updatePrevArray = () => {
 
     const firstOperand = firstCalculatorInput.join("")
@@ -129,7 +142,7 @@ export default function Calculator() {
       case "+/-": changeSign()
         break
 
-      default: alert("No more space for more numbers")
+      default: notifyMessage("Cannot add anymore numbers")
     }
   }
 
@@ -219,7 +232,7 @@ export default function Calculator() {
 
       setPrevInput(`√ ${0}`)
 
-      return;
+      return
     }
 
     // Check if no numbers have been put in second calculation
@@ -229,7 +242,7 @@ export default function Calculator() {
 
       setPrevInput(`√ ${0}`)
 
-      return;
+      return
     }
 
     // Square number in first calculation if operator not yet set
@@ -262,7 +275,7 @@ export default function Calculator() {
     }
 
     setPrevInput(`√ ${originalNumber}`)
-    return;
+    return
   }
 
   // handle decimal input logic
@@ -301,13 +314,13 @@ export default function Calculator() {
 
     // Check first number is inputted before operator
     if (firstCalculatorInput.length < 1) {
-      alert('please enter a number first')
+      errorMessage('please enter a number first')
       return
     }
 
     // Check second number is inputted before solving equation
     if (secondCalculatorInput.length < 1 && !isFirstCalculatorInput) {
-      alert('please enter a number first')
+      errorMessage('please enter a number first')
       return
     }
 
@@ -325,10 +338,10 @@ export default function Calculator() {
     if (isFirstCalculatorInput) {
 
       if (firstCalculatorInput[0] === "0" && firstCalculatorInput.length < 2)
-        return;
+        return
 
     } else if (secondCalculatorInput[0] === "0") {
-      return;
+      return
     }
 
     if(overwriteNumber){
@@ -379,12 +392,6 @@ export default function Calculator() {
     // Calculations don't need validation
     let calculationComplete = false
 
-    // Add number to array
-    if (numArray.includes(userInput)) {
-      onInputNumber(userInput)
-      calculationComplete = true
-    }
-
     switch (userInput) {
       case "AC":
         resetCalculator()
@@ -400,6 +407,12 @@ export default function Calculator() {
         onInputDecimal(userInput)
         calculationComplete = true
         break
+
+      case "+/-":
+        if(!isLastCalculationAnOperator){
+          return
+        }
+        changeSign()
     }
 
     if (calculationComplete) {
@@ -412,18 +425,16 @@ export default function Calculator() {
       return
     }
 
-    let endsWithPeriod = false
-
-    if (firstCalculatorInput.length > 0) {
-      endsWithPeriod = checkLastItemIsDecimal(firstCalculatorInput)
-
-    } else if (secondCalculatorInput.length > 1 && !isFirstCalculatorInput) {
-      endsWithPeriod = checkLastItemIsDecimal(secondCalculatorInput)
+    // Add number to array
+    if (numArray.includes(userInput)) {
+      onInputNumber(userInput)
+      calculationComplete = true
+      return;
     }
 
     // Check last input on first number isn't a decimal
-    if (endsWithPeriod) {
-      alert('please enter a number first')
+    if (isDecimalUnfinished) {
+      errorMessage('please enter a number first')
       return
     }
 
@@ -437,16 +448,8 @@ export default function Calculator() {
     } else if (userInput === "√" && !isLastCalculationAnOperator) {
       onSquareRoot()
 
-    } else if (userInput === "+/-" && !isLastCalculationAnOperator) {
-      changeSign()
-    }
-    return;
-  }
-
-  // Get last item in current number array to check if decimal
-  function checkLastItemIsDecimal(array: string[]) {
-    let lastItem = array[array.length - 1]
-    return lastItem.endsWith(".")
+    } 
+    return
   }
 
   function copyTextToClipboard(){
@@ -456,12 +459,13 @@ export default function Calculator() {
 
     navigator.clipboard.writeText(textToCopy)
     
-    alert("Text copied to clipboard")
+    notifyMessage("Text copied to clipboard")
   }
 
   return (
     // Calculator Screen
     <div className={styles.calculator}>
+         <Toaster />
       <div className={styles.calculatorScreen }>
         <div className={styles.miniScreen}>
           <span>{prevInput}</span>
