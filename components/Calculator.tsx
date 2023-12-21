@@ -1,10 +1,11 @@
 import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
-import symbolsArray from './symbolsArray'
+import {regularSymbolsArray} from './symbolsArray'
 import SolveEquation from './calculatorFunctions/equationSolver'
 import squareNumber from './calculatorFunctions/numberSquarer'
 import removeTrailingZeros from './calculatorFunctions/removeTrailingZeros'
 import toast, { Toaster } from 'react-hot-toast';
+import SideMenu from './SideMenu'
 
 const numArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 const operatorArray = ["+", "-", "×", "÷"]
@@ -467,6 +468,7 @@ export default function Calculator() {
     <div className={styles.calculator}>
          <Toaster />
       <div className={styles.calculatorScreen }>
+        <SideMenu/>
         <div className={styles.miniScreen}>
           <span>{prevInput}</span>
         </div>
@@ -477,7 +479,7 @@ export default function Calculator() {
 
       {/* Calculator Keypad */}
       <div id="calculatorKeypad" className={styles.calculatorKeypad}>
-        {symbolsArray.map((symbol, index) => {
+        {regularSymbolsArray.map((symbol, index) => {
           return (
             <button onClick={() => handleUserInput(symbol)} key={index} className={styles.calcBtn}>{symbol}</button>
           )
