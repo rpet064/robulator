@@ -26,7 +26,6 @@
   position: relative;
   top: 5rem;
   font-size: 5.25rem;
-  cursor: pointer;
 }
 
 .calculatorKeypad{
@@ -41,7 +40,6 @@
   color: #181D31;
   font-size: 3.25rem;
   border: #181D31 1px solid;
-  cursor: pointer;
 }
 
 .calculatorKeypad button:nth-child(-n+3){
@@ -75,6 +73,19 @@
 .calcBtn:active{
   border: black 1px solid;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.sideMenuButton{
+  position: relative;
+  background-color: #181D31;
+  right: 47%;
+  top: 0.2rem;
+  border: none;
+}
+
+.sideMenuButtonIcon{
+  color: #FFFAE7!important;
+  font-size: 2rem;
 }
 
 /* Responsive */

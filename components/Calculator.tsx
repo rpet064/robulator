@@ -453,26 +453,39 @@ export default function Calculator() {
     return
   }
 
-  function copyTextToClipboard(){
+  const copyPreviousCalculationToClipboard = () => {
+
+    navigator.clipboard.writeText(prevInput)
+    
+    notifyMessage("Copied to clipboard")
+  }
+
+  const copyCurrentCalculationToClipboard = () =>  {
+
     let textToCopy = firstCalculatorInput + operator + secondCalculatorInput
 
     textToCopy = textToCopy.replaceAll(",", "")
 
     navigator.clipboard.writeText(textToCopy)
     
-    notifyMessage("Text copied to clipboard")
+    notifyMessage("Copied to clipboard")
   }
 
   return (
+
     // Calculator Screen
     <div className={styles.calculator}>
-         <Toaster />
-      <div className={styles.calculatorScreen }>
-        <SideMenu/>
-        <div className={styles.miniScreen}>
-          <span>{prevInput}</span>
+         <Toaster/>
+
+      {/* // above main screen calculations */}
+      <div className={styles.calculatorScreen}>
+          <SideMenu/>
+          <div className={styles.miniScreen} onClick={copyPreviousCalculationToClipboard}>
+            <span>{prevInput}</span>
         </div>
-        <div className={styles.mainScreen} onClick={copyTextToClipboard}>
+
+        {/* // Main screen */}
+        <div className={styles.mainScreen} onClick={copyCurrentCalculationToClipboard}>
           <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>
         </div>
       </div>
