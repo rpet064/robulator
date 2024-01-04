@@ -4,7 +4,7 @@ export const regularSymbolsArray = [
     "4", "5", "6", "-",
     "1", "2", "3", "+",
     "0", "+/-", ".", "="
-    ]
+]
 
 export const scientificSymbolsArray = [
     "log", "AC", "C", "√", "÷",
@@ -13,4 +13,8 @@ export const scientificSymbolsArray = [
     "exp", "4", "5", "6", "-",
     "x2", "1", "2", "3", "+",
     "x3", "0", "+/-", ".", "="
-    ]
+]
+
+export const numArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+
+export const operatorArray = ["+", "-", "×", "÷"]
