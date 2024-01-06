@@ -3,8 +3,7 @@ import SideMenu from './SideMenu'
 import {Toaster} from 'react-hot-toast'
 import { copyPreviousCalculationToClipboard, copyCurrentCalculationToClipboard} from './utility/clipboardUtils'
 import Keypad from './Keypad'
-import { useState } from 'react'
-import {notifyMessage} from './utility/toastMessages'
+import { useState, useRef, useEffect } from 'react'
 
 export default function Calculator() {
 
@@ -12,16 +11,14 @@ export default function Calculator() {
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([])
   const [prevInput, setPrevInput] = useState<string>("")
   const [operator, setOperator] = useState("")
-  const [isFirstCalculatorInput, setIsFirstCalculatorInput] = useState(true)
-  const [firstCalculatorInputHasAnswer, setFirstCalculatorInputHasAnswer] = useState(false)
-  const [overwriteNumber, setOverwriteNumber] = useState(false)
-  const [isLastCalculationAnOperator, setIsLastCalculationAnOperator] = useState(false)
-  const [isDecimalUnfinished, setIsDecimalUnfinished] = useState(false)
+
+  const calculatorRef = useRef(null);
+  const textInputRef = useRef(null);
 
   return (
 
     // Calculator Screen
-    <div className={styles.calculator}>
+    <div className={styles.calculator} ref={calculatorRef}>
          <Toaster/>
 
       {/* // above main screen calculations */}
@@ -36,8 +33,9 @@ export default function Calculator() {
         {/* // Main screen */}
         <div className={styles.mainScreen}
           onClick={() => copyCurrentCalculationToClipboard(firstCalculatorInput, operator, secondCalculatorInput)}>
-          
-          <span>{firstCalculatorInput}{operator}{secondCalculatorInput}</span>
+          <span className="mainScreenTextInput" ref={textInputRef}>
+            {firstCalculatorInput}{operator}{secondCalculatorInput}
+            </span>
         </div>
       </div>
 
@@ -50,17 +48,8 @@ export default function Calculator() {
         setPrevInput={setPrevInput}
         operator={operator} 
         setOperator={setOperator}
-        isFirstCalculatorInput={isFirstCalculatorInput}
-         setIsFirstCalculatorInput={setIsFirstCalculatorInput}
-        firstCalculatorInputHasAnswer={firstCalculatorInputHasAnswer}
-        setFirstCalculatorInputHasAnswer={setFirstCalculatorInputHasAnswer}
-        overwriteNumber={overwriteNumber}
-         setOverwriteNumber={setOverwriteNumber}
-        isLastCalculationAnOperator={isLastCalculationAnOperator}
-        setIsLastCalculationAnOperator={setIsLastCalculationAnOperator}
-        isDecimalUnfinished={isDecimalUnfinished}
-        setIsDecimalUnfinished={setIsDecimalUnfinished}
-        notifyMessage={notifyMessage}
+        calculatorRef={calculatorRef}
+        textInputRef={textInputRef}
       />
     </div>
   )
