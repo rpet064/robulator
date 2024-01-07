@@ -3,7 +3,7 @@ import SideMenu from './SideMenu'
 import {Toaster} from 'react-hot-toast'
 import { copyPreviousCalculationToClipboard, copyCurrentCalculationToClipboard} from './utility/clipboardUtils'
 import Keypad from './Keypad'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 
 export default function Calculator() {
 
