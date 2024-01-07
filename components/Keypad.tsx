@@ -31,7 +31,6 @@ const Keypad: React.FC<KeypadProps> = ({
   textInputRef
 }) => {
 
-  
   const maximumNumberOfIntegers = 15
 
   const [isFirstCalculatorInput, setIsFirstCalculatorInput] = useState(true)
@@ -75,16 +74,6 @@ const Keypad: React.FC<KeypadProps> = ({
       return
     }
 
-    if (firstCalculatorInput[0] === "-" && firstCalculatorInput[1] === "0" && firstCalculatorInput.length < 3) {
-      setOverwriteNumber(true)
-      return
-    }
-
-    if (secondCalculatorInput[0] === "-" && secondCalculatorInput[1] === "0" && secondCalculatorInput.length < 3) {
-      setOverwriteNumber(true)
-      return
-    }
-
     setOverwriteNumber(false)
 
   }, [firstCalculatorInputHasAnswer, firstCalculatorInput, secondCalculatorInput])
@@ -101,7 +90,10 @@ const Keypad: React.FC<KeypadProps> = ({
   useEffect(() => {
     setIsDecimalUnfinished(
       firstCalculatorInput.length < 3 && firstCalculatorInput[1] === "."
-      || secondCalculatorInput.length < 3 && secondCalculatorInput[1] === ".")
+      || secondCalculatorInput.length < 3 && secondCalculatorInput[1] === "."
+      || firstCalculatorInput.length < 4 && firstCalculatorInput[0] === "-" && firstCalculatorInput[2] === "."
+      || secondCalculatorInput.length < 4 && secondCalculatorInput[0] === "-" && secondCalculatorInput[2] === "."
+      )
   }, [firstCalculatorInput, secondCalculatorInput])
 
 
@@ -339,22 +331,14 @@ const Keypad: React.FC<KeypadProps> = ({
   // handle decimal input logic
   const onInputDecimal = (userInput: string) => {
 
-    // add 0 to first array (as it's empty) 
+    // add 0 to first array (it's empty) 
     if (firstCalculatorInput.length < 1) {
       setFirstCalculatorInput(['0'])
     }
 
-    // add 0 to second array (as it's empty)
+    // add 0 to second array (it's empty)
     if (secondCalculatorInput.length < 1 && !isFirstCalculatorInput) {
       setSecondCalculatorInput(['0'])
-    }
-
-    if (firstCalculatorInput.length < 2 && firstCalculatorInput[0] == "-") {
-      setFirstCalculatorInput(['-0'])
-    }
-
-    if (secondCalculatorInput.length < 2 && secondCalculatorInput[0] == "-") {
-      setSecondCalculatorInput(['-0'])
     }
 
     // check if decimal already exists in current array
@@ -392,16 +376,6 @@ const Keypad: React.FC<KeypadProps> = ({
   // handle changing number to negative/positive - sign logic
   const changeSign = () => {
 
-    // Real numbers do not contain -0
-    if (isFirstCalculatorInput) {
-
-      if (firstCalculatorInput[0] === "0" && firstCalculatorInput.length < 2)
-        return
-
-    } else if (secondCalculatorInput[0] === "0") {
-      return
-    }
-
     if (overwriteNumber) {
       setFirstCalculatorInputHasAnswer(false)
     }
@@ -417,32 +391,35 @@ const Keypad: React.FC<KeypadProps> = ({
 
         setFirstCalculatorInput([...originalArray])
 
+        return;
+
       } else {
 
         // add "-" to front of first array making it "negative"
         originalArray.unshift("-")
 
         setFirstCalculatorInput([...originalArray])
-      }
-    } else {
 
-      var originalArray = secondCalculatorInput
-
-      if (secondCalculatorInput[0] === "-") {
-
-        // remove "-" from front of second array making it "positive"
-        originalArray = originalArray.slice(1)
-
-        setSecondCalculatorInput([...originalArray])
-      } else {
-
-        // add "-" to front of second array making it "negative"
-        originalArray.unshift("-")
-
-        setSecondCalculatorInput([...originalArray])
+        return;
       }
     }
+
+    var originalArray = secondCalculatorInput
+
+    if (secondCalculatorInput[0] === "-") {
+
+      // remove "-" from front of second array making it "positive"
+      originalArray = originalArray.slice(1)
+
+      setSecondCalculatorInput([...originalArray])
+    } else {
+
+      // add "-" to front of second array making it "negative"
+      originalArray.unshift("-")
+
+      setSecondCalculatorInput([...originalArray])
   }
+}
 
   // this const catches userinput from button and triggers correct function accordingly
   const handleUserInput = (userInput: string) => {
@@ -467,9 +444,10 @@ const Keypad: React.FC<KeypadProps> = ({
         break
 
       case "+/-":
-        if (!isLastCalculationAnOperator) {
+        if (isLastCalculationAnOperator) {
           return
         }
+        calculationComplete = true
         changeSign()
     }
 
