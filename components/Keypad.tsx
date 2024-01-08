@@ -271,62 +271,38 @@ const Keypad: React.FC<KeypadProps> = ({
 
   const onSquareRoot = () => {
 
-    let originalNumber, answer = []
+    let isNegative = false;
 
-    let roundedAnswer = ""
-
-    // Check if no numbers have been put in first calculation
-    if (firstCalculatorInput.length < 1) {
-
-      setFirstCalculatorInput(['0'])
-
-      setPrevInput(`√ ${0}`)
-
-      return
+    const input = isFirstCalculatorInput ? firstCalculatorInput : secondCalculatorInput;
+    const setInput = isFirstCalculatorInput ? setFirstCalculatorInput : setSecondCalculatorInput;
+   
+    if (!input.length || (operator !== "" && !secondCalculatorInput.length)) {
+     setInput(['0']);
+     setPrevInput(`√ ${0}`);
+     return;
     }
 
-    // Check if no numbers have been put in second calculation
-    if (secondCalculatorInput.length < 1 && operator !== "") {
-
-      setSecondCalculatorInput(['0'])
-
-      setPrevInput(`√ ${0}`)
-
-      return
+    // Remove negative sign from input
+    if(input[0] === "-"){
+      isNegative = true;
+      input.shift();
     }
+   
+    const originalNumberAsInt = parseFloat(input.toString().replaceAll(',', ""));
+    const answer = squareNumber(input, originalNumberAsInt, input.length);
+    const roundedAnswer = removeTrailingZeros(answer.toString().replaceAll(',', ""));
 
-    // Square number in first calculation if operator not yet set
-    // And calculation isn't already finished - i.e set to 0
-    if (isFirstCalculatorInput) {
-      originalNumber = firstCalculatorInput
-    } else {
-      originalNumber = secondCalculatorInput
+    let roundedAnswerAsArray = roundedAnswer.split("")
+
+    // Add negative sign back to input
+    if(isNegative){
+      roundedAnswerAsArray.unshift("-")
     }
-
-    let originalNumberAsInt = parseInt(originalNumber.toString().replaceAll(',', ""))
-
-    answer = squareNumber(originalNumber, originalNumberAsInt, originalNumber.length)!
-
-    roundedAnswer = removeTrailingZeros(answer.toString().replaceAll(',', ""))
-
-    if (isFirstCalculatorInput) {
-      setFirstCalculatorInput([roundedAnswer])
-    } else {
-      setSecondCalculatorInput([roundedAnswer])
-    }
-
-    // check if changed to number
-    let originalNumberIsArray = Array.isArray(originalNumber)
-
-    // If an array set to number
-    if (originalNumberIsArray) {
-
-      originalNumber = originalNumber.toString().replaceAll(',', "")
-    }
-
-    setPrevInput(`√ ${originalNumber}`)
-    return
-  }
+   
+    setInput(roundedAnswerAsArray);
+    setPrevInput(`√ ${originalNumberAsInt}`);
+   };
+   
 
   // handle decimal input logic
   const onInputDecimal = (userInput: string) => {
