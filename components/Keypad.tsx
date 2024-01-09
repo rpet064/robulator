@@ -29,7 +29,7 @@ const Keypad: React.FC<KeypadProps> = ({
   setOperator,
   calculatorRef,
   textInputRef
-}) => {
+  }) => {
 
   const maximumNumberOfIntegers = 15
 
@@ -51,31 +51,11 @@ const Keypad: React.FC<KeypadProps> = ({
 
 
   useEffect(() => {
-    let firstElementIsZero = false
-    let secondElementIsDecimalPoint = false
-
-    // overwrite number if answer displayed
     if (firstCalculatorInputHasAnswer) {
       setOverwriteNumber(true)
       return
     }
-
-    if (isFirstCalculatorInput) {
-      firstElementIsZero = firstCalculatorInput[0] === "0"
-      secondElementIsDecimalPoint = firstCalculatorInput[1] === "."
-
-    } else if (!isFirstCalculatorInput) {
-      firstElementIsZero = secondCalculatorInput[0] === "0"
-      secondElementIsDecimalPoint = secondCalculatorInput[1] === "."
-    }
-
-    if (firstElementIsZero && !secondElementIsDecimalPoint) {
-      setOverwriteNumber(true)
-      return
-    }
-
     setOverwriteNumber(false)
-
   }, [firstCalculatorInputHasAnswer, firstCalculatorInput, secondCalculatorInput])
 
 
@@ -140,13 +120,10 @@ const Keypad: React.FC<KeypadProps> = ({
   const updatePrevArray = () => {
 
     const firstOperand = firstCalculatorInput.join("")
-
     const secondOperand = secondCalculatorInput.join("")
 
-    const equationOperator = operator
-
     // Construct the equation string
-    const equationString = `${firstOperand} ${equationOperator} ${secondOperand} =`
+    const equationString = `${firstOperand} ${operator} ${secondOperand} =`
 
     // Convert the array to a string and remove commas
     const prevEquationString = equationString.replace(/,/g, "")
@@ -159,7 +136,6 @@ const Keypad: React.FC<KeypadProps> = ({
 
       // join array of strings into String, then change strings into numbers
       let firstInputAsFloat = parseFloat(firstCalculatorInput.join(""))
-
       let secondInputAsFloat = parseFloat(secondCalculatorInput.join(""))
 
       let answer = SolveEquation(firstInputAsFloat, operator, secondInputAsFloat)!
@@ -252,13 +228,9 @@ const Keypad: React.FC<KeypadProps> = ({
     }
 
     // Overwrite number and return
-    if (overwriteNumber && isFirstCalculatorInput && userInput !== ".") {
+    if (overwriteNumber && userInput !== ".") {
       setFirstCalculatorInput([userInput])
       setFirstCalculatorInputHasAnswer(false)
-      return
-
-    } else if (overwriteNumber && userInput && userInput !== ".") {
-      setSecondCalculatorInput([userInput])
       return
     }
 
