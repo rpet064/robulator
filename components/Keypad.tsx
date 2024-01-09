@@ -1,4 +1,4 @@
-import { useEffect, useState, Dispatch, SetStateAction, RefObject } from 'react'
+import { useEffect, useState, Dispatch, SetStateAction, RefObject, FC } from 'react'
 import styles from '../styles/Home.module.css'
 import { numArray, operatorArray, regularSymbolsArray } from './utility/symbolsArray'
 import SolveEquation from './utility/equationSolver'
@@ -19,7 +19,7 @@ interface KeypadProps {
 }
 
 
-const Keypad: React.FC<KeypadProps> = ({
+const Keypad: FC<KeypadProps> = ({
   firstCalculatorInput,
   setFirstCalculatorInput,
   secondCalculatorInput,
@@ -314,12 +314,15 @@ const Keypad: React.FC<KeypadProps> = ({
       return
     }
 
+    // Reset overwrite number
+    setFirstCalculatorInputHasAnswer(false)
+
     // Equation is sufficent to solve
     if (secondCalculatorInput.length > 0 && !isFirstCalculatorInput) {
       solveEquation(userInput)
     }
     setOperator(userInput)
-  }
+    }
 
   // handle changing number to negative/positive - sign logic
   const changeSign = () => {
