@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Dispatch, SetStateAction, RefObject } from 'react'
 import styles from '../styles/Home.module.css'
 import { numArray, operatorArray, regularSymbolsArray } from './utility/symbolsArray'
 import SolveEquation from './utility/equationSolver'
@@ -8,14 +8,14 @@ import { errorMessage, notifyMessage } from './utility/toastMessages'
 
 interface KeypadProps {
   firstCalculatorInput: string[]
-  setFirstCalculatorInput: React.Dispatch<React.SetStateAction<string[]>>;
+  setFirstCalculatorInput: Dispatch<SetStateAction<string[]>>;
   secondCalculatorInput: string[]
-  setSecondCalculatorInput: React.Dispatch<React.SetStateAction<string[]>>;
+  setSecondCalculatorInput: Dispatch<SetStateAction<string[]>>;
   setPrevInput: (value: string) => void
   operator: string
   setOperator: (value: string) => void
-  calculatorRef: React.RefObject<HTMLDivElement>
-  textInputRef: React.RefObject<HTMLDivElement>
+  calculatorRef: RefObject<HTMLDivElement>
+  textInputRef: RefObject<HTMLDivElement>
 }
 
 
@@ -324,49 +324,25 @@ const Keypad: React.FC<KeypadProps> = ({
   // handle changing number to negative/positive - sign logic
   const changeSign = () => {
 
-    if (overwriteNumber) {
-      setFirstCalculatorInputHasAnswer(false)
-    }
-
-    if (isFirstCalculatorInput) {
-
-      var originalArray = firstCalculatorInput
-
-      if (firstCalculatorInput[0] === "-") {
-
-        // remove "-" from front of first array making it "positive"
-        originalArray = originalArray.slice(1)
-
-        setFirstCalculatorInput([...originalArray])
-
-        return;
-
+    function handleSign(input: string[], setInput: Dispatch<SetStateAction<string[]>>) {
+      var originalArray = input;
+     
+      if (input[0] === "-") {
+        // remove "-" from front of array making it "positive"
+        originalArray = originalArray.slice(1);
       } else {
-
-        // add "-" to front of first array making it "negative"
-        originalArray.unshift("-")
-
-        setFirstCalculatorInput([...originalArray])
-
-        return;
+        // add "-" to front of array making it "negative"
+        originalArray.unshift("-");
       }
-    }
-
-    var originalArray = secondCalculatorInput
-
-    if (secondCalculatorInput[0] === "-") {
-
-      // remove "-" from front of second array making it "positive"
-      originalArray = originalArray.slice(1)
-
-      setSecondCalculatorInput([...originalArray])
-    } else {
-
-      // add "-" to front of second array making it "negative"
-      originalArray.unshift("-")
-
-      setSecondCalculatorInput([...originalArray])
-  }
+     
+      setInput([...originalArray]);
+     }
+     
+     if (isFirstCalculatorInput) {
+      handleSign(firstCalculatorInput, setFirstCalculatorInput);
+     } else {
+      handleSign(secondCalculatorInput, setSecondCalculatorInput);
+     }
 }
 
   // this const catches userinput from button and triggers correct function accordingly
