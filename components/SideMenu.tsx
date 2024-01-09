@@ -20,9 +20,9 @@ export default function SideMenu() {
     }
 
     return(
-        <div className="side-menu">
+        <div>
             <button className={styles.sideMenuButton} onClick={() => toggleMenu()}>
-                <FontAwesomeIcon className={styles.sideMenuButtonIcon}  icon={sideNavBarToggleIcon} />
+                <FontAwesomeIcon icon={sideNavBarToggleIcon} />
             </button>
         </div>
     )

@@ -76,18 +76,27 @@
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
+.calculatorScreen svg{
+  color: #FFFAE7!important;
+  font-size: 2.5rem;
+}
+
 .sideMenuButton{
   position: absolute;
   background-color: #181D31;
   top: 0;
   left: 0;
-  margin-left: 0.5rem;
+  margin: 0.5rem 0rem 0rem 0.5rem;
   border: none;
 }
 
-.sideMenuButtonIcon{
-  color: #FFFAE7!important;
-  font-size: 2.5rem;
+.aboutMenuButton{
+  position: absolute;
+  background-color: #181D31;
+  top: 0;
+  right: 0;
+  margin: 0.5rem 0.5rem 0rem 0rem;
+  border: none;
 }
 
 /* Responsive */

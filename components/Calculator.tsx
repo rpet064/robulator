@@ -4,6 +4,7 @@ import {Toaster} from 'react-hot-toast'
 import { copyPreviousCalculationToClipboard, copyCurrentCalculationToClipboard} from './utility/clipboardUtils'
 import Keypad from './Keypad'
 import { useState, useRef } from 'react'
+import AboutMenu from './AboutMenu'
 
 export default function Calculator() {
 
@@ -23,7 +24,10 @@ export default function Calculator() {
 
       {/* // above main screen calculations */}
       <div className={styles.calculatorScreen}>
+
           <SideMenu/>
+          <AboutMenu/>
+
           <div className={styles.miniScreen} 
             onClick={() => copyPreviousCalculationToClipboard(prevInput)}>
             
