@@ -3,24 +3,23 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from '../styles/Home.module.css'
-import { notifyMessage } from "./utility/toastMessages"
+import AboutMenuModal from "./AboutMenuModal"
 
 library.add(faCircleQuestion)
 
 export default function AboutMenu() {
 
-    const [isAboutMenuOpen, setIsAboutMenuOpen] = useState(false)
+    const [aboutMenuIsOpen, setAboutMenuIsOpen] = useState(false);
 
     const toggleMenu = () => {
-        setIsAboutMenuOpen(!isAboutMenuOpen)
-
-        notifyMessage('In progress')
+        setAboutMenuIsOpen(!aboutMenuIsOpen)
     }
 
     return(
         <div>
-            <button className={styles.aboutMenuButton} onClick={() => toggleMenu()}>
+            <button className={`${styles.aboutMenuButton} ${styles.popupMenuButton}`} onClick={() => toggleMenu()}>
                 <FontAwesomeIcon icon={faCircleQuestion} />
+                <AboutMenuModal aboutMenuIsOpen={aboutMenuIsOpen} setAboutMenuIsOpen={setAboutMenuIsOpen} />
             </button>
         </div>
     )

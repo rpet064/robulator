@@ -3,26 +3,24 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAngleLeft, faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from '../styles/Home.module.css'
-import { notifyMessage } from "./utility/toastMessages"
-
+import SideMenuModal from "./SideMenuModal"
 library.add(faAngleLeft, faAngleDown)
 
 export default function SideMenu() {
 
-    const [isMenuCollapsed, setIsMenuCollapsed] = useState(false)
+  const [sideMenuIsOpen, setSideMenuIsOpen] = useState(false);
 
-    const sideNavBarToggleIcon = isMenuCollapsed ? faAngleDown : faAngleLeft
+    const sideNavBarToggleIcon = sideMenuIsOpen ? faAngleDown : faAngleLeft
 
     const toggleMenu = () => {
-        setIsMenuCollapsed(!isMenuCollapsed)
-
-        notifyMessage('In progress')
+        setSideMenuIsOpen(!sideMenuIsOpen)
     }
 
     return(
         <div>
-            <button className={styles.sideMenuButton} onClick={() => toggleMenu()}>
+            <button className={`${styles.sideMenuButton} ${styles.popupMenuButton}`} onClick={() => toggleMenu()}>
                 <FontAwesomeIcon icon={sideNavBarToggleIcon} />
+                <SideMenuModal sideMenuIsOpen={sideMenuIsOpen} setSideMenuIsOpen={setSideMenuIsOpen} />
             </button>
         </div>
     )
