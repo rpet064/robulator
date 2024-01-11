@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import Modal from 'react-modal';
+import modalStyles from '../styles/ModalStyles.module.css';
 
 Modal.setAppElement('#__next')
 
@@ -18,11 +19,26 @@ const AboutMenuModal: FC<AboutMenuProps> = ({
      <Modal
        isOpen={aboutMenuIsOpen}
        onRequestClose={() => setAboutMenuIsOpen(false)}
-       contentLabel="Example Modal"
+       contentLabel="About Menu Modal"
+       style={{
+        content: {
+          width: '47.5%',
+          height: '82.5%',
+          margin: 'auto',
+        }
+      }}
      >
-       <h2>Hello</h2>
-       <button onClick={() => setAboutMenuIsOpen(false)}>close</button>
-       <div>I am a AboutMenuModal</div>
+      <div className={modalStyles.modalHeader}>
+        <button className={modalStyles.closeModalButton} onClick={() => setAboutMenuIsOpen(false)}>X</button>
+      </div>
+      
+      <div className={modalStyles.modalBody}>
+        
+      </div>
+      
+      <div className={modalStyles.modalFooter}>
+        
+      </div>
      </Modal>
    </div>
  );

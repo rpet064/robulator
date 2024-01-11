@@ -1,0 +1,28 @@
+.modalHeader{
+}
+
+.modalBody{
+}
+
+.modalFooter{
+}
+
+.closeModalButton{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.5rem;
+    color: #181D31;
+    background-color: #999999;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .closeModalButton:hover{
+    background-color: #181D31;
+    color: #FFFAE7;
+  }
