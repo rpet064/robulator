@@ -1,5 +1,5 @@
 import styles from '../styles/Home.module.css'
-import SideMenu from './SideMenu'
+import DropDownMenu from './DropDownMenu'
 import {Toaster} from 'react-hot-toast'
 import { copyPreviousCalculationToClipboard, copyCurrentCalculationToClipboard} from './utility/clipboardUtils'
 import Keypad from './Keypad'
@@ -25,7 +25,7 @@ export default function Calculator() {
       {/* // above main screen calculations */}
       <div className={styles.calculatorScreen}>
 
-          <SideMenu/>
+          <DropDownMenu/>
           <AboutMenu/>
 
           <div className={styles.miniScreen} 

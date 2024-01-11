@@ -3,10 +3,11 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAngleLeft, faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from '../styles/Home.module.css'
-import SideMenuModal from "./SideMenuModal"
+import dropDownStyles from '../styles/DropdownStyles.module.css'
+
 library.add(faAngleLeft, faAngleDown)
 
-export default function SideMenu() {
+export default function DropDownMenu() {
 
   const [sideMenuIsOpen, setSideMenuIsOpen] = useState(false);
 
@@ -20,7 +21,6 @@ export default function SideMenu() {
         <div>
             <button className={`${styles.sideMenuButton} ${styles.popupMenuButton}`} onClick={() => toggleMenu()}>
                 <FontAwesomeIcon icon={sideNavBarToggleIcon} />
-                <SideMenuModal sideMenuIsOpen={sideMenuIsOpen} setSideMenuIsOpen={setSideMenuIsOpen} />
             </button>
         </div>
     )
