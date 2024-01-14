@@ -1,17 +1,19 @@
 import { useState } from "react"
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faAngleLeft, faAngleDown } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from '../styles/Home.module.css'
 import dropDownStyles from '../styles/DropdownStyles.module.css'
+import { FiChevronDown, FiChevronLeft } from 'react-icons/fi';
 
-library.add(faAngleLeft, faAngleDown)
+interface SideNavBarToggleIconProps {
+    sideMenuIsOpen: boolean;
+   }
 
 export default function DropDownMenu() {
 
   const [sideMenuIsOpen, setSideMenuIsOpen] = useState(false);
 
-    const sideNavBarToggleIcon = sideMenuIsOpen ? faAngleDown : faAngleLeft
+  const SideNavBarToggleIcon: React.FC<SideNavBarToggleIconProps> = ({ sideMenuIsOpen }) => {
+    return sideMenuIsOpen ? <FiChevronDown /> : <FiChevronLeft />;
+   };
 
     const toggleMenu = () => {
         setSideMenuIsOpen(!sideMenuIsOpen)
@@ -20,7 +22,7 @@ export default function DropDownMenu() {
     return(
         <div>
             <button className={`${styles.sideMenuButton} ${styles.popupMenuButton}`} onClick={() => toggleMenu()}>
-                <FontAwesomeIcon icon={sideNavBarToggleIcon} />
+                <SideNavBarToggleIcon sideMenuIsOpen={sideMenuIsOpen} />
             </button>
         </div>
     )

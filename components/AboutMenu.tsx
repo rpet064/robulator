@@ -1,11 +1,7 @@
 import { useState } from "react"
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FiHelpCircle } from 'react-icons/fi';
 import styles from '../styles/Home.module.css'
 import AboutMenuModal from "./AboutMenuModal"
-
-library.add(faCircleQuestion)
 
 export default function AboutMenu() {
 
@@ -18,7 +14,7 @@ export default function AboutMenu() {
     return(
         <div>
             <button className={`${styles.aboutMenuButton} ${styles.popupMenuButton}`} onClick={() => toggleMenu()}>
-                <FontAwesomeIcon icon={faCircleQuestion} />
+                <FiHelpCircle />
                 <AboutMenuModal aboutMenuIsOpen={aboutMenuIsOpen} setAboutMenuIsOpen={setAboutMenuIsOpen} />
             </button>
         </div>
