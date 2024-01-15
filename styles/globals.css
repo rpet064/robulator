@@ -20,3 +20,11 @@ a {
 button, span, svg{
   cursor: pointer;
 }
+
+svg{
+  font-size: 2.5rem;
+}
+
+svg:hover {
+  transform: scale(1.25);
+ }
