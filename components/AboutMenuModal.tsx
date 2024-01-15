@@ -56,7 +56,7 @@ const AboutMenuModal: FC<AboutMenuProps> = ({
 
         <p>Don't let those tricky equations beat you anymore. Our calculator is your secret weapon!"</p>
         <p>Click below to learn more about the design of the calculator, learn more about the the engineer of this application
-        and share any feedback, suggestions or improvements</p>
+          and share any feedback, suggestions or improvements</p>
       </div>
       
       <div className={modalStyles.modalFooter}>
