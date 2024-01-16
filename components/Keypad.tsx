@@ -8,14 +8,15 @@ import { errorMessage, notifyMessage } from './utility/toastMessages'
 
 interface KeypadProps {
   firstCalculatorInput: string[]
-  setFirstCalculatorInput: Dispatch<SetStateAction<string[]>>;
+  setFirstCalculatorInput: Dispatch<SetStateAction<string[]>>
   secondCalculatorInput: string[]
-  setSecondCalculatorInput: Dispatch<SetStateAction<string[]>>;
+  setSecondCalculatorInput: Dispatch<SetStateAction<string[]>>
   setPrevInput: (value: string) => void
   operator: string
   setOperator: (value: string) => void
   calculatorRef: RefObject<HTMLDivElement>
   textInputRef: RefObject<HTMLDivElement>
+  isAdvancedCalculations: boolean
 }
 
 
@@ -28,7 +29,8 @@ const Keypad: FC<KeypadProps> = ({
   operator,
   setOperator,
   calculatorRef,
-  textInputRef
+  textInputRef,
+  isAdvancedCalculations
   }) => {
 
   const maximumNumberOfIntegers = 15
@@ -41,7 +43,7 @@ const Keypad: FC<KeypadProps> = ({
   const [doesCalculationExceedInput, setDoesCalculationExceedInput] = useState(false)
   const [doesCalculationExceedScreenWidth, setDoesCalculationExceedScreenWidth] = useState(false)
   const [currentNumberOfInputs, setCurrentNumberOfInputs] = useState(0)
-  const [currentFontSizeInRem, setCurrentFontSizeInRem] = useState(5.25) // This is the default font size
+  const [currentFontSizeInRem, setCurrentFontSizeInRem] = useState(5.25)
 
   // if operator is empty, then still on first equation
   useEffect(() => {

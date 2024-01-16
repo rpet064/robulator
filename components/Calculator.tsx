@@ -11,6 +11,7 @@ export default function Calculator() {
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([])
   const [prevInput, setPrevInput] = useState<string>("")
   const [operator, setOperator] = useState("")
+  const [isAdvancedCalculations, setIsAdvancedCalculations] = useState(false);
 
   const calculatorRef = useRef(null);
   const textInputRef = useRef(null);
@@ -24,7 +25,10 @@ export default function Calculator() {
       {/* // above main screen calculations */}
       <div className={styles.calculatorScreen}>
 
-          <SideMenu/>
+          <SideMenu
+              isAdvancedCalculations={isAdvancedCalculations}
+              setIsAdvancedCalculations={setIsAdvancedCalculations}
+          />
 
           <div className={styles.miniScreen} 
             onClick={() => copyPreviousCalculationToClipboard(prevInput)}>
@@ -52,6 +56,7 @@ export default function Calculator() {
         setOperator={setOperator}
         calculatorRef={calculatorRef}
         textInputRef={textInputRef}
+        isAdvancedCalculations={isAdvancedCalculations}
       />
     </div>
   )

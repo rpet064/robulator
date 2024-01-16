@@ -1,10 +1,17 @@
-import { useState } from "react"
+import { useState, FC, SetStateAction, Dispatch } from "react"
 import sideMenuStyles from '../styles/SideMenu.module.css'
 import { TbPacman, TbAdjustmentsCog, TbMoonFilled, TbSunHigh } from "react-icons/tb";
 import AboutMenu from "./AboutMenu";
-import CalculationsManager from "./CalculationsManager";
 
-export default function SideMenu() {
+interface SideMenuProps {
+    isAdvancedCalculations: boolean
+    setIsAdvancedCalculations: Dispatch<SetStateAction<boolean>>
+  }
+
+const SideMenu: FC<SideMenuProps> = ({
+    isAdvancedCalculations,
+    setIsAdvancedCalculations
+    }) => {
 
   const [sideMenuIsOpen, setSideMenuIsOpen] = useState(false);
   const [theme, setTheme] = useState("light");
@@ -17,6 +24,10 @@ export default function SideMenu() {
         setTheme(mode)
     }
 
+    const toggleCalculationsMode = () => {
+        setIsAdvancedCalculations(!isAdvancedCalculations)
+    }
+
     return(
         <div>
             <button className={
@@ -27,8 +38,9 @@ export default function SideMenu() {
 
             {sideMenuIsOpen && (
             <div className={sideMenuStyles.sideMenuContainer}>
-                <CalculationsManager/>
-                <AboutMenu/>
+                <button className={sideMenuStyles.darkButton} onClick={() => toggleTheme("light")} name="Light Mode">
+                    <TbSunHigh />
+                </button>
                 <button className={sideMenuStyles.darkButton} onClick={() => toggleTheme("light")} name="Light Mode">
                     <TbSunHigh />
                 </button>
@@ -38,10 +50,12 @@ export default function SideMenu() {
                 <button className={sideMenuStyles.darkButton} onClick={() => toggleTheme("retro")} name="Retro Mode">
                     <TbPacman />
                 </button>
+                <AboutMenu/>
             </div>
                 )}
             </button>
         </div>
     )
-     
 }
+
+export default SideMenu
