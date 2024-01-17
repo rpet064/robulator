@@ -78,9 +78,21 @@
 
 /* Responsive */
 
+@media (max-width: 1200px){
+  .calculator{
+    width: 60%;
+  }
+}
+
 @media (max-width: 996px){
   .calculator{
     width: 70%;
+  }
+}
+
+@media (max-width: 768px){
+  .calculator{
+    width: 80%;
   }
 }
 

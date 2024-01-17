@@ -53,3 +53,17 @@
   .modalFooter .modalFooterIcon:hover{
     transform: scale(1.25);
   }
+
+  /* Responsive */
+
+  @media (max-width: 768px){
+    .modalBody {
+      padding: 0 1.5rem;
+    }
+  }
+
+  @media (max-width: 768px){
+    .modalBody p, .modalBody h3, .modalBody h4, .modalBody li {
+      scale: 0.9;
+    }
+  }
