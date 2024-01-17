@@ -1,6 +1,6 @@
 import { useState, FC, SetStateAction, Dispatch } from "react"
 import sideMenuStyles from '../styles/SideMenu.module.css'
-import { TbPacman, TbAdjustmentsCog, TbMoonFilled, TbSunHigh } from "react-icons/tb";
+import { TbPacman, TbAdjustmentsCog, TbMoonFilled, TbSunHigh, TbSettingsOff, TbSettings } from "react-icons/tb";
 import AboutMenu from "./AboutMenu";
 
 interface SideMenuProps {
@@ -34,12 +34,13 @@ const SideMenu: FC<SideMenuProps> = ({
                 `${sideMenuStyles.sideMenuButton} ${sideMenuStyles.popupMenuButton} ${sideMenuStyles.darkButton}`} 
                 onClick={() => toggleMenu()}
                 >
-            <TbAdjustmentsCog name="Settings"/>
-
+            {sideMenuIsOpen ? <TbSettingsOff name="Settings" /> : <TbSettings name="Settings" />}
+            </button>
+     
             {sideMenuIsOpen && (
             <div className={sideMenuStyles.sideMenuContainer}>
-                <button className={sideMenuStyles.darkButton} onClick={() => toggleTheme("light")} name="Light Mode">
-                    <TbSunHigh />
+                <button className={sideMenuStyles.darkButton} onClick={() => toggleCalculationsMode()} name="Advanced Calculations">
+                    <TbAdjustmentsCog />
                 </button>
                 <button className={sideMenuStyles.darkButton} onClick={() => toggleTheme("light")} name="Light Mode">
                     <TbSunHigh />
@@ -53,9 +54,8 @@ const SideMenu: FC<SideMenuProps> = ({
                 <AboutMenu/>
             </div>
                 )}
-            </button>
         </div>
-    )
+     )
 }
 
 export default SideMenu
