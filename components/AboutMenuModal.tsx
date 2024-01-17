@@ -1,7 +1,8 @@
-import React, { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import modalStyles from '../styles/ModalStyles.module.css';
 import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
+import useWindowSize from './utility/windowSize';
 
 Modal.setAppElement('#__next')
 
@@ -15,6 +16,17 @@ const AboutMenuModal: FC<AboutMenuProps> = ({
   setAboutMenuIsOpen
   }) => {
 
+    const { width } = useWindowSize();
+    const [modalWidth, setModalWidth] = useState('47.5%');
+   
+    useEffect(() => {
+      if (width <= 1200) {
+        setModalWidth('82.5%');
+      } else {
+        setModalWidth('50%');
+      }
+    }, [width]);
+
  return (
    <div>
      <Modal
@@ -23,7 +35,7 @@ const AboutMenuModal: FC<AboutMenuProps> = ({
        contentLabel="About menu modal"
        style={{
         content: {
-          width: '47.5%',
+          width: modalWidth,
           height: '85%',
           margin: '0 auto',
           padding: '0px',
