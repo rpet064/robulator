@@ -44,7 +44,9 @@ const Keypad: FC<KeypadProps> = ({
   const [doesCalculationExceedScreenWidth, setDoesCalculationExceedScreenWidth] = useState(false)
   const [currentNumberOfInputs, setCurrentNumberOfInputs] = useState(0)
   const [currentFontSizeInRem, setCurrentFontSizeInRem] = useState(5.25)
-  const [symbolsArray, setSymbolsArray] = useState<string[]>([]);
+  const [symbolsArray, setSymbolsArray] = useState<string[]>([])
+  const [buttonStyle, setButtonStyle] = useState(styles.calcBtn)
+  const [keypadContainerStyle, setKeypadContainerStyle] = useState(styles.compactCalculatorKeypad)
 
 
   // Toggle between compact calculations and advanced
@@ -53,6 +55,16 @@ const Keypad: FC<KeypadProps> = ({
   setSymbolsArray(currentSymbolsArray)
   }, [isScientificSymbolsArray])
 
+
+    // Toggle between compact calculations and scientific styles
+    useEffect(() => {
+    setButtonStyle(isScientificSymbolsArray ? styles.scientificCalcBtn : styles.compactCalcBtn)
+    }, [isScientificSymbolsArray])
+
+
+    useEffect(() => {
+      setKeypadContainerStyle(isScientificSymbolsArray ? styles.scientificCalculatorKeypad : styles.compactCalculatorKeypad)
+      }, [isScientificSymbolsArray])
 
   // if operator is empty, then still on first equation
   useEffect(() => {
@@ -93,7 +105,7 @@ const Keypad: FC<KeypadProps> = ({
     setCurrentNumberOfInputs(firstCalculatorInput.length + secondCalculatorInput.length + operator.length)
     if (currentNumberOfInputs > maximumNumberOfIntegers) {
       setDoesCalculationExceedInput(true)
-      return;
+      return
     }
     setDoesCalculationExceedInput(false)
   }, [firstCalculatorInput, secondCalculatorInput, operator])
@@ -102,10 +114,10 @@ const Keypad: FC<KeypadProps> = ({
   // get current font size
   useEffect(() => {
     if (textInputRef.current) {
-      const style = window.getComputedStyle(textInputRef.current);
+      const style = window.getComputedStyle(textInputRef.current)
       setCurrentFontSizeInRem(parseFloat(style.fontSize))
     }
-  }, [textInputRef]);
+  }, [textInputRef])
 
 
   // check number of inputs * font size width is larger than the screen
@@ -119,12 +131,12 @@ const Keypad: FC<KeypadProps> = ({
 
   useEffect(() => {
     if (textInputRef.current && doesCalculationExceedScreenWidth) {
-      const style = window.getComputedStyle(textInputRef.current);
-      const fontSizeInPixels = parseInt(style.fontSize, 10);
-      const newFontSizeInRem = fontSizeInPixels * 0.9 / 16;
-      textInputRef.current.style.fontSize = `${newFontSizeInRem}rem`;
+      const style = window.getComputedStyle(textInputRef.current)
+      const fontSizeInPixels = parseInt(style.fontSize, 10)
+      const newFontSizeInRem = fontSizeInPixels * 0.9 / 16
+      textInputRef.current.style.fontSize = `${newFontSizeInRem}rem`
     }
-    }, [doesCalculationExceedScreenWidth]);
+    }, [doesCalculationExceedScreenWidth])
 
 
   // this function stores the last equation
@@ -254,26 +266,26 @@ const Keypad: FC<KeypadProps> = ({
 
   const onSquareRoot = () => {
 
-    let isNegative = false;
+    let isNegative = false
 
-    const input = isFirstCalculatorInput ? firstCalculatorInput : secondCalculatorInput;
-    const setInput = isFirstCalculatorInput ? setFirstCalculatorInput : setSecondCalculatorInput;
+    const input = isFirstCalculatorInput ? firstCalculatorInput : secondCalculatorInput
+    const setInput = isFirstCalculatorInput ? setFirstCalculatorInput : setSecondCalculatorInput
    
     if (!input.length || (operator !== "" && !secondCalculatorInput.length)) {
-     setInput(['0']);
-     setPrevInput(`√ ${0}`);
-     return;
+     setInput(['0'])
+     setPrevInput(`√ ${0}`)
+     return
     }
 
     // Remove negative sign from input
     if(input[0] === "-"){
-      isNegative = true;
-      input.shift();
+      isNegative = true
+      input.shift()
     }
    
-    const originalNumberAsInt = parseFloat(input.toString().replaceAll(',', ""));
-    const answer = squareNumber(input, originalNumberAsInt, input.length);
-    const roundedAnswer = removeTrailingZeros(answer.toString().replaceAll(',', ""));
+    const originalNumberAsInt = parseFloat(input.toString().replaceAll(',', ""))
+    const answer = squareNumber(input, originalNumberAsInt, input.length)
+    const roundedAnswer = removeTrailingZeros(answer.toString().replaceAll(',', ""))
 
     let roundedAnswerAsArray = roundedAnswer.split("")
 
@@ -282,9 +294,9 @@ const Keypad: FC<KeypadProps> = ({
       roundedAnswerAsArray.unshift("-")
     }
    
-    setInput(roundedAnswerAsArray);
-    setPrevInput(`√ ${originalNumberAsInt}`);
-   };
+    setInput(roundedAnswerAsArray)
+    setPrevInput(`√ ${originalNumberAsInt}`)
+   }
    
 
   // handle decimal input logic
@@ -339,23 +351,23 @@ const Keypad: FC<KeypadProps> = ({
   const changeSign = () => {
 
     function handleSign(input: string[], setInput: Dispatch<SetStateAction<string[]>>) {
-      var originalArray = input;
+      var originalArray = input
      
       if (input[0] === "-") {
         // remove "-" from front of array making it "positive"
-        originalArray = originalArray.slice(1);
+        originalArray = originalArray.slice(1)
       } else {
         // add "-" to front of array making it "negative"
-        originalArray.unshift("-");
+        originalArray.unshift("-")
       }
      
-      setInput([...originalArray]);
+      setInput([...originalArray])
      }
      
      if (isFirstCalculatorInput) {
-      handleSign(firstCalculatorInput, setFirstCalculatorInput);
+      handleSign(firstCalculatorInput, setFirstCalculatorInput)
      } else {
-      handleSign(secondCalculatorInput, setSecondCalculatorInput);
+      handleSign(secondCalculatorInput, setSecondCalculatorInput)
      }
 }
 
@@ -427,10 +439,11 @@ const Keypad: FC<KeypadProps> = ({
   }
 
   return (
-    <div className={styles.calculatorKeypad}>
+    <div className={`${keypadContainerStyle} ${styles.calculatorKeypadStyle}`}>
       {symbolsArray.map((symbol, index) => {
         return (
-          <button onClick={() => handleUserInput(symbol)} key={index} className={styles.calcBtn}>{symbol}</button>
+          <button onClick={() => handleUserInput(symbol)} key={index} 
+          className={`${buttonStyle} ${styles.calcBtn}`}>{symbol}</button>
         )
       })
       }
