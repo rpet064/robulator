@@ -4,13 +4,13 @@ import { TbPacman, TbAdjustmentsCog, TbMoonFilled, TbSunHigh, TbSettingsOff, TbS
 import AboutMenu from "./AboutMenu";
 
 interface SideMenuProps {
-    isAdvancedCalculations: boolean
-    setIsAdvancedCalculations: Dispatch<SetStateAction<boolean>>
+    ScientificSymbolsArray: boolean
+    setScientificSymbolsArray: Dispatch<SetStateAction<boolean>>
   }
 
 const SideMenu: FC<SideMenuProps> = ({
-    isAdvancedCalculations,
-    setIsAdvancedCalculations
+    ScientificSymbolsArray,
+    setScientificSymbolsArray
     }) => {
 
   const [sideMenuIsOpen, setSideMenuIsOpen] = useState(false);
@@ -25,7 +25,7 @@ const SideMenu: FC<SideMenuProps> = ({
     }
 
     const toggleCalculationsMode = () => {
-        setIsAdvancedCalculations(!isAdvancedCalculations)
+        setScientificSymbolsArray(!ScientificSymbolsArray)
     }
 
     return(

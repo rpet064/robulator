@@ -1,6 +1,6 @@
 import { useEffect, useState, Dispatch, SetStateAction, RefObject, FC } from 'react'
 import styles from '../styles/Home.module.css'
-import { numArray, operatorArray, regularSymbolsArray } from './utility/symbolsArray'
+import { numArray, operatorArray, regularSymbolsArray, scientificSymbolsArray } from './utility/symbolsArray'
 import SolveEquation from './utility/equationSolver'
 import squareNumber from './utility/numberSquarer'
 import removeTrailingZeros from './utility/removeTrailingZeros'
@@ -16,7 +16,7 @@ interface KeypadProps {
   setOperator: (value: string) => void
   calculatorRef: RefObject<HTMLDivElement>
   textInputRef: RefObject<HTMLDivElement>
-  isAdvancedCalculations: boolean
+  isScientificSymbolsArray: boolean
 }
 
 
@@ -30,7 +30,7 @@ const Keypad: FC<KeypadProps> = ({
   setOperator,
   calculatorRef,
   textInputRef,
-  isAdvancedCalculations
+  isScientificSymbolsArray
   }) => {
 
   const maximumNumberOfIntegers = 15
@@ -44,6 +44,15 @@ const Keypad: FC<KeypadProps> = ({
   const [doesCalculationExceedScreenWidth, setDoesCalculationExceedScreenWidth] = useState(false)
   const [currentNumberOfInputs, setCurrentNumberOfInputs] = useState(0)
   const [currentFontSizeInRem, setCurrentFontSizeInRem] = useState(5.25)
+  const [symbolsArray, setSymbolsArray] = useState<string[]>([]);
+
+
+  // Toggle between compact calculations and advanced
+  useEffect(() => {
+  let currentSymbolsArray = isScientificSymbolsArray ? scientificSymbolsArray : regularSymbolsArray
+  setSymbolsArray(currentSymbolsArray)
+  }, [isScientificSymbolsArray])
+
 
   // if operator is empty, then still on first equation
   useEffect(() => {
@@ -419,7 +428,7 @@ const Keypad: FC<KeypadProps> = ({
 
   return (
     <div className={styles.calculatorKeypad}>
-      {regularSymbolsArray.map((symbol, index) => {
+      {symbolsArray.map((symbol, index) => {
         return (
           <button onClick={() => handleUserInput(symbol)} key={index} className={styles.calcBtn}>{symbol}</button>
         )

@@ -11,7 +11,7 @@ export default function Calculator() {
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([])
   const [prevInput, setPrevInput] = useState<string>("")
   const [operator, setOperator] = useState("")
-  const [isAdvancedCalculations, setIsAdvancedCalculations] = useState(false);
+  const [isScientificSymbolsArray, setScientificSymbolsArray] = useState(false);
 
   const calculatorRef = useRef(null);
   const textInputRef = useRef(null);
@@ -26,8 +26,8 @@ export default function Calculator() {
       <div className={styles.calculatorScreen}>
 
           <SideMenu
-              isAdvancedCalculations={isAdvancedCalculations}
-              setIsAdvancedCalculations={setIsAdvancedCalculations}
+              ScientificSymbolsArray={isScientificSymbolsArray}
+              setScientificSymbolsArray={setScientificSymbolsArray}
           />
 
           <div className={styles.miniScreen} 
@@ -56,7 +56,7 @@ export default function Calculator() {
         setOperator={setOperator}
         calculatorRef={calculatorRef}
         textInputRef={textInputRef}
-        isAdvancedCalculations={isAdvancedCalculations}
+        isScientificSymbolsArray={isScientificSymbolsArray}
       />
     </div>
   )
