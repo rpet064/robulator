@@ -1,7 +1,7 @@
 import { useEffect, useState, Dispatch, SetStateAction, RefObject, FC } from 'react'
 import styles from '../styles/Keypad.module.css'
 import { regularSymbolsArray, scientificSymbolsArray } from './utility/symbolsArray'
-import CalculationsManager from "./calculations/calculationsManager"
+import CalculationsManager from "./calculations/CalculationsManager"
 
 interface KeypadProps {
   firstCalculatorInput: string[]
