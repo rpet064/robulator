@@ -1,0 +1,70 @@
+.calculatorKeypadStyle {
+    height: 62.5%;
+    display: flex !important;
+    flex-wrap: wrap;
+}
+
+.calcBtn:active {
+    border: black 1px solid;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.calcBtn {
+    background-color: #FFFAE7;
+    color: #181D31;
+    font-size: 3.25rem;
+    border: #181D31 1px solid;
+}
+
+/* Compact */
+
+.compactCalcBtn {
+    flex: 1 0 24%;
+}
+
+.compactCalculatorKeypad button:nth-child(-n+3) {
+    background-color: #0779E4 !important;
+    color: #FFFAE7;
+}
+
+.compactCalculatorKeypad button:nth-child(4n) {
+    background-color: #9951FF !important;
+    color: #FFFAE7;
+}
+
+.compactCalculatorKeypad button:nth-child(20) {
+    background-color: #C21010 !important;
+    color: #FFFAE7;
+}
+
+/* Scientific */
+
+.scientificCalcBtn {
+    flex: 1 0 18%;
+    font-size: 3rem;
+}
+
+.scientificCalculatorKeypad button:nth-child(-n+4) {
+    background-color: #0779E4 !important;
+    color: #FFFAE7;
+}
+
+.scientificCalculatorKeypad button:nth-child(5n) {
+    background-color: #9951FF !important;
+    color: #FFFAE7;
+}
+
+.scientificCalculatorKeypad button:nth-child(5n) {
+    background-color: #9951FF !important;
+    color: #FFFAE7;
+}
+
+.scientificCalculatorKeypad button:nth-child(5n+6) {
+    background-color: #3CB371;
+    color: #FFFAE7;
+}
+
+.scientificCalculatorKeypad button:nth-child(30) {
+    background-color: #C21010 !important;
+    color: #FFFAE7;
+}

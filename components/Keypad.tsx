@@ -1,5 +1,5 @@
 import { useEffect, useState, Dispatch, SetStateAction, RefObject, FC } from 'react'
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Keypad.module.css'
 import { regularSymbolsArray, scientificSymbolsArray } from './utility/symbolsArray'
 import CalculationsManager from "./calculations/calculationsManager"
 
