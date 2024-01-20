@@ -4,6 +4,7 @@ import {Toaster} from 'react-hot-toast'
 import { copyPreviousCalculationToClipboard, copyCurrentCalculationToClipboard} from './utility/clipboardUtils'
 import Keypad from './Keypad'
 import { useState, useRef, SetStateAction, Dispatch, FC } from 'react'
+import colours from '../styles/Colours.module.css'
 
 interface CalculatorProps {
   theme: string
@@ -31,11 +32,12 @@ const Calculator: FC<CalculatorProps> = ({
          <Toaster/>
 
       {/* // above main screen calculations */}
-      <div className={styles.calculatorScreen}>
+      <div className={`${styles.calculatorScreen} ${theme === 'light' ? colours.darkBackground : colours.lightBackground}`}>
 
           <SideMenu
               ScientificSymbolsArray={isScientificSymbolsArray}
               setScientificSymbolsArray={setScientificSymbolsArray}
+              theme={theme}
               setTheme={setTheme}
           />
 

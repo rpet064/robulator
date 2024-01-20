@@ -1,9 +1,15 @@
-import { useState } from "react"
+import { useState, FC } from "react"
 import { FiHelpCircle } from 'react-icons/fi';
 import AboutMenuModal from "./AboutMenuModal"
-import sideMenuStyles from '../styles/SideMenu.module.css'
+import colours from '../styles/Colours.module.css'
 
-export default function AboutMenu() {
+interface AboutMenuProps {
+    theme: string
+  }
+
+  const AboutMenu: FC<AboutMenuProps> = ({
+        theme,
+        }) => {
 
     const [aboutMenuIsOpen, setAboutMenuIsOpen] = useState(false);
 
@@ -13,10 +19,13 @@ export default function AboutMenu() {
 
     return(
         <div>
-            <button className={sideMenuStyles.darkButton} onClick={() => toggleMenu()}>
-                <FiHelpCircle />
+            <button className={theme === "light" ? colours.darkButton : colours.lightButton} 
+            onClick={() => toggleMenu()}>
+                <FiHelpCircle className={theme === "light" ? colours.lightIcon : colours.darkIcon}/>
                 <AboutMenuModal aboutMenuIsOpen={aboutMenuIsOpen} setAboutMenuIsOpen={setAboutMenuIsOpen}/>
             </button>
         </div>
     )
 }
+
+export default AboutMenu

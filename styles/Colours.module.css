@@ -1,7 +1,25 @@
-.whiteBackground {
+.lightBackground {
   background-color: white;
 }
 
 .darkBackground {
   background-color: #181D31;
+}
+
+.lightIcon{
+  color: white;
+}
+
+.darkIcon{
+  color: #181D31;
+}
+
+.darkButton {
+  background-color: #181D31;
+  border: none;
+}
+
+.lightButton {
+  background-color: white;
+  border: none;
 }

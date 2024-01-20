@@ -18,12 +18,21 @@ const AboutMenuModal: FC<AboutMenuProps> = ({
 
     const { width } = useWindowSize();
     const [modalWidth, setModalWidth] = useState('47.5%');
+    const [modalHeight, setModalHeight] = useState('85%');
    
     useEffect(() => {
       if (width <= 1200) {
         setModalWidth('82.5%');
       } else {
         setModalWidth('50%');
+      }
+    }, [width]);
+
+    useEffect(() => {
+      if (width <= 768) {
+        setModalHeight('100%');
+      } else {
+        setModalHeight('85%');
       }
     }, [width]);
 
@@ -36,8 +45,8 @@ const AboutMenuModal: FC<AboutMenuProps> = ({
        style={{
         content: {
           width: modalWidth,
-          height: '85%',
-          margin: '0 auto',
+          height: modalHeight,
+          margin: 'auto',
           padding: '0px',
         }
       }}
