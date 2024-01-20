@@ -3,9 +3,17 @@ import SideMenu from './SideMenu'
 import {Toaster} from 'react-hot-toast'
 import { copyPreviousCalculationToClipboard, copyCurrentCalculationToClipboard} from './utility/clipboardUtils'
 import Keypad from './Keypad'
-import { useState, useRef } from 'react'
+import { useState, useRef, SetStateAction, Dispatch, FC } from 'react'
 
-export default function Calculator() {
+interface CalculatorProps {
+  theme: string
+  setTheme: Dispatch<SetStateAction<string>>
+}
+
+const Calculator: FC<CalculatorProps> = ({
+    theme,
+    setTheme
+    }) => {
 
   const [firstCalculatorInput, setFirstCalculatorInput] = useState<string[]>([])
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([])
@@ -28,6 +36,7 @@ export default function Calculator() {
           <SideMenu
               ScientificSymbolsArray={isScientificSymbolsArray}
               setScientificSymbolsArray={setScientificSymbolsArray}
+              setTheme={setTheme}
           />
 
           <div className={styles.miniScreen} 
@@ -61,3 +70,5 @@ export default function Calculator() {
     </div>
   )
 }
+
+export default Calculator

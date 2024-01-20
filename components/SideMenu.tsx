@@ -6,15 +6,16 @@ import AboutMenu from "./AboutMenu";
 interface SideMenuProps {
     ScientificSymbolsArray: boolean
     setScientificSymbolsArray: Dispatch<SetStateAction<boolean>>
+    setTheme: Dispatch<SetStateAction<string>>
   }
 
 const SideMenu: FC<SideMenuProps> = ({
     ScientificSymbolsArray,
-    setScientificSymbolsArray
+    setScientificSymbolsArray,
+    setTheme
     }) => {
 
   const [sideMenuIsOpen, setSideMenuIsOpen] = useState(false);
-  const [theme, setTheme] = useState("light");
 
     const toggleMenu = () => {
         setSideMenuIsOpen(!sideMenuIsOpen)

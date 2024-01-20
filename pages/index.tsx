@@ -3,11 +3,15 @@ import Image from 'next/image'
 import { Inter } from "next/font/google"
 import styles from '../styles/Home.module.css'
 import Calculator from '../components/Calculator'
-
+import colours from '../styles/Colours.module.css'
+import { useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+
+  const [theme, setTheme] = useState("light");
+
   return (
     <>
       <Head>
@@ -22,8 +26,10 @@ export default function Home() {
         <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png"/>
         <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
       </Head>
-      <main className={styles.main}>
-        <Calculator />
+      <main className={`${styles.main} ${theme === 'light' ? colours.lightBackground : colours.darkBackground}`}>
+        <Calculator 
+        theme={theme}
+        setTheme={setTheme}/>
       </main>
     </>
   )
