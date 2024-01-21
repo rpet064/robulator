@@ -30,8 +30,8 @@
 
 /* onclick & hover */
 
-.calculatorScreen .mainScreen span:hover{
-  color: rgba(255, 255, 255, 0.631);
+.calculatorScreen .mainScreen span:active{
+  color: gray;
 }
 
 /* Responsive */

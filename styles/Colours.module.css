@@ -1,5 +1,9 @@
 .lightBackground {
-  background-color: white;
+  background-color: #ffffff;;
+}
+
+.blueBackground {
+  background-color: #0779E4;
 }
 
 .darkBackground {
@@ -7,7 +11,7 @@
 }
 
 .lightIcon{
-  color: white;
+  color: #ffffff;;
 }
 
 .darkIcon{
@@ -20,6 +24,18 @@
 }
 
 .lightButton {
-  background-color: white;
+  background-color: #ffffff;
   border: none;
+}
+
+.lighterButton{
+  background-color: #FFFAE7;
+}
+
+.lightText{
+  color: #ffffff;;
+}
+
+.darkText{
+  color: #181D31;
 }

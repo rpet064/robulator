@@ -2,6 +2,7 @@ import { useEffect, useState, Dispatch, SetStateAction, RefObject, FC } from 're
 import styles from '../styles/Keypad.module.css'
 import { regularSymbolsArray, scientificSymbolsArray } from './utility/symbolsArray'
 import CalculationsManager from "./calculations/CalculationsManager"
+import colours from '../styles/Colours.module.css'
 
 interface KeypadProps {
   firstCalculatorInput: string[]
@@ -88,7 +89,7 @@ const Keypad: FC<KeypadProps> = ({
         return (
           <button onClick={() => calculationsManager(symbol)} 
           key={index}
-            className={`${buttonStyle} ${styles.calcBtn}`}>{symbol}</button>
+            className={`${buttonStyle} ${styles.calcBtn} ${colours.lighterButton}`}>{symbol}</button>
         )
       })
       }

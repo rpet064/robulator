@@ -29,6 +29,14 @@ const SideMenu: FC<SideMenuProps> = ({
         setTheme(currentTheme)
     }
 
+    const getStyleForButton = (theme: string) => {
+        return theme === "light" ? colours.darkButton : colours.lightButton;
+       }
+       
+       const getStyleForIcon = (theme: string) => {
+        return theme === "light" ? colours.lightIcon : colours.darkIcon;
+       }
+
     const toggleCalculationsMode = () => {
         setScientificSymbolsArray(!ScientificSymbolsArray)
     }
@@ -36,28 +44,22 @@ const SideMenu: FC<SideMenuProps> = ({
     return(
         <div>
             <button className={
-                `${sideMenuStyles.sideMenuButton} ${sideMenuStyles.popupMenuButton} 
-                ${theme === "light" ? colours.darkButton : colours.lightButton} `} 
-                onClick={() => toggleMenu()}
-                >
-            {sideMenuIsOpen ? <TbSettingsOff name="Settings" className={theme === "light" ? colours.lightIcon : colours.darkIcon}/> : 
-            <TbSettings name="Settings" className={theme === "light" ? colours.lightIcon : colours.darkIcon}/>}
+                `${sideMenuStyles.sideMenuButton} ${sideMenuStyles.popupMenuButton} ${getStyleForButton(theme)} `}
+                onClick={() => toggleMenu()} >
+            {sideMenuIsOpen ? <TbSettingsOff className={getStyleForIcon(theme)} name="Settings"/> :
+            <TbSettings className={getStyleForIcon(theme)} name="Settings" /> }
             </button>
      
             {sideMenuIsOpen && (
             <div className={sideMenuStyles.sideMenuContainer}>
-                <button className={theme === "light" ? colours.darkButton : colours.lightButton} 
-                onClick={() => toggleCalculationsMode()} 
-                name="Advanced Calculations">
-                    <TbAdjustmentsCog className={theme === "light" ? colours.lightIcon : colours.darkIcon}/>
+                <button className={getStyleForButton(theme)} onClick={() => toggleCalculationsMode()} name="Advanced Calculations">
+                <TbAdjustmentsCog className={getStyleForIcon(theme)}/>
                 </button>
-                <button className={theme === "light" ? colours.darkButton : colours.lightButton} 
-                onClick={() => toggleTheme("light")} name="Light Mode">
-                    <TbSunHigh className={theme === "light" ? colours.lightIcon : colours.darkIcon}/>
+                <button className={getStyleForButton(theme)} onClick={() => toggleTheme("light")} name="Light Mode">
+                <TbSunHigh className={getStyleForIcon(theme)}/>
                 </button>
-                <button className={theme === "light" ? colours.darkButton : colours.lightButton} 
-                onClick={() => toggleTheme("dark")} name="Dark Mode">
-                    <TbMoonFilled className={theme === "light" ? colours.lightIcon : colours.darkIcon}/>
+                <button className={getStyleForButton(theme)} onClick={() => toggleTheme("dark")} name="Dark Mode">
+                <TbMoonFilled className={getStyleForIcon(theme)}/>
                 </button>
                 <AboutMenu theme={theme}/>
             </div>

@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import modalStyles from '../styles/ModalStyles.module.css';
 import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
 import useWindowSize from './utility/windowSize';
+import colours from '../styles/Colours.module.css';
 
 Modal.setAppElement('#__next')
 
@@ -19,10 +20,11 @@ const AboutMenuModal: FC<AboutMenuProps> = ({
     const { width } = useWindowSize();
     const [modalWidth, setModalWidth] = useState('47.5%');
     const [modalHeight, setModalHeight] = useState('85%');
+    const [modalInset, setmModalInset] = useState('40px');
    
     useEffect(() => {
       if (width <= 1200) {
-        setModalWidth('82.5%');
+        setModalWidth('85%');
       } else {
         setModalWidth('50%');
       }
@@ -30,9 +32,17 @@ const AboutMenuModal: FC<AboutMenuProps> = ({
 
     useEffect(() => {
       if (width <= 768) {
-        setModalHeight('100%');
+        setModalHeight('97.5%');
       } else {
         setModalHeight('85%');
+      }
+    }, [width]);
+
+    useEffect(() => {
+      if (width <= 568) {
+        setmModalInset('1px');
+      } else {
+        setmModalInset('40px');
       }
     }, [width]);
 
@@ -51,9 +61,9 @@ const AboutMenuModal: FC<AboutMenuProps> = ({
         }
       }}
      >
-      <div className={modalStyles.modalHeader}>
+      <div className={` ${modalStyles.modalHeader} ${colours.blueBackground} ${colours.lightText}`}>
         <p>About</p>
-        <button className={modalStyles.closeModalButton} onClick={() => setAboutMenuIsOpen(false)}>X</button>
+        <button className={`${modalStyles.closeModalButton} ${colours.lightText}`} onClick={() => setAboutMenuIsOpen(false)}>X</button>
       </div>
       
       <div className={modalStyles.modalBody}>
@@ -80,7 +90,7 @@ const AboutMenuModal: FC<AboutMenuProps> = ({
           and share any feedback, suggestions or improvements</p>
       </div>
       
-      <div className={modalStyles.modalFooter}>
+      <div className={`${modalStyles.modalFooter} ${colours.blueBackground} ${colours.lightText}`}>
       <a className={modalStyles.modalFooterIcon} href="https://github.com/rpet064">
         <FiGithub title="Github" />
       </a>

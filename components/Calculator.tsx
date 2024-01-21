@@ -20,7 +20,7 @@ const Calculator: FC<CalculatorProps> = ({
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([])
   const [prevInput, setPrevInput] = useState<string>("")
   const [operator, setOperator] = useState("")
-  const [isScientificSymbolsArray, setScientificSymbolsArray] = useState(false);
+  const [isScientificSymbolsArray, setScientificSymbolsArray] = useState(true);
 
   const calculatorRef = useRef(null);
   const textInputRef = useRef(null);
@@ -28,7 +28,7 @@ const Calculator: FC<CalculatorProps> = ({
   return (
 
     // Calculator Screen
-    <div className={styles.calculator} ref={calculatorRef}>
+    <div className={`${styles.calculator} ${theme === 'light' ? colours.lightText : colours.darkText}`} ref={calculatorRef}>
          <Toaster/>
 
       {/* // above main screen calculations */}
