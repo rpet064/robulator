@@ -5,6 +5,7 @@ import SolveEquation from './equationSolver'
 import squareNumber from './numberSquarer'
 import removeTrailingZeros from '../utility/removeTrailingZeros'
 import { errorMessage, notifyMessage } from '../utility/toastMessages'
+import solvePiEquation from './solvePiEquation'
 
 interface calculationsManagerProps {
     firstCalculatorInput: string[]
@@ -58,12 +59,30 @@ const CalculationsManager = ({
     const [isFirstCalculatorInput, setIsFirstCalculatorInput] = useState(true)
     const [firstCalculatorInputHasAnswer, setFirstCalculatorInputHasAnswer] = useState(false)
     const [currentFontSizeInRem, setCurrentFontSizeInRem] = useState(5.25)
+    const [doesCalculationContainPi, setDoesCalculationContainPi] = useState(false)
+    const [doesFirstCalculationContainPi, setFirstDoesCalculationContainPi] = useState(false)
+    const [doesSecondCalculationContainPi, setSecondDoesCalculationContainPi] = useState(false)
 
     // if operator is empty, then still on first equation
     useEffect(() => {
         let isFirstEquation = operator.trim() === ""
         setIsFirstCalculatorInput(isFirstEquation)
     }, [operator])
+
+    // Track if first equation contains pi
+    useEffect(() => {
+        setFirstDoesCalculationContainPi(firstCalculatorInput.includes("𝝅"))
+    }, [firstCalculatorInput])
+
+    // Track if second equation contains pi
+    useEffect(() => {
+        setSecondDoesCalculationContainPi(secondCalculatorInput.includes("𝝅"))
+    }, [secondCalculatorInput])
+
+    // Track if any equation contains pi
+    useEffect(() => {
+        setDoesCalculationContainPi(doesFirstCalculationContainPi || doesSecondCalculationContainPi)
+    }, [doesFirstCalculationContainPi, doesSecondCalculationContainPi])
 
 
     useEffect(() => {
@@ -150,9 +169,25 @@ const CalculationsManager = ({
     const solveEquation = async (newOperator: string) => {
         if (secondCalculatorInput.length !== 0) {
 
+            let firstInput = firstCalculatorInput.join("")
+            let secondInput = secondCalculatorInput.join("")
+
+            // replace pi with actual number
+            if (doesCalculationContainPi) {
+                firstInput = solvePiEquation(firstInput)
+                secondInput = solvePiEquation(secondInput)
+            }
+
             // join array of strings into String, then change strings into numbers
-            let firstInputAsFloat = parseFloat(firstCalculatorInput.join(""))
-            let secondInputAsFloat = parseFloat(secondCalculatorInput.join(""))
+            let firstInputAsFloat , secondInputAsFloat
+
+            try{
+                firstInputAsFloat = parseFloat(firstInput)
+                secondInputAsFloat = parseFloat(secondInput)
+            } catch {
+                errorMessage("Equations could not be joined")
+                return
+            }
 
             let answer = SolveEquation(firstInputAsFloat, operator, secondInputAsFloat)!
 
@@ -403,10 +438,26 @@ const CalculationsManager = ({
             handleInputExceedsMaximum(userInput)
             return
         }
-
-        // Add number to array
+        
+        // Add number or pi to array
         if (numArray.includes(userInput)) {
             onInputNumber(userInput)
+            calculationComplete = true
+            return
+        }
+
+        // Add pi to array
+        if (userInput === "𝝅") {
+
+            if(isFirstCalculatorInput && !doesFirstCalculationContainPi){
+                onInputNumber(userInput)
+
+            } else if(!isFirstCalculatorInput && !doesSecondCalculationContainPi){
+                onInputNumber(userInput)
+                
+            } else {
+                notifyMessage("Only one Pi can be added to the equation")
+            }
             calculationComplete = true
             return
         }

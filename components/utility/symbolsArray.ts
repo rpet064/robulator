@@ -8,7 +8,7 @@ export const regularSymbolsArray = [
 
 export const scientificSymbolsArray = [
     "log", "AC", "C", "√", "≠",
-    "sin", "cos", "tan", "π", "÷",
+    "sin", "cos", "tan", "𝝅", "÷",
     "!", "7", "8", "9", "×",
     "x2", "4", "5", "6", "-",
     "x3", "1", "2", "3", "+",
