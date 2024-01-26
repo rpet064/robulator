@@ -5,7 +5,7 @@ import SolveEquation from './equationSolver'
 import squareNumber from './numberSquarer'
 import removeTrailingZeros from '../utility/removeTrailingZeros'
 import { errorMessage, notifyMessage } from '../utility/toastMessages'
-import solvePiEquation from './solvePiEquation'
+import {solvePiEquation, replacePiSymbol } from './solvePiEquation'
 
 interface calculationsManagerProps {
     firstCalculatorInput: string[]
@@ -296,8 +296,17 @@ const CalculationsManager = ({
 
         let isNegative = false
 
-        const input = isFirstCalculatorInput ? firstCalculatorInput : secondCalculatorInput
+        let input = isFirstCalculatorInput ? firstCalculatorInput : secondCalculatorInput
         const setInput = isFirstCalculatorInput ? setFirstCalculatorInput : setSecondCalculatorInput
+
+        // IsFirstCalc & contains Pi or isSecondCalc and contains pi = true
+        const doesCurrentCalculationHavePi = isFirstCalculatorInput ? 
+        doesFirstCalculationContainPi : doesSecondCalculationContainPi
+
+        // Solve equation with Pi for calculation
+        if(doesCurrentCalculationHavePi){
+            input = solvePiEquation(input.join("")).split("")
+        }
 
         if (!input.length || (operator !== "" && !secondCalculatorInput.length)) {
             setInput(['0'])
