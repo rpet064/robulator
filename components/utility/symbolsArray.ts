@@ -15,6 +15,8 @@ export const scientificSymbolsArray = [
     "xy", "0", "+/-", ".", "="
 ]
 
+export const trigSymbolsArray = ["sin", "log", "cos", "tan"]
+
 export const numArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
 export const operatorArray = ["+", "-", "×", "÷"]

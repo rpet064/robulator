@@ -1,3 +1,5 @@
+import { solveTanCalculation, manageTanInput, solveSinCalculation, manageSinInput,
+    solveLogCalculation, manageLogInput, solveCosCalculation, manageCosInput } from './trigonometryCalculations';
 import { useEffect, useState, Dispatch, SetStateAction, RefObject, FC } from 'react'
 import styles from '../styles/Home.module.css'
 import { numArray, operatorArray } from '../utility/symbolsArray'

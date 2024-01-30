@@ -1,3 +1,5 @@
-// x2 x3 xY
+export const exponentCalculation = (input: string, exponentPosition: number) => {
+    // Get exponent from input position
 
-export {}
+    // solve equation and return
+}
