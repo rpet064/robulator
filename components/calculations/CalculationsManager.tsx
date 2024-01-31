@@ -1,13 +1,14 @@
-import { solveTanCalculation, manageTanInput, solveSinCalculation, manageSinInput,
-    solveLogCalculation, manageLogInput, solveCosCalculation, manageCosInput } from './trigonometryCalculations';
+import { solveTanCalculation, solveSinCalculation,
+    solveLogCalculation, solveCosCalculation } from './trigonometryCalculations';
 import { useEffect, useState, Dispatch, SetStateAction, RefObject, FC } from 'react'
-import styles from '../styles/Home.module.css'
-import { numArray, operatorArray } from '../utility/symbolsArray'
+import { numArray, operatorArray, trigSymbolsArray } from '../utility/symbolsArray'
 import SolveEquation from './equationSolver'
 import squareNumber from './numberSquarer'
 import removeTrailingZeros from '../utility/removeTrailingZeros'
 import { errorMessage, notifyMessage } from '../utility/toastMessages'
-import {solvePiEquation, replacePiSymbol } from './solvePiEquation'
+import {solvePiEquation } from './solvePiEquation'
+import { removeBrackets } from '../utility/removeBrackets';
+
 
 interface calculationsManagerProps {
     firstCalculatorInput: string[]
@@ -57,6 +58,7 @@ const CalculationsManager = ({
     setDoesCalculationExceedScreenWidth,
 }: calculationsManagerProps) => {
 
+
     const maximumNumberOfIntegers = 15
     const [isFirstCalculatorInput, setIsFirstCalculatorInput] = useState(true)
     const [firstCalculatorInputHasAnswer, setFirstCalculatorInputHasAnswer] = useState(false)
@@ -64,22 +66,44 @@ const CalculationsManager = ({
     const [doesCalculationContainPi, setDoesCalculationContainPi] = useState(false)
     const [doesFirstCalculationContainPi, setFirstDoesCalculationContainPi] = useState(false)
     const [doesSecondCalculationContainPi, setSecondDoesCalculationContainPi] = useState(false)
+    const [doesFirstCalculationContainTrig, setDoesFirstCalculationContainTrig] = useState(false)
+    const [doesSecondCalculationContainTrig, setDoesSecondCalculationContainTrig] = useState(false)
 
+    
     // if operator is empty, then still on first equation
     useEffect(() => {
         let isFirstEquation = operator.trim() === ""
         setIsFirstCalculatorInput(isFirstEquation)
     }, [operator])
 
+
+    // track if first equation contains a trig related calculation
+    useEffect(() => {
+        let trimmedFirstCalculatorInput = removeBrackets(firstCalculatorInput)
+        let includesTrigInput = trimmedFirstCalculatorInput.some(input => trigSymbolsArray.includes(input));
+        setDoesFirstCalculationContainTrig(includesTrigInput)
+    }, [firstCalculatorInput])
+
+
+    // track if first equation contains a trig related calculation
+    useEffect(() => {
+        let trimmedSecondCalculatorInput = removeBrackets(secondCalculatorInput)
+        let includesTrigInput = trimmedSecondCalculatorInput.some(input => trigSymbolsArray.includes(input));
+        setDoesSecondCalculationContainTrig(includesTrigInput)
+    }, [secondCalculatorInput])
+
+
     // Track if first equation contains pi
     useEffect(() => {
         setFirstDoesCalculationContainPi(firstCalculatorInput.includes("𝝅"))
     }, [firstCalculatorInput])
 
+
     // Track if second equation contains pi
     useEffect(() => {
         setSecondDoesCalculationContainPi(secondCalculatorInput.includes("𝝅"))
     }, [secondCalculatorInput])
+
 
     // Track if any equation contains pi
     useEffect(() => {
@@ -258,7 +282,7 @@ const CalculationsManager = ({
             setFirstCalculatorInput(stringIntoArray)
 
             // Removes last inputted number from second input array
-        } else if (secondCalculatorInput.length > 0) {
+        } else if (!isFirstCalculatorInput) {
 
             arrayIntoString = secondCalculatorInput.join("").slice(0, -1)
 
@@ -418,25 +442,30 @@ const CalculationsManager = ({
 
         switch (userInput) {
             case "AC":
-                resetCalculator()
                 calculationComplete = true
+
+                resetCalculator()
                 break
 
             case "C":
-                deletePrevInput()
                 calculationComplete = true
+
+                deletePrevInput()
                 break
 
             case ".":
-                onInputDecimal(userInput)
                 calculationComplete = true
+
+                onInputDecimal(userInput)
                 break
 
             case "+/-":
-                if (isLastCalculationAnOperator) {
-                    return
-                }
                 calculationComplete = true
+
+                if (isLastCalculationAnOperator) {
+                    break
+                }
+
                 changeSign()
         }
 
@@ -450,11 +479,27 @@ const CalculationsManager = ({
             return
         }
         
-        // Add number or pi to array
+        // Add number to calculation
         if (numArray.includes(userInput)) {
             onInputNumber(userInput)
-            calculationComplete = true
             return
+        }
+
+        // Add number to calculation
+        for (let i = 0; i < trigSymbolsArray.length; i++) {
+            if (trigSymbolsArray[i] === userInput) {
+
+                if (isFirstCalculatorInput && !doesFirstCalculationContainTrig) {
+                    onInputNumber(userInput + "()")
+
+                } else if (!isFirstCalculatorInput && !doesSecondCalculationContainTrig) {
+                    onInputNumber(userInput + "()")
+
+                } else {
+                    notifyMessage("Only one trig calculation can be added to the equation")
+                }
+                return;
+            }
         }
 
         // Add pi to array
