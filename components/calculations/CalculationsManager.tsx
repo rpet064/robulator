@@ -8,6 +8,7 @@ import removeTrailingZeros from '../utility/removeTrailingZeros'
 import { errorMessage, notifyMessage } from '../utility/toastMessages'
 import {solvePiEquation } from './solvePiEquation'
 import { removeBrackets } from '../utility/removeBrackets';
+import { removeLastInputFromString } from '../utility/removeLastInputFromString'
 
 
 interface calculationsManagerProps {
@@ -270,30 +271,20 @@ const CalculationsManager = ({
 
     // This function checks 
     const deletePrevInput = () => {
-        let arrayIntoString: string
 
-        // Removes last inputted number from first input array
-        if (isFirstCalculatorInput) {
-
-            arrayIntoString = firstCalculatorInput.join("").slice(0, -1)
-
-            let stringIntoArray: Array<string> = arrayIntoString.split("")
-
-            setFirstCalculatorInput(stringIntoArray)
-
-            // Removes last inputted number from second input array
-        } else if (!isFirstCalculatorInput) {
-
-            arrayIntoString = secondCalculatorInput.join("").slice(0, -1)
-
-            let stringIntoArray: Array<string> = arrayIntoString.split("")
-
-            setSecondCalculatorInput(stringIntoArray)
-
-            // Catches exception where user wants to delete the operator
-        } else {
+        // Clear operator
+        if(isLastCalculationAnOperator){
             setOperator("")
+            return
         }
+
+        // Set input
+        let currentInput = isFirstCalculatorInput ? firstCalculatorInput : secondCalculatorInput
+        let setCurrentInput = isFirstCalculatorInput ? setFirstCalculatorInput : setSecondCalculatorInput
+
+        // Remove from string and set input
+        let stringIntoArray: Array<string> = removeLastInputFromString(currentInput)
+        setCurrentInput(stringIntoArray)
     }
 
     const onInputNumber = (userInput: string) => {
