@@ -2,9 +2,9 @@ import { solveTanCalculation, solveSinCalculation,
     solveLogCalculation, solveCosCalculation } from './trigonometryCalculations';
 import { useEffect, useState, Dispatch, SetStateAction, RefObject, FC } from 'react'
 import { numArray, operatorArray, trigSymbolsArray } from '../utility/symbolsArray'
-import SolveEquation from './equationSolver'
-import squareNumber from './numberSquarer'
-import removeTrailingZeros from '../utility/removeTrailingZeros'
+import { SolveEquation } from './equationSolver'
+import { squareNumber } from './numberSquarer'
+import { removeTrailingZeros } from '../utility/removeTrailingZeros'
 import { errorMessage, notifyMessage } from '../utility/toastMessages'
 import {solvePiEquation } from './solvePiEquation'
 import { removeBrackets } from '../utility/removeBrackets';
@@ -19,12 +19,9 @@ interface calculationsManagerProps {
     setPrevInput: (value: string) => void
     operator: string
     setOperator: (value: string) => void
-    calculatorRef: RefObject<HTMLDivElement>
-    textInputRef: RefObject<HTMLDivElement>
     isLastCalculationAnOperator: boolean
     isDecimalUnfinished: boolean
     doesCalculationExceedInput: boolean
-    doesCalculationExceedScreenWidth: boolean
     currentNumberOfInputs: number
     overwriteNumber: boolean
     setOverwriteNumber: (value: boolean) => void
@@ -32,10 +29,9 @@ interface calculationsManagerProps {
     setCurrentNumberOfInputs: (value: number) => void
     setDoesCalculationExceedInput: (value: boolean) => void,
     setIsDecimalUnfinished: (value: boolean) => void
-    setDoesCalculationExceedScreenWidth: (value: boolean) => void
 }
 
-const CalculationsManager = ({
+export const CalculationsManager = ({
     firstCalculatorInput,
     setFirstCalculatorInput,
     secondCalculatorInput,
@@ -43,11 +39,9 @@ const CalculationsManager = ({
     setPrevInput,
     operator,
     setOperator,
-    calculatorRef,
     isLastCalculationAnOperator,
     isDecimalUnfinished,
     doesCalculationExceedInput,
-    doesCalculationExceedScreenWidth,
     currentNumberOfInputs,
     setOverwriteNumber,
     overwriteNumber,
@@ -55,20 +49,18 @@ const CalculationsManager = ({
     setCurrentNumberOfInputs,
     setDoesCalculationExceedInput,
     setIsDecimalUnfinished,
-    textInputRef,
-    setDoesCalculationExceedScreenWidth,
 }: calculationsManagerProps) => {
 
 
     const maximumNumberOfIntegers = 15
     const [isFirstCalculatorInput, setIsFirstCalculatorInput] = useState(true)
     const [firstCalculatorInputHasAnswer, setFirstCalculatorInputHasAnswer] = useState(false)
-    const [currentFontSizeInRem, setCurrentFontSizeInRem] = useState(5.25)
     const [doesCalculationContainPi, setDoesCalculationContainPi] = useState(false)
     const [doesFirstCalculationContainPi, setFirstDoesCalculationContainPi] = useState(false)
     const [doesSecondCalculationContainPi, setSecondDoesCalculationContainPi] = useState(false)
     const [doesFirstCalculationContainTrig, setDoesFirstCalculationContainTrig] = useState(false)
     const [doesSecondCalculationContainTrig, setDoesSecondCalculationContainTrig] = useState(false)
+    const [currentInput, setCurrentInput] = useState(firstCalculatorInput)
 
     
     // if operator is empty, then still on first equation
@@ -76,6 +68,12 @@ const CalculationsManager = ({
         let isFirstEquation = operator.trim() === ""
         setIsFirstCalculatorInput(isFirstEquation)
     }, [operator])
+
+
+    // Track if first or second equation
+    useEffect(() => {
+        isFirstCalculatorInput ? setCurrentInput(firstCalculatorInput) : setCurrentInput(secondCalculatorInput)
+    }, [firstCalculatorInput, secondCalculatorInput])
 
 
     // track if first equation contains a trig related calculation
@@ -150,32 +148,9 @@ const CalculationsManager = ({
     }, [firstCalculatorInput, secondCalculatorInput, operator])
 
 
-    // get current font size
-    useEffect(() => {
-        if (textInputRef.current) {
-            const style = window.getComputedStyle(textInputRef.current)
-            setCurrentFontSizeInRem(parseFloat(style.fontSize))
-        }
-    }, [textInputRef])
-
-
-    // check number of inputs * font size width is larger than the screen
-    useEffect(() => {
-        if (calculatorRef.current) {
-            let doesCalculationExceedScreenWidth = (calculatorRef.current.offsetWidth - currentFontSizeInRem * currentNumberOfInputs) > 0
-            setDoesCalculationExceedScreenWidth(doesCalculationExceedScreenWidth)
-        }
-    }, [calculatorRef, currentNumberOfInputs, currentFontSizeInRem])
-
-
-    useEffect(() => {
-        if (textInputRef.current && doesCalculationExceedScreenWidth) {
-            const style = window.getComputedStyle(textInputRef.current)
-            const fontSizeInPixels = parseInt(style.fontSize, 10)
-            const newFontSizeInRem = fontSizeInPixels * 0.9 / 16
-            textInputRef.current.style.fontSize = `${newFontSizeInRem}rem`
-        }
-    }, [doesCalculationExceedScreenWidth])
+    const getCurrentSetInput = (): React.Dispatch<React.SetStateAction<string[]>> => {
+        return isFirstCalculatorInput ? setFirstCalculatorInput : setSecondCalculatorInput;
+       };
 
 
     // this function stores the last equation
@@ -269,7 +244,7 @@ const CalculationsManager = ({
         setPrevInput("")
     }
 
-    // This function checks 
+    // This function checks
     const deletePrevInput = () => {
 
         // Clear operator
@@ -278,13 +253,11 @@ const CalculationsManager = ({
             return
         }
 
-        // Set input
-        let currentInput = isFirstCalculatorInput ? firstCalculatorInput : secondCalculatorInput
-        let setCurrentInput = isFirstCalculatorInput ? setFirstCalculatorInput : setSecondCalculatorInput
+        let currentSetInput = getCurrentSetInput()
 
         // Remove from string and set input
         let stringIntoArray: Array<string> = removeLastInputFromString(currentInput)
-        setCurrentInput(stringIntoArray)
+        currentSetInput(stringIntoArray)
     }
 
     const onInputNumber = (userInput: string) => {
@@ -302,19 +275,16 @@ const CalculationsManager = ({
             return
         }
 
-        if (isFirstCalculatorInput) {
-            setFirstCalculatorInput(firstCalculatorInput => [...firstCalculatorInput, userInput])
-            return
-        }
-        setSecondCalculatorInput(secondCalculatorInput => [...secondCalculatorInput, userInput])
+        let currentSetInput = getCurrentSetInput()
+        currentSetInput(currentInput => [...currentInput, userInput])
     }
 
     const onSquareRoot = () => {
 
         let isNegative = false
 
-        let input = isFirstCalculatorInput ? firstCalculatorInput : secondCalculatorInput
-        const setInput = isFirstCalculatorInput ? setFirstCalculatorInput : setSecondCalculatorInput
+        let input = currentInput
+        let currentSetInput = getCurrentSetInput()
 
         // IsFirstCalc & contains Pi or isSecondCalc and contains pi = true
         const doesCurrentCalculationHavePi = isFirstCalculatorInput ? 
@@ -326,7 +296,7 @@ const CalculationsManager = ({
         }
 
         if (!input.length || (operator !== "" && !secondCalculatorInput.length)) {
-            setInput(['0'])
+            currentSetInput(['0'])
             setPrevInput(`√ ${0}`)
             return
         }
@@ -348,7 +318,7 @@ const CalculationsManager = ({
             roundedAnswerAsArray.unshift("-")
         }
 
-        setInput(roundedAnswerAsArray)
+        currentSetInput(roundedAnswerAsArray)
         setPrevInput(`√ ${originalNumberAsInt}`)
     }
 
@@ -416,12 +386,8 @@ const CalculationsManager = ({
             }
 
             setInput([...originalArray])
-        }
-
-        if (isFirstCalculatorInput) {
-            handleSign(firstCalculatorInput, setFirstCalculatorInput)
-        } else {
-            handleSign(secondCalculatorInput, setSecondCalculatorInput)
+            
+            handleSign(currentInput, setCurrentInput)
         }
     }
 
@@ -532,5 +498,3 @@ const CalculationsManager = ({
         handleUserInput
     )
 }
-
-export default CalculationsManager
