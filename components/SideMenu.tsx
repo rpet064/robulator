@@ -1,7 +1,7 @@
 import { useState, FC, SetStateAction, Dispatch } from "react"
 import sideMenuStyles from '../styles/SideMenu.module.css'
 import { TbAdjustmentsCog, TbMoonFilled, TbSunHigh, TbSettingsOff, TbSettings } from "react-icons/tb";
-import { AboutMenu } from "./AboutMenu";
+import AboutMenu from "./AboutMenu";
 import colours from '../styles/Colours.module.css'
 
 
@@ -12,7 +12,7 @@ interface SideMenuProps {
     setTheme: Dispatch<SetStateAction<string>>
   }
 
-export const SideMenu: FC<SideMenuProps> = ({
+const SideMenu: FC<SideMenuProps> = ({
     ScientificSymbolsArray,
     setScientificSymbolsArray,
     theme,
@@ -67,3 +67,5 @@ export const SideMenu: FC<SideMenuProps> = ({
         </div>
      )
 }
+
+export default SideMenu

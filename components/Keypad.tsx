@@ -15,7 +15,7 @@ interface KeypadProps {
   isScientificSymbolsArray: boolean
 }
 
-export const Keypad: FC<KeypadProps> = ({
+const Keypad: FC<KeypadProps> = ({
   firstCalculatorInput,
   setFirstCalculatorInput,
   secondCalculatorInput,
@@ -87,3 +87,5 @@ export const Keypad: FC<KeypadProps> = ({
     </div>
   )
 }
+
+export default Keypad
