@@ -1,7 +1,7 @@
 import { useEffect, useState, Dispatch, SetStateAction, RefObject, FC } from 'react'
 import styles from '../styles/Keypad.module.css'
 import { regularSymbolsArray, scientificSymbolsArray } from './utility/symbolsArray'
-import CalculationsManager from "./calculations/CalculationsManager"
+import { CalculationsManager } from "./calculations/CalculationsManager"
 import colours from '../styles/Colours.module.css'
 
 interface KeypadProps {
@@ -12,12 +12,10 @@ interface KeypadProps {
   setPrevInput: (value: string) => void
   operator: string
   setOperator: (value: string) => void
-  calculatorRef: RefObject<HTMLDivElement>
-  textInputRef: RefObject<HTMLDivElement>
   isScientificSymbolsArray: boolean
 }
 
-const Keypad: FC<KeypadProps> = ({
+export const Keypad: FC<KeypadProps> = ({
   firstCalculatorInput,
   setFirstCalculatorInput,
   secondCalculatorInput,
@@ -25,8 +23,6 @@ const Keypad: FC<KeypadProps> = ({
   setPrevInput,
   operator,
   setOperator,
-  calculatorRef,
-  textInputRef,
   isScientificSymbolsArray
 }) => {
 
@@ -34,7 +30,6 @@ const Keypad: FC<KeypadProps> = ({
   const [isLastCalculationAnOperator, setIsLastCalculationAnOperator] = useState(false)
   const [isDecimalUnfinished, setIsDecimalUnfinished] = useState(false)
   const [doesCalculationExceedInput, setDoesCalculationExceedInput] = useState(false)
-  const [doesCalculationExceedScreenWidth, setDoesCalculationExceedScreenWidth] = useState(false)
   const [currentNumberOfInputs, setCurrentNumberOfInputs] = useState(0)
   const [symbolsArray, setSymbolsArray] = useState<string[]>([])
   const [buttonStyle, setButtonStyle] = useState(styles.calcBtn)
@@ -49,8 +44,6 @@ const Keypad: FC<KeypadProps> = ({
     setPrevInput: setPrevInput,
     operator: operator,
     setOperator: setOperator,
-    calculatorRef: calculatorRef,
-    textInputRef: textInputRef,
     overwriteNumber: overwriteNumber,
     setOverwriteNumber: setOverwriteNumber,
     isLastCalculationAnOperator: isLastCalculationAnOperator,
@@ -59,8 +52,6 @@ const Keypad: FC<KeypadProps> = ({
     setIsDecimalUnfinished: setIsDecimalUnfinished,
     doesCalculationExceedInput: doesCalculationExceedInput,
     setDoesCalculationExceedInput: setDoesCalculationExceedInput,
-    doesCalculationExceedScreenWidth: doesCalculationExceedScreenWidth,
-    setDoesCalculationExceedScreenWidth: setDoesCalculationExceedScreenWidth,
     currentNumberOfInputs: currentNumberOfInputs,
     setCurrentNumberOfInputs: setCurrentNumberOfInputs
    });
@@ -96,5 +87,3 @@ const Keypad: FC<KeypadProps> = ({
     </div>
   )
 }
-
-export default Keypad

@@ -1,5 +1,5 @@
 
-const squareNumber = (calculatorInput: string[], originalNumber: number, arrayLength: number) => {
+export const squareNumber = (calculatorInput: string[], originalNumber: number, arrayLength: number) => {
   
   if (arrayLength) {
       const hasNegative = calculatorInput.includes("-")
@@ -19,6 +19,4 @@ const squareNumber = (calculatorInput: string[], originalNumber: number, arrayLe
 
   return []
 }
-
-export default squareNumber
 

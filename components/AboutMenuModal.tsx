@@ -12,7 +12,7 @@ interface AboutMenuProps {
   setAboutMenuIsOpen: (value: boolean) => void
 }
 
-const AboutMenuModal: FC<AboutMenuProps> = ({
+export const AboutMenuModal: FC<AboutMenuProps> = ({
   aboutMenuIsOpen,
   setAboutMenuIsOpen
   }) => {
@@ -105,5 +105,3 @@ const AboutMenuModal: FC<AboutMenuProps> = ({
    </div>
  );
 };
-
-export default AboutMenuModal;

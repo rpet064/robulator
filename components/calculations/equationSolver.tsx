@@ -1,4 +1,4 @@
-const SolveEquation = (firstNumber: number, operator: string, secondNumber:number) => {
+export const SolveEquation = (firstNumber: number, operator: string, secondNumber:number) => {
     let answer = 0
 
     if (operator === "+"){
@@ -16,4 +16,3 @@ const SolveEquation = (firstNumber: number, operator: string, secondNumber:numbe
 
     return answer.toFixed(5).toString()
 }
-export default SolveEquation

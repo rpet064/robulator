@@ -1,8 +1,8 @@
 import styles from '../styles/Home.module.css'
-import SideMenu from './SideMenu'
+import { SideMenu } from './SideMenu'
 import {Toaster} from 'react-hot-toast'
 import { copyPreviousCalculationToClipboard, copyCurrentCalculationToClipboard} from './utility/clipboardUtils'
-import Keypad from './Keypad'
+import { Keypad } from './Keypad'
 import { useState, useRef, SetStateAction, Dispatch, FC } from 'react'
 import colours from '../styles/Colours.module.css'
 
@@ -11,7 +11,7 @@ interface CalculatorProps {
   setTheme: Dispatch<SetStateAction<string>>
 }
 
-const Calculator: FC<CalculatorProps> = ({
+export const Calculator: FC<CalculatorProps> = ({
     theme,
     setTheme
     }) => {
@@ -65,12 +65,8 @@ const Calculator: FC<CalculatorProps> = ({
         setPrevInput={setPrevInput}
         operator={operator} 
         setOperator={setOperator}
-        calculatorRef={calculatorRef}
-        textInputRef={textInputRef}
         isScientificSymbolsArray={isScientificSymbolsArray}
       />
     </div>
   )
 }
-
-export default Calculator

@@ -1,13 +1,13 @@
 import { useState, FC } from "react"
 import { FiHelpCircle } from 'react-icons/fi';
-import AboutMenuModal from "./AboutMenuModal"
+import { AboutMenuModal } from "./AboutMenuModal"
 import colours from '../styles/Colours.module.css'
 
 interface AboutMenuProps {
     theme: string
   }
 
-  const AboutMenu: FC<AboutMenuProps> = ({
+  export const AboutMenu: FC<AboutMenuProps> = ({
         theme,
         }) => {
 
@@ -27,5 +27,3 @@ interface AboutMenuProps {
         </div>
     )
 }
-
-export default AboutMenu
