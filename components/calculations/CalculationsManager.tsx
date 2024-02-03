@@ -72,8 +72,12 @@ export const CalculationsManager = ({
 
     // Track if first or second equation
     useEffect(() => {
+        if(isLastCalculationAnOperator){
+            setCurrentInput(firstCalculatorInput)
+            return
+        }
         isFirstCalculatorInput ? setCurrentInput(firstCalculatorInput) : setCurrentInput(secondCalculatorInput)
-    }, [firstCalculatorInput, secondCalculatorInput])
+    }, [firstCalculatorInput, secondCalculatorInput, isLastCalculationAnOperator])
 
 
     // track if first equation contains a trig related calculation
@@ -121,8 +125,9 @@ export const CalculationsManager = ({
 
     // this function checks if the last input was an operator
     useEffect(() => {
-        setIsLastCalculationAnOperator(operator !== "" && secondCalculatorInput.length < 1
-            || firstCalculatorInput[0] === "-" && firstCalculatorInput.length < 2)
+        let lastCalculatorIsOperator = operator !== "" && secondCalculatorInput.length < 1
+        || firstCalculatorInput[0] === "-" && firstCalculatorInput.length < 2
+        setIsLastCalculationAnOperator(lastCalculatorIsOperator)
     }, [firstCalculatorInput, operator, secondCalculatorInput])
 
 
