@@ -1,5 +1,5 @@
 import { solveTanCalculation, solveSinCalculation, solveLogCalculation, solveCosCalculation,
-    removeTrigCalculation, manageTrigInput, doesInputContaionTrigCalculation,  } from './trigonometryCalculations'
+    removeTrigCalculation, manageTrigInput, doesInputContainTrigCalculation,  } from './trigonometryCalculations'
 import { useEffect, useState, Dispatch, SetStateAction, RefObject, FC } from 'react'
 import { numArray, operatorArray, trigSymbolsArray } from '../utility/symbolsArray'
 import { SolveEquation } from './equationSolver'
@@ -8,7 +8,6 @@ import { removeTrailingZeros } from '../utility/removeTrailingZeros'
 import { errorMessage, notifyMessage } from '../utility/toastMessages'
 import {solvePiEquation } from './solvePiEquation'
 import { removeLastInputFromString } from '../utility/removeLastInputFromString'
-import { current } from '@reduxjs/toolkit'
 
 
 interface calculationsManagerProps {
@@ -82,14 +81,14 @@ export const CalculationsManager = ({
 
     // track if first equation contains a trig related calculation
     useEffect(() => {
-        let includesTrigInput = doesInputContaionTrigCalculation(firstCalculatorInput)
-        setDoesSecondCalculationContainTrig(includesTrigInput)
+        let includesTrigInput = doesInputContainTrigCalculation(firstCalculatorInput)
+        setDoesFirstCalculationContainTrig(includesTrigInput)
     }, [firstCalculatorInput])
 
 
     // track if first equation contains a trig related calculation
     useEffect(() => {
-        let includesTrigInput = doesInputContaionTrigCalculation(secondCalculatorInput)
+        let includesTrigInput = doesInputContainTrigCalculation(secondCalculatorInput)
         setDoesSecondCalculationContainTrig(includesTrigInput)
     }, [secondCalculatorInput])
 
@@ -232,7 +231,7 @@ export const CalculationsManager = ({
     // inputted operator for new equation
     const clearNumbers = (newOperator: string) => {
 
-        if (newOperator === "") {
+        if (newOperator !== "") {
             setOperator(newOperator)
         }
         setSecondCalculatorInput([])
@@ -266,18 +265,18 @@ export const CalculationsManager = ({
     const onInputNumber = (userInput: string) => {
         let currentSetInput = getCurrentSetInput()
 
-        // put number inside first trig brackets
-        if(doesFirstCalculationContainTrig && isFirstCalculatorInput){
-            let newInput = manageTrigInput(userInput, currentInput)
-            currentSetInput(newInput.split(""))
-            return
+        // // put number inside first trig brackets
+        // if(doesFirstCalculationContainTrig && isFirstCalculatorInput){
+        //     let newInput = manageTrigInput(userInput, currentInput)
+        //     currentSetInput(newInput)
+        //     return
 
-        // put number inside second trig brackets
-        } else if(doesSecondCalculationContainTrig && !isFirstCalculatorInput){
-            let newInput = manageTrigInput(userInput, currentInput)
-            currentSetInput(newInput.split(""))
-            return
-        }
+        // // put number inside second trig brackets
+        // } else if(doesSecondCalculationContainTrig && !isFirstCalculatorInput){
+        //     let newInput = manageTrigInput(userInput, currentInput)
+        //     currentSetInput(newInput)
+        //     return
+        // }
 
         // Overwrite is decimal added to answer
         if (overwriteNumber && userInput === ".") {
@@ -407,12 +406,6 @@ export const CalculationsManager = ({
         }
     }
 
-    const setTrigInput = (input: string) => {
-        let splitInput = input.split("")
-        let currentSetInput = getCurrentSetInput()
-        currentSetInput(splitInput)
-    }
-
     // this const catches userinput from button and triggers correct function accordingly
     const handleUserInput = (userInput: string) => {
 
@@ -469,10 +462,10 @@ export const CalculationsManager = ({
             if (trigSymbolsArray[i] === userInput) {
 
                 if (isFirstCalculatorInput && !doesFirstCalculationContainTrig) {
-                    setTrigInput(userInput + "()")
+                    onInputNumber(userInput + "()")
 
                 } else if (!isFirstCalculatorInput && !doesSecondCalculationContainTrig) {
-                    setTrigInput(userInput + "()")
+                    onInputNumber(userInput + "()")
 
                 } else {
                     notifyMessage("Only one trig calculation can be added to the equation")
