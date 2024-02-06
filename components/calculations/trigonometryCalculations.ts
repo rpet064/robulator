@@ -1,4 +1,6 @@
 import { trigSymbolsArray } from "../utility/symbolsArray"
+import { splitStringByBrackers } from "../utility/splitStringByBrackers"
+
 
 export const solveTanCalculation = () => {
     // Your code here
@@ -24,15 +26,9 @@ export const manageTrigInput = (userInput: string, currentInput: string[]) => {
         let splitString = splitStringByBrackers(joinedInput)
         
         // append "" or existing number between brackets
-        splitString[1] += userInput
+        splitString[2] += userInput
 
-        // Split string for calculation
-        let stringSplitForCalculation
-        splitString.forEach(input => {
-            stringSplitForCalculation = splitStringForCalculation(input);
-        });
-
-        return stringSplitForCalculation
+        return splitString
 
         } catch (e) {
         throw new Error(`This equation doesn't contain brackets ${e}`)
@@ -52,7 +48,7 @@ export const doesInputContainTrigCalculation = (input: string[]) => {
         // Iterate over each trigonometric symbol
         trigSymbolsArray.forEach(symbol => {
             // Check if the string contains the trigonometric symbol followed by an opening bracket
-            if (str.includes(`${symbol}(`)) {
+            if (str.includes(symbol)) {
                 inputContainTrigCalculation = true;
             }
         });

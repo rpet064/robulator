@@ -265,18 +265,18 @@ export const CalculationsManager = ({
     const onInputNumber = (userInput: string) => {
         let currentSetInput = getCurrentSetInput()
 
-        // // put number inside first trig brackets
-        // if(doesFirstCalculationContainTrig && isFirstCalculatorInput){
-        //     let newInput = manageTrigInput(userInput, currentInput)
-        //     currentSetInput(newInput)
-        //     return
+        // put number inside first trig brackets
+        if(doesFirstCalculationContainTrig && isFirstCalculatorInput){
+            let newInput = manageTrigInput(userInput, currentInput)
+            currentSetInput(newInput)
+            return
 
-        // // put number inside second trig brackets
-        // } else if(doesSecondCalculationContainTrig && !isFirstCalculatorInput){
-        //     let newInput = manageTrigInput(userInput, currentInput)
-        //     currentSetInput(newInput)
-        //     return
-        // }
+        // put number inside second trig brackets
+        } else if(doesSecondCalculationContainTrig && !isFirstCalculatorInput){
+            let newInput = manageTrigInput(userInput, currentInput)
+            currentSetInput(newInput)
+            return
+        }
 
         // Overwrite is decimal added to answer
         if (overwriteNumber && userInput === ".") {
