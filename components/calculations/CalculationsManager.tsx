@@ -233,7 +233,10 @@ export const CalculationsManager = ({
 
         if (newOperator !== "") {
             setOperator(newOperator)
+        } else {
+            setOperator("")
         }
+
         setSecondCalculatorInput([])
     }
 
@@ -389,21 +392,15 @@ export const CalculationsManager = ({
     // handle changing number to negative/positive - sign logic
     const changeSign = () => {
 
-        function handleSign(input: string[], setInput: Dispatch<SetStateAction<string[]>>) {
-            var originalArray = input
+        let updatedArray = []
 
-            if (input[0] === "-") {
-                // remove "-" from front of array making it "positive"
-                originalArray = originalArray.slice(1)
-            } else {
-                // add "-" to front of array making it "negative"
-                originalArray.unshift("-")
-            }
+        if (currentInput[0] === "-") {
+            updatedArray = currentInput.slice(1)
 
-            setInput([...originalArray])
-            
-            handleSign(currentInput, setCurrentInput)
+        } else {
+            updatedArray = ["-", ...currentInput]
         }
+        setCurrentInput(updatedArray)
     }
 
     // this const catches userinput from button and triggers correct function accordingly
