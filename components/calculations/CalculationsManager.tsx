@@ -1,13 +1,15 @@
 import { solveTanCalculation, solveSinCalculation, solveLogCalculation, solveCosCalculation,
     removeTrigCalculation, manageTrigInput, doesInputContainTrigCalculation,  } from './trigonometryCalculations'
-import { useEffect, useState, Dispatch, SetStateAction, RefObject, FC } from 'react'
+import { useEffect, useState, Dispatch, SetStateAction } from 'react'
 import { numArray, operatorArray, trigSymbolsArray } from '../utility/symbolsArray'
-import { SolveEquation } from './equationSolver'
+import { getAnswer } from './equationSolver'
 import { squareNumber } from './numberSquarer'
 import { removeTrailingZeros } from '../utility/removeTrailingZeros'
 import { errorMessage, notifyMessage } from '../utility/toastMessages'
 import {solvePiEquation } from './solvePiEquation'
 import { removeLastInputFromString } from '../utility/removeLastInputFromString'
+import { solveInequalityCalculation } from '../calculations/solveInequalityCalculation'
+import { changeSignArray } from '../utility/changeSignArray'
 
 
 interface calculationsManagerProps {
@@ -59,7 +61,15 @@ export const CalculationsManager = ({
     const [doesSecondCalculationContainPi, setSecondDoesCalculationContainPi] = useState(false)
     const [doesFirstCalculationContainTrig, setDoesFirstCalculationContainTrig] = useState(false)
     const [doesSecondCalculationContainTrig, setDoesSecondCalculationContainTrig] = useState(false)
+    const [isOperatorInequalityCheck, setIsOperatorInequalityCheck] = useState(false)
     const [currentInput, setCurrentInput] = useState(firstCalculatorInput)
+
+
+    // check if operator is inquality check
+    useEffect(() => {
+        let isInequalitySymbol = operator.trim() === "≠"
+        setIsOperatorInequalityCheck(isInequalitySymbol)
+    }, [operator])
 
     
     // if operator is empty, then still on first equation
@@ -171,42 +181,53 @@ export const CalculationsManager = ({
     }
 
     const solveEquation = async (newOperator: string) => {
-        if (secondCalculatorInput.length !== 0) {
 
-            let firstInput = firstCalculatorInput.join("")
-            let secondInput = secondCalculatorInput.join("")
+        // Check if equation is valid
+        if (secondCalculatorInput.length === 0) {
+            return
+        }
 
-            // replace pi with actual number
-            if (doesCalculationContainPi) {
-                firstInput = solvePiEquation(firstInput)
-                secondInput = solvePiEquation(secondInput)
-            }
+        let firstInput = firstCalculatorInput.join("")
+        let secondInput = secondCalculatorInput.join("")
 
-            // join array of strings into String, then change strings into numbers
-            let firstInputAsFloat , secondInputAsFloat
+        // replace pi with actual number
+        if (doesCalculationContainPi) {
+            firstInput = solvePiEquation(firstInput)
+            secondInput = solvePiEquation(secondInput)
+        }
 
-            try{
-                firstInputAsFloat = parseFloat(firstInput)
-                secondInputAsFloat = parseFloat(secondInput)
+        let firstCalcInput
+
+        // Solve inequality calculation
+        if(isOperatorInequalityCheck){
+            firstCalcInput = [solveInequalityCalculation(firstInput, secondInput) ? "Not Equal" : "Equal"]
+        
+        // solve "normal" equation
+        } else {
+
+       // join array of strings into String, then change strings into numbers
+        let firstInputAsFloat , secondInputAsFloat
+
+        try{
+            firstInputAsFloat = parseFloat(firstInput)
+            secondInputAsFloat = parseFloat(secondInput)
+
+            let answer = getAnswer(firstInputAsFloat, operator, secondInputAsFloat)!
+            firstCalcInput = removeTrailingZeros(answer).split("")
+
             } catch {
                 errorMessage("Equations could not be joined")
                 return
             }
-
-            let answer = SolveEquation(firstInputAsFloat, operator, secondInputAsFloat)!
-
-            let roundedAnswer = removeTrailingZeros(answer).split("")
-
-            setFirstCalculatorInput(roundedAnswer)
-
-            setFirstCalculatorInputHasAnswer(true)
-
-            // send answer to be added to equation
-            updatePrevArray()
-
-            clearNumbers(newOperator)
         }
-    }
+
+        setFirstCalculatorInput(firstCalcInput)
+        setFirstCalculatorInputHasAnswer(true)
+
+        updatePrevArray()
+
+        clearNumbers(newOperator)
+        }
 
     // manages the app inputs when the screen is full (max is 15 integers excl an operator)
     const handleInputExceedsMaximum = (userInput: string) => {
@@ -392,15 +413,9 @@ export const CalculationsManager = ({
     // handle changing number to negative/positive - sign logic
     const changeSign = () => {
 
-        let updatedArray = []
-
-        if (currentInput[0] === "-") {
-            updatedArray = currentInput.slice(1)
-
-        } else {
-            updatedArray = ["-", ...currentInput]
-        }
-        setCurrentInput(updatedArray)
+        let updatedArray = changeSignArray(currentInput)
+        let currentSetInput = getCurrentSetInput()
+        currentSetInput(updatedArray)
     }
 
     // this const catches userinput from button and triggers correct function accordingly
@@ -496,13 +511,11 @@ export const CalculationsManager = ({
         if (operatorArray.includes(userInput) && !isLastCalculationAnOperator) {
             onInputOperator(userInput)
 
-            // No additional operator selected, so equation is solved and operator is set to ""
         } else if (userInput === "=") {
             solveEquation("")
 
         } else if (userInput === "√" && !isLastCalculationAnOperator) {
             onSquareRoot()
-
         }
         return
     }

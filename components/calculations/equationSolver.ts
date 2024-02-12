@@ -1,4 +1,4 @@
-export const SolveEquation = (firstNumber: number, operator: string, secondNumber:number) => {
+export const getAnswer = (firstNumber: number, operator: string, secondNumber:number) => {
     let answer = 0
 
     if (operator === "+"){
