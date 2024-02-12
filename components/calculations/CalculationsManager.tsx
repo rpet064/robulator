@@ -1,5 +1,4 @@
-import { solveTanCalculation, solveSinCalculation, solveLogCalculation, solveCosCalculation,
-    removeTrigCalculation, manageTrigInput, doesInputContainTrigCalculation,  } from './trigonometryCalculations'
+import { solveTrigCalculation, manageTrigInput, removeTrigCalculation,  } from './trigonometryCalculations'
 import { useEffect, useState, Dispatch, SetStateAction } from 'react'
 import { numArray, operatorArray, trigSymbolsArray } from '../utility/symbolsArray'
 import { getAnswer } from './equationSolver'
@@ -59,11 +58,12 @@ export const CalculationsManager = ({
     const [doesCalculationContainPi, setDoesCalculationContainPi] = useState(false)
     const [doesFirstCalculationContainPi, setFirstDoesCalculationContainPi] = useState(false)
     const [doesSecondCalculationContainPi, setSecondDoesCalculationContainPi] = useState(false)
+    const [firstCalculationTrigSymbol, setFirstCalculationTrigSymbol] = useState("")
+    const [secondCalculationTrigSymbol, setSecondCalculationTrigSymbol] = useState("")
     const [doesFirstCalculationContainTrig, setDoesFirstCalculationContainTrig] = useState(false)
     const [doesSecondCalculationContainTrig, setDoesSecondCalculationContainTrig] = useState(false)
     const [isOperatorInequalityCheck, setIsOperatorInequalityCheck] = useState(false)
     const [currentInput, setCurrentInput] = useState(firstCalculatorInput)
-
 
     // check if operator is inquality check
     useEffect(() => {
@@ -87,20 +87,6 @@ export const CalculationsManager = ({
         }
         isFirstCalculatorInput ? setCurrentInput(firstCalculatorInput) : setCurrentInput(secondCalculatorInput)
     }, [firstCalculatorInput, secondCalculatorInput, isLastCalculationAnOperator])
-
-
-    // track if first equation contains a trig related calculation
-    useEffect(() => {
-        let includesTrigInput = doesInputContainTrigCalculation(firstCalculatorInput)
-        setDoesFirstCalculationContainTrig(includesTrigInput)
-    }, [firstCalculatorInput])
-
-
-    // track if first equation contains a trig related calculation
-    useEffect(() => {
-        let includesTrigInput = doesInputContainTrigCalculation(secondCalculatorInput)
-        setDoesSecondCalculationContainTrig(includesTrigInput)
-    }, [secondCalculatorInput])
 
 
     // Track if first equation contains pi
@@ -160,10 +146,29 @@ export const CalculationsManager = ({
     }, [firstCalculatorInput, secondCalculatorInput, operator])
 
 
-    const getCurrentSetInput = (): React.Dispatch<React.SetStateAction<string[]>> => {
+    const getCurrentSetInput = (): Dispatch<SetStateAction<string[]>> => {
         return isFirstCalculatorInput ? setFirstCalculatorInput : setSecondCalculatorInput
-       }
+    }
 
+    const getCurrentTrigSymbol = (): string => {
+        return isFirstCalculatorInput ? firstCalculationTrigSymbol : secondCalculationTrigSymbol
+    }
+
+    const getCurrentTrigBooleanInput = (): Dispatch<SetStateAction<boolean>> => {
+        return isFirstCalculatorInput ? setDoesFirstCalculationContainTrig : setDoesSecondCalculationContainTrig
+    }
+
+    const getCurrentTrigSetInput = (): Dispatch<SetStateAction<string>> => {
+        return isFirstCalculatorInput ? setFirstCalculationTrigSymbol : setSecondCalculationTrigSymbol
+    }
+
+    const clearTrigInputs = () => {
+        let currentTrigBooleanInput = getCurrentTrigBooleanInput()
+        currentTrigBooleanInput(false)
+
+        let curentTrigSetInput = getCurrentTrigSetInput()
+        curentTrigSetInput("")
+    }
 
     // this function stores the last equation
     const updatePrevArray = () => {
@@ -281,6 +286,16 @@ export const CalculationsManager = ({
 
         let currentSetInput = getCurrentSetInput()
 
+        let isCurrentcharacterTrigCalc = currentInput[currentInput.length -  2] === ")"
+        if(isCurrentcharacterTrigCalc){
+
+            let inputWithoutTrigCalc = removeTrigCalculation(currentInput, getCurrentTrigSymbol())
+            currentSetInput([inputWithoutTrigCalc])
+
+            clearTrigInputs()
+            return
+        }
+
         // Remove from string and set input
         let stringIntoArray: Array<string> = removeLastInputFromString(currentInput)
         currentSetInput(stringIntoArray)
@@ -290,6 +305,7 @@ export const CalculationsManager = ({
         let currentSetInput = getCurrentSetInput()
 
         // put number inside first trig brackets
+        notifyMessage(doesFirstCalculationContainTrig.toString())
         if(doesFirstCalculationContainTrig && isFirstCalculatorInput){
             let newInput = manageTrigInput(userInput, currentInput)
             currentSetInput(newInput)
@@ -412,7 +428,6 @@ export const CalculationsManager = ({
 
     // handle changing number to negative/positive - sign logic
     const changeSign = () => {
-
         let updatedArray = changeSignArray(currentInput)
         let currentSetInput = getCurrentSetInput()
         currentSetInput(updatedArray)
@@ -474,9 +489,13 @@ export const CalculationsManager = ({
             if (trigSymbolsArray[i] === userInput) {
 
                 if (isFirstCalculatorInput && !doesFirstCalculationContainTrig) {
+                    setFirstCalculationTrigSymbol(userInput)
+                    setDoesFirstCalculationContainTrig(true)
                     onInputNumber(userInput + "()")
 
                 } else if (!isFirstCalculatorInput && !doesSecondCalculationContainTrig) {
+                    setSecondCalculationTrigSymbol(userInput)
+                    setDoesSecondCalculationContainTrig(true)
                     onInputNumber(userInput + "()")
 
                 } else {

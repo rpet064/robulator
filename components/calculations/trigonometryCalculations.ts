@@ -2,19 +2,7 @@ import { trigSymbolsArray } from "../utility/symbolsArray"
 import { splitStringByBrackers } from "../utility/splitStringByBrackers"
 
 
-export const solveTanCalculation = () => {
-    // Your code here
-}
-
-export const solveSinCalculation = () => {
-    // Your code here
-}
-
-export const solveLogCalculation = () => {
-    // Your code here
-}
-
-export const solveCosCalculation = () => {
+export const solveTrigCalculation = () => {
     // Your code here
 }
 
@@ -35,23 +23,8 @@ export const manageTrigInput = (userInput: string, currentInput: string[]) => {
     }
 }
 
-export const removeTrigCalculation = (input: string[]) => {
-    return []
-}
-
-// Check if the input contains a trigonometric calculation
-export const doesInputContainTrigCalculation = (input: string[]) => {
-
-    let inputContainTrigCalculation = false
-
-    input.forEach(str => {
-        // Iterate over each trigonometric symbol
-        trigSymbolsArray.forEach(symbol => {
-            // Check if the string contains the trigonometric symbol followed by an opening bracket
-            if (str.includes(symbol)) {
-                inputContainTrigCalculation = true;
-            }
-        });
-    });
-    return inputContainTrigCalculation
+export const removeTrigCalculation = (input: string[], inputContainTrigCalculation: string) => {
+    let inputString = input.join('');
+    let splitString = inputString.split(inputContainTrigCalculation);
+    return splitString[0].trim();
 }
