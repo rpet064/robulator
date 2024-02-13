@@ -56,7 +56,7 @@ export const CalculationsManager = ({
     const [isFirstCalculatorInput, setIsFirstCalculatorInput] = useState(true)
     const [firstCalculatorInputHasAnswer, setFirstCalculatorInputHasAnswer] = useState(false)
     const [doesCalculationContainPi, setDoesCalculationContainPi] = useState(false)
-    const [doesFirstCalculationContainPi, setFirstDoesCalculationContainPi] = useState(false)
+    const [doesFirstCalculationContainPi, setDoesFirstCalculationContainPi] = useState(false)
     const [doesSecondCalculationContainPi, setSecondDoesCalculationContainPi] = useState(false)
     const [firstCalculationTrigSymbol, setFirstCalculationTrigSymbol] = useState("")
     const [secondCalculationTrigSymbol, setSecondCalculationTrigSymbol] = useState("")
@@ -91,7 +91,7 @@ export const CalculationsManager = ({
 
     // Track if first equation contains pi
     useEffect(() => {
-        setFirstDoesCalculationContainPi(firstCalculatorInput.includes("𝝅"))
+        setDoesFirstCalculationContainPi(firstCalculatorInput.includes("𝝅"))
     }, [firstCalculatorInput])
 
 
@@ -149,6 +149,10 @@ export const CalculationsManager = ({
 
     const getCurrentTrigSetInput = (): Dispatch<SetStateAction<string>> => {
         return isFirstCalculatorInput ? setFirstCalculationTrigSymbol : setSecondCalculationTrigSymbol
+    }
+
+    const currentCalculationContainsPi = (): boolean => {
+        return isFirstCalculatorInput ? doesFirstCalculationContainPi : doesSecondCalculationContainPi
     }
 
     const clearTrigInputs = () => {
@@ -514,16 +518,11 @@ export const CalculationsManager = ({
         // Add pi to array
         if (userInput === "𝝅") {
 
-            if(isFirstCalculatorInput && !doesFirstCalculationContainPi){
+            if(!currentCalculationContainsPi()){
                 onInputNumber(userInput)
-
-            } else if(!isFirstCalculatorInput && !doesSecondCalculationContainPi){
-                onInputNumber(userInput)
-
             } else {
                 notifyMessage("Only one pi can be added to the equation")
             }
-            calculationComplete = true
             return
         }
 
