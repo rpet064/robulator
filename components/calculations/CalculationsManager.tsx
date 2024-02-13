@@ -1,14 +1,14 @@
-import { solveTrigCalculation, manageTrigInput, removeTrigCalculation,  } from './trigonometryCalculations'
-import { useEffect, useState, Dispatch, SetStateAction } from 'react'
-import { numArray, operatorArray, trigSymbolsArray } from '../utility/symbolsArray'
-import { getAnswer } from './equationSolver'
-import { squareNumber } from './numberSquarer'
-import { removeTrailingZeros } from '../utility/removeTrailingZeros'
-import { errorMessage, notifyMessage } from '../utility/toastMessages'
-import {solvePiEquation } from './solvePiEquation'
-import { removeLastInputFromString } from '../utility/removeLastInputFromString'
-import { solveInequalityCalculation } from '../calculations/solveInequalityCalculation'
-import { changeSignArray } from '../utility/changeSignArray'
+import { solveTrigCalculation, manageTrigInput, removeTrigCalculation,  } from "./trigonometryCalculations"
+import { useEffect, useState, Dispatch, SetStateAction } from "react"
+import { numArray, operatorArray, trigSymbolsArray } from "../utility/symbolsArray"
+import { getAnswer } from "./equationSolver"
+import { squareNumber } from "./numberSquarer"
+import { removeTrailingZeros } from "../utility/removeTrailingZeros"
+import { errorMessage, notifyMessage } from "../utility/toastMessages"
+import {solvePiEquation } from "./solvePiEquation"
+import { removeLastInputFromString } from "../utility/removeLastInputFromString"
+import { solveInequalityCalculation } from "../calculations/solveInequalityCalculation"
+import { changeSignArray } from "../utility/changeSignArray"
 
 
 interface calculationsManagerProps {
@@ -124,17 +124,6 @@ export const CalculationsManager = ({
     }, [firstCalculatorInput, operator, secondCalculatorInput])
 
 
-    // Checks if currently contains unfinished decimal
-    useEffect(() => {
-        setIsDecimalUnfinished(
-            firstCalculatorInput.length < 3 && firstCalculatorInput[1] === "."
-            || secondCalculatorInput.length < 3 && secondCalculatorInput[1] === "."
-            || firstCalculatorInput.length < 4 && firstCalculatorInput[0] === "-" && firstCalculatorInput[2] === "."
-            || secondCalculatorInput.length < 4 && secondCalculatorInput[0] === "-" && secondCalculatorInput[2] === "."
-        )
-    }, [firstCalculatorInput, secondCalculatorInput])
-
-
     // Check if current number of inputs exceeds maximum input
     useEffect(() => {
         setCurrentNumberOfInputs(firstCalculatorInput.length + secondCalculatorInput.length + operator.length)
@@ -146,12 +135,12 @@ export const CalculationsManager = ({
     }, [firstCalculatorInput, secondCalculatorInput, operator])
 
 
-    const getCurrentSetInput = (): Dispatch<SetStateAction<string[]>> => {
-        return isFirstCalculatorInput ? setFirstCalculatorInput : setSecondCalculatorInput
-    }
-
     const getCurrentTrigSymbol = (): string => {
         return isFirstCalculatorInput ? firstCalculationTrigSymbol : secondCalculationTrigSymbol
+    }
+
+    const getCurrentSetInput = (): Dispatch<SetStateAction<string[]>> => {
+        return isFirstCalculatorInput ? setFirstCalculatorInput : setSecondCalculatorInput
     }
 
     const getCurrentTrigBooleanInput = (): Dispatch<SetStateAction<boolean>> => {
@@ -278,6 +267,10 @@ export const CalculationsManager = ({
     // This function checks
     const deletePrevInput = () => {
 
+        if(currentInput.length < 2){
+            resetCalculator()
+        }
+
         // Clear operator
         if(isLastCalculationAnOperator){
             setOperator("")
@@ -305,7 +298,6 @@ export const CalculationsManager = ({
         let currentSetInput = getCurrentSetInput()
 
         // put number inside first trig brackets
-        notifyMessage(doesFirstCalculationContainTrig.toString())
         if(doesFirstCalculationContainTrig && isFirstCalculatorInput){
             let newInput = manageTrigInput(userInput, currentInput)
             currentSetInput(newInput)
@@ -351,7 +343,7 @@ export const CalculationsManager = ({
         }
 
         if (!input.length || (operator !== "" && !secondCalculatorInput.length)) {
-            currentSetInput(['0'])
+            currentSetInput(["0"])
             setPrevInput(`√ ${0}`)
             return
         }
@@ -362,9 +354,9 @@ export const CalculationsManager = ({
             input.shift()
         }
 
-        const originalNumberAsInt = parseFloat(input.toString().replaceAll(',', ""))
+        const originalNumberAsInt = parseFloat(input.toString().replaceAll(",", ""))
         const answer = squareNumber(input, originalNumberAsInt, input.length)
-        const roundedAnswer = removeTrailingZeros(answer.toString().replaceAll(',', ""))
+        const roundedAnswer = removeTrailingZeros(answer.toString().replaceAll(",", ""))
 
         let roundedAnswerAsArray = roundedAnswer.split("")
 
@@ -381,14 +373,16 @@ export const CalculationsManager = ({
     // handle decimal input logic
     const onInputDecimal = (userInput: string) => {
 
-        // add 0 to first array (it's empty) 
-        if (firstCalculatorInput.length < 1) {
-            setFirstCalculatorInput(['0'])
+        let currentSetInput = getCurrentSetInput()
+
+        // Add 0 before decimal if no number is inputted
+        if (currentInput.length < 1) {
+            currentSetInput(["0"])
         }
 
-        // add 0 to second array (it's empty)
-        if (secondCalculatorInput.length < 1 && !isFirstCalculatorInput) {
-            setSecondCalculatorInput(['0'])
+        // Add 0 after negative sign if no number is inputted
+        if (currentInput.length < 2 && currentInput[0] === "-") {
+            currentSetInput(["-", "0"])
         }
 
         // check if decimal already exists in current array
@@ -406,13 +400,13 @@ export const CalculationsManager = ({
 
         // Check first number is inputted before operator
         if (firstCalculatorInput.length < 1) {
-            errorMessage('please enter a number first')
+            errorMessage("please enter a number first")
             return
         }
 
         // Check second number is inputted before solving equation
         if (secondCalculatorInput.length < 1 && !isFirstCalculatorInput) {
-            errorMessage('please enter a number first')
+            errorMessage("please enter a number first")
             return
         }
 
@@ -436,7 +430,7 @@ export const CalculationsManager = ({
     // this const catches userinput from button and triggers correct function accordingly
     const handleUserInput = (userInput: string) => {
 
-        // Calculations don't need validation
+        // Calculations don"t need validation
         let calculationComplete = false
 
         switch (userInput) {
@@ -454,6 +448,7 @@ export const CalculationsManager = ({
 
             case ".":
                 calculationComplete = true
+                setIsDecimalUnfinished(true)
 
                 onInputDecimal(userInput)
                 break
@@ -464,7 +459,6 @@ export const CalculationsManager = ({
                 if (isLastCalculationAnOperator) {
                     break
                 }
-
                 changeSign()
         }
 
@@ -479,8 +473,20 @@ export const CalculationsManager = ({
         }
         
         // Add number to calculation
-        if (numArray.includes(userInput)) {
+        if (numArray.includes(userInput) || userInput === "!") {
+
             onInputNumber(userInput)
+
+            // after number is inputted, decimal is finished
+            if (isDecimalUnfinished) {
+                setIsDecimalUnfinished(false);
+            }
+            return
+        }
+
+        // Check last input on first number isn"t a decimal
+        if (isDecimalUnfinished) {
+            errorMessage("please enter a number first")
             return
         }
 
@@ -513,19 +519,14 @@ export const CalculationsManager = ({
 
             } else if(!isFirstCalculatorInput && !doesSecondCalculationContainPi){
                 onInputNumber(userInput)
-                
+
             } else {
-                notifyMessage("Only one Pi can be added to the equation")
+                notifyMessage("Only one pi can be added to the equation")
             }
             calculationComplete = true
             return
         }
 
-        // Check last input on first number isn't a decimal
-        if (isDecimalUnfinished) {
-            errorMessage('please enter a number first')
-            return
-        }
 
         if (operatorArray.includes(userInput) && !isLastCalculationAnOperator) {
             onInputOperator(userInput)
