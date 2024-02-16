@@ -9,6 +9,7 @@ import {solvePiEquation } from "./solvePiEquation"
 import { removeLastInputFromString } from "../utility/removeLastInputFromString"
 import { solveInequalityCalculation } from "../calculations/solveInequalityCalculation"
 import { changeSignArray } from "../utility/changeSignArray"
+import { solveFactorial } from "../calculations/factorialCalculation"
 
 
 interface calculationsManagerProps {
