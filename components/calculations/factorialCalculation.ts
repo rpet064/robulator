@@ -1,4 +1,5 @@
 import { notifyMessage } from "../utility/toastMessages"
+import { countSubstringOccurrences } from "../utility/substringOccurences"
 
 export const solveFactorial = (input: string) => {
 
@@ -8,13 +9,13 @@ export const solveFactorial = (input: string) => {
         operand = parseInt(input.split('!')[0])
     } catch (e) {
         notifyMessage(`Cannot solve factorial calculation ${e}`)
-        return
+        return input.toString()
     }
 
     // get number of times need to calculate factorial
     let numOfFactorials = countSubstringOccurrences(input, '!')
     if(numOfFactorials < 1){
-        return operand
+        return operand.toString()
     }
 
     let inputTotal = operand, numOfIterations = operand;
@@ -25,10 +26,11 @@ export const solveFactorial = (input: string) => {
         numOfIterations = inputTotal
 
         // factorial starts from highest nunber and multiplies down
-        while (numOfIterations > 0){
+        while (numOfIterations > 1){
             numOfIterations--
             inputTotal *= numOfIterations
         }
         numOfFactorials--
     }
+    return inputTotal.toString()
 }

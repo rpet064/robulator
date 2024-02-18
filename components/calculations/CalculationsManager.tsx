@@ -10,7 +10,7 @@ import { removeLastInputFromString } from "../utility/removeLastInputFromString"
 import { solveInequalityCalculation } from "../calculations/solveInequalityCalculation"
 import { changeSignArray } from "../utility/changeSignArray"
 import { solveFactorial } from "../calculations/factorialCalculation"
-
+import { updatePrevArray } from "../utility/updatePrevArray"
 
 interface calculationsManagerProps {
     firstCalculatorInput: string[]
@@ -164,22 +164,7 @@ export const CalculationsManager = ({
         curentTrigSetInput("")
     }
 
-    // this function stores the last equation
-    const updatePrevArray = () => {
-
-        const firstOperand = firstCalculatorInput.join("")
-        const secondOperand = secondCalculatorInput.join("")
-
-        // Construct the equation string
-        const equationString = `${firstOperand} ${operator} ${secondOperand} =`
-
-        // Convert the array to a string and remove commas
-        const prevEquationString = equationString.replace(/,/g, "")
-
-        setPrevInput(prevEquationString)
-    }
-
-    const solveEquation = async (newOperator: string) => {
+    const solveEquation = async (newOperator: string, secondInput: string) => {
 
         // Check if equation is valid
         if (secondCalculatorInput.length === 0) {
@@ -187,7 +172,6 @@ export const CalculationsManager = ({
         }
 
         let firstInput = firstCalculatorInput.join("")
-        let secondInput = secondCalculatorInput.join("")
 
         // replace pi with actual number
         if (doesCalculationContainPi) {
@@ -195,13 +179,12 @@ export const CalculationsManager = ({
             secondInput = solvePiEquation(secondInput)
         }
 
-        let firstCalcInput
-
         // Solve inequality calculation
+        let firstCalcInput
         if(isOperatorInequalityCheck){
             firstCalcInput = [solveInequalityCalculation(firstInput, secondInput) ? "Not Equal" : "Equal"]
         
-        // solve "normal" equation
+        // solve non inequality calculation
         } else {
 
        // join array of strings into String, then change strings into numbers
@@ -219,14 +202,32 @@ export const CalculationsManager = ({
                 return
             }
         }
+        completeCalculations(firstCalcInput, newOperator, secondInput)
+        }
+
+    const completeCalculations = (firstCalcInput: string[], newOperator: string, secondInput: string) => {
 
         setFirstCalculatorInput(firstCalcInput)
         setFirstCalculatorInputHasAnswer(true)
 
-        updatePrevArray()
+        let prevEquationString = updatePrevArray(firstCalculatorInput, secondInput.split(""), operator)
+        setPrevInput(prevEquationString)
 
         clearNumbers(newOperator)
+    }
+
+    const solveFactorialEquation = () => {
+        if(isFirstCalculatorInput){
+            let firstInput = firstCalculatorInput.join("") + "!"
+            setPrevInput(firstInput)
+            firstInput = solveFactorial(firstInput)
+            setFirstCalculatorInput([firstInput])
+            return
         }
+        let secondInput = secondCalculatorInput.join("") + "!"
+        secondInput = solveFactorial(secondInput)
+        solveEquation("", secondInput)
+    }
 
     // manages the app inputs when the screen is full (max is 15 integers excl an operator)
     const handleInputExceedsMaximum = (userInput: string) => {
@@ -234,7 +235,7 @@ export const CalculationsManager = ({
             case "AC": resetCalculator()
                 break
 
-            case "=": solveEquation(userInput)
+            case "=": solveEquation(userInput, secondCalculatorInput.join(""))
                 break
 
             case "C": deletePrevInput()
@@ -420,7 +421,7 @@ export const CalculationsManager = ({
 
         // Equation is sufficent to solve
         if (secondCalculatorInput.length > 0 && !isFirstCalculatorInput) {
-            solveEquation(userInput)
+            solveEquation(userInput, secondCalculatorInput.join(""))
         }
         setOperator(userInput)
     }
@@ -465,6 +466,14 @@ export const CalculationsManager = ({
                     break
                 }
                 changeSign()
+
+            case "!":
+                calculationComplete = true
+
+                if (isLastCalculationAnOperator) {
+                    break
+                }
+            solveFactorialEquation()
         }
 
         if (calculationComplete) {
@@ -532,7 +541,7 @@ export const CalculationsManager = ({
             onInputOperator(userInput)
 
         } else if (userInput === "=") {
-            solveEquation("")
+            solveEquation("", secondCalculatorInput.join(""))
 
         } else if (userInput === "√" && !isLastCalculationAnOperator) {
             onSquareRoot()
