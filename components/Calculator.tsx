@@ -1,10 +1,11 @@
 import styles from '../styles/Home.module.css'
 import SideMenu from './SideMenu'
-import {Toaster} from 'react-hot-toast'
-import { copyPreviousCalculationToClipboard, copyCurrentCalculationToClipboard} from './utility/clipboardUtils'
+import { Toaster } from 'react-hot-toast'
+import { copyPreviousCalculationToClipboard, copyCurrentCalculationToClipboard } from './utility/clipboardUtils'
 import Keypad from './Keypad'
 import { useState, useRef, SetStateAction, Dispatch, FC } from 'react'
 import colours from '../styles/Colours.module.css'
+import HistorySideMenu from './HistorySideMenu'
 
 interface CalculatorProps {
   theme: string
@@ -12,39 +13,40 @@ interface CalculatorProps {
 }
 
 const Calculator: FC<CalculatorProps> = ({
-    theme,
-    setTheme
-    }) => {
+  theme,
+  setTheme
+}) => {
 
   const [firstCalculatorInput, setFirstCalculatorInput] = useState<string>("")
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string>("")
   const [prevInput, setPrevInput] = useState<string>("")
   const [operator, setOperator] = useState<string>("")
-  const [isScientificSymbolsArray, setScientificSymbolsArray] = useState<boolean>(true);
+  const [isScientificSymbolsArray, setScientificSymbolsArray] = useState<boolean>(true)
 
-  const calculatorRef = useRef(null);
-  const textInputRef = useRef(null);
+  const calculatorRef = useRef(null)
+  const textInputRef = useRef(null)
 
   return (
 
     // Calculator Screen
     <div className={`${styles.calculator} ${theme === 'light' ? colours.lightText : colours.darkText}`} ref={calculatorRef}>
-         <Toaster/>
+      <Toaster />
 
       {/* // above main screen calculations */}
       <div className={`${styles.calculatorScreen} ${theme === 'light' ? colours.darkBackground : colours.lightBackground}`}>
 
-          <SideMenu
-              ScientificSymbolsArray={isScientificSymbolsArray}
-              setScientificSymbolsArray={setScientificSymbolsArray}
-              theme={theme}
-              setTheme={setTheme}
-          />
+        <SideMenu
+          ScientificSymbolsArray={isScientificSymbolsArray}
+          setScientificSymbolsArray={setScientificSymbolsArray}
+          theme={theme}
+          setTheme={setTheme}
+        />
+        <HistorySideMenu theme={theme} />
 
-          <div className={styles.miniScreen} 
-            onClick={() => copyPreviousCalculationToClipboard(prevInput)}>
-            
-            <span>{prevInput}</span>
+        <div className={styles.miniScreen}
+          onClick={() => copyPreviousCalculationToClipboard(prevInput)}>
+
+          <span>{prevInput}</span>
         </div>
 
         {/* // Main screen */}
@@ -52,7 +54,7 @@ const Calculator: FC<CalculatorProps> = ({
           onClick={() => copyCurrentCalculationToClipboard(firstCalculatorInput, operator, secondCalculatorInput)}>
           <span className="mainScreenTextInput" ref={textInputRef}>
             {firstCalculatorInput}{operator}{secondCalculatorInput}
-            </span>
+          </span>
         </div>
       </div>
 
@@ -63,7 +65,7 @@ const Calculator: FC<CalculatorProps> = ({
         secondCalculatorInput={secondCalculatorInput}
         setSecondCalculatorInput={setSecondCalculatorInput}
         setPrevInput={setPrevInput}
-        operator={operator} 
+        operator={operator}
         setOperator={setOperator}
         isScientificSymbolsArray={isScientificSymbolsArray}
       />

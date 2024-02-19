@@ -477,7 +477,7 @@ export const CalculationsManager = ({
 
             // after number is inputted, decimal is finished
             if (isDecimalUnfinished) {
-                setIsDecimalUnfinished(false);
+                setIsDecimalUnfinished(false)
             }
             return
         }

@@ -18,7 +18,7 @@ export const solveFactorial = (input: string) => {
         return operand.toString()
     }
 
-    let inputTotal = operand, numOfIterations = operand;
+    let inputTotal = operand, numOfIterations = operand
 
     // Number of factorials
     while (numOfFactorials > 0) {

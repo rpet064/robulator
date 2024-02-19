@@ -1,4 +1,4 @@
-import { useEffect, useState, Dispatch, SetStateAction, RefObject, FC } from 'react'
+import { useEffect, useState, Dispatch, SetStateAction, FC } from 'react'
 import styles from '../styles/Keypad.module.css'
 import { regularSymbolsArray, scientificSymbolsArray } from './utility/symbolsArray'
 import { CalculationsManager } from "./calculations/CalculationsManager"
@@ -54,7 +54,7 @@ const Keypad: FC<KeypadProps> = ({
     setDoesCalculationExceedInput: setDoesCalculationExceedInput,
     currentNumberOfInputs: currentNumberOfInputs,
     setCurrentNumberOfInputs: setCurrentNumberOfInputs
-   });
+  })
 
 
   // Toggle between compact calculations and advanced
@@ -78,8 +78,8 @@ const Keypad: FC<KeypadProps> = ({
     <div className={`${keypadContainerStyle} ${styles.calculatorKeypadStyle}`}>
       {symbolsArray.map((symbol, index) => {
         return (
-          <button onClick={() => calculationsManager(symbol)} 
-          key={index}
+          <button onClick={() => calculationsManager(symbol)}
+            key={index}
             className={`${buttonStyle} ${styles.calcBtn} ${colours.lighterButton}`}>{symbol}</button>
         )
       })

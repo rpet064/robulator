@@ -1,6 +1,6 @@
 export const splitStringByBrackers = (input: string) => {
     try{
-        const parts = input.split(/(\(|\))/);
+        const parts = input.split(/(\(|\))/)
         return parts
 
     } catch (e) {
