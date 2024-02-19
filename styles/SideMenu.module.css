@@ -9,6 +9,11 @@
     margin-left: 0.5rem;
 }
 
+.historySideMenuButton {
+    right: 0;
+    margin-right: 0.5rem;
+}
+
 .sideMenuContainer {
     position: absolute;
     top: 0.5rem;
