@@ -56,25 +56,14 @@ export const CalculationsManager = ({
     const maximumNumberOfIntegers = 15
     const [isFirstCalculatorInput, setIsFirstCalculatorInput] = useState<boolean>(true)
     const [firstCalculatorInputHasAnswer, setFirstCalculatorInputHasAnswer] = useState<boolean>(false)
-    const [doesCalculationContainPi, setDoesCalculationContainPi] = useState<boolean>(false)
-    const [doesFirstCalculationContainPi, setDoesFirstCalculationContainPi] = useState<boolean>(false)
-    const [doesSecondCalculationContainPi, setSecondDoesCalculationContainPi] = useState<boolean>(false)
     const [firstCalculationTrigSymbol, setFirstCalculationTrigSymbol] = useState<string>("")
     const [secondCalculationTrigSymbol, setSecondCalculationTrigSymbol] = useState<string>("")
     const [doesFirstCalculationContainTrig, setDoesFirstCalculationContainTrig] = useState<boolean>(false)
     const [doesSecondCalculationContainTrig, setDoesSecondCalculationContainTrig] = useState<boolean>(false)
     const [isOperatorInequalityCheck, setIsOperatorInequalityCheck] = useState<boolean>(false)
     const [currentInput, setCurrentInput] = useState<string>(firstCalculatorInput)
-    const [isFactorialCalculationValid, setIsFactorialCalculationValid] = useState<boolean>(true)
 
 
-    // check if operator is inquality check
-    useEffect(() => {
-        let isInequalitySymbol = operator.trim() === "≠"
-        setIsOperatorInequalityCheck(isInequalitySymbol)
-    }, [operator])
-
-    
     // if operator is empty, then still on first equation
     useEffect(() => {
         let isFirstEquation = operator.trim() === ""
@@ -90,24 +79,6 @@ export const CalculationsManager = ({
         }
         isFirstCalculatorInput ? setCurrentInput(firstCalculatorInput) : setCurrentInput(secondCalculatorInput)
     }, [firstCalculatorInput, secondCalculatorInput, isLastCalculationAnOperator])
-
-
-    // Track if first equation contains pi
-    useEffect(() => {
-        setDoesFirstCalculationContainPi(firstCalculatorInput.includes("𝝅"))
-    }, [firstCalculatorInput])
-
-
-    // Track if second equation contains pi
-    useEffect(() => {
-        setSecondDoesCalculationContainPi(secondCalculatorInput.includes("𝝅"))
-    }, [secondCalculatorInput])
-
-
-    // Track if any equation contains pi
-    useEffect(() => {
-        setDoesCalculationContainPi(doesFirstCalculationContainPi || doesSecondCalculationContainPi)
-    }, [doesFirstCalculationContainPi, doesSecondCalculationContainPi])
 
 
     useEffect(() => {
@@ -154,8 +125,9 @@ export const CalculationsManager = ({
         return isFirstCalculatorInput ? setFirstCalculationTrigSymbol : setSecondCalculationTrigSymbol
     }
 
-    const currentCalculationContainsPi = (): boolean => {
-        return isFirstCalculatorInput ? doesFirstCalculationContainPi : doesSecondCalculationContainPi
+    const calculationCanAddSymbol = (): boolean => {
+        return currentInput.length > 0
+        && !isDecimalUnfinished && !isLastCalculationAnOperator
     }
 
     const clearTrigInputs = () => {
@@ -174,12 +146,6 @@ export const CalculationsManager = ({
         }
 
         let firstInput = firstCalculatorInput
-
-        // replace pi with actual number
-        if (doesCalculationContainPi) {
-            firstInput = solvePiEquation(firstInput)
-            secondInput = solvePiEquation(secondInput)
-        }
 
         // Solve inequality calculation
         let firstCalcInput
@@ -220,8 +186,8 @@ export const CalculationsManager = ({
 
     const solveFactorialEquation = () => {
 
-        if(!isFactorialCalculationValid){
-            setFirstCalculatorInput("0")
+        if(!calculationCanAddSymbol()){
+            return
         }
 
         if(isFirstCalculatorInput){
@@ -233,6 +199,26 @@ export const CalculationsManager = ({
         }
         let secondInput = secondCalculatorInput + "!"
         secondInput = solveFactorial(secondInput)
+        solveEquation("", secondInput)
+    }
+
+    const solveEquationContainingPi = () => {
+
+        if(!calculationCanAddSymbol()){
+            return
+        }
+
+        if(isFirstCalculatorInput){
+            let firstInput = firstCalculatorInput + "𝝅"
+            setPrevInput(firstInput)
+
+            let answer = solvePiEquation(firstInput)
+            setFirstCalculatorInput(answer)
+
+            return
+        }
+        let secondInput = secondCalculatorInput + "𝝅"
+        secondInput = solvePiEquation(secondInput)
         solveEquation("", secondInput)
     }
 
@@ -345,15 +331,6 @@ export const CalculationsManager = ({
 
         let input = currentInput
         let currentSetInput = getCurrentSetInput()
-
-        // IsFirstCalc & contains Pi or isSecondCalc and contains pi = true
-        const doesCurrentCalculationHavePi = isFirstCalculatorInput ? 
-        doesFirstCalculationContainPi : doesSecondCalculationContainPi
-
-        // Solve equation with Pi for calculation
-        if(doesCurrentCalculationHavePi){
-            input = solvePiEquation(input)
-        }
 
         if (!input.length || (operator !== "" && !secondCalculatorInput.length)) {
             currentSetInput("0")
@@ -534,12 +511,7 @@ export const CalculationsManager = ({
 
         // Add pi to array
         if (userInput === "𝝅") {
-
-            if(!currentCalculationContainsPi()){
-                onInputNumber(userInput)
-            } else {
-                notifyMessage("Only one pi can be added to the equation")
-            }
+            solveEquationContainingPi()
             return
         }
 

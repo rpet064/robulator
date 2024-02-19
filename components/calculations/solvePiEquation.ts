@@ -2,13 +2,7 @@ const math = require('mathjs')
 const parser = new math.Parser()
 
 const solvePiEquation = (equation: string): string => {
-
-    let equationReplacedPi
-    if(equation.startsWith("𝝅") && equation.length > 1){
-        equationReplacedPi = replacePiSymbol(equation, '3.14 *')
-    } else {
-        equationReplacedPi = replacePiSymbol(equation, 'pi')
-    }
+    let equationReplacedPi = replacePiSymbol(equation, 'pi')
     return parser.evaluate(equationReplacedPi)
 }
 
