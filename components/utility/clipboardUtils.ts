@@ -10,9 +10,8 @@ export const copyPreviousCalculationToClipboard = (prevInput:string) => {
 }
 
 export const copyCurrentCalculationToClipboard = 
-(firstInput: string[], operator: string, secondInput: string[]) => {
+(firstInput: string, operator: string, secondInput: string) => {
 
   let textToCopy = firstInput + operator + secondInput
-  textToCopy = textToCopy.replaceAll(",", "")
   copyToClipboard(textToCopy)
 }

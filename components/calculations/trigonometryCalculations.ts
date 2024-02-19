@@ -6,9 +6,9 @@ export const solveTrigCalculation = () => {
     // Your code here
 }
 
-export const manageTrigInput = (userInput: string, currentInput: string[]) => {
+export const manageTrigInput = (userInput: string, currentInput: string) => {
     try{
-        let joinedInput = currentInput.join('')
+        let joinedInput = currentInput
 
         // get content between brackets or ""
         let splitString = splitStringByBrackers(joinedInput)
@@ -16,15 +16,15 @@ export const manageTrigInput = (userInput: string, currentInput: string[]) => {
         // append "" or existing number between brackets
         splitString[2] += userInput
 
-        return splitString
+        return splitString.join("")
 
         } catch (e) {
         throw new Error(`This equation doesn't contain brackets ${e}`)
     }
 }
 
-export const removeTrigCalculation = (input: string[], inputContainTrigCalculation: string) => {
-    let inputString = input.join('');
-    let splitString = inputString.split(inputContainTrigCalculation);
-    return splitString[0].trim();
+export const removeTrigCalculation = (input: string, inputContainTrigCalculation: string) => {
+    let inputString = input
+    let splitString = inputString.split(inputContainTrigCalculation)
+    return splitString[0].trim()
 }

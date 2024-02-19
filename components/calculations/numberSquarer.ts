@@ -1,10 +1,10 @@
 
-export const squareNumber = (calculatorInput: string[], originalNumber: number, arrayLength: number) => {
+export const squareNumber = (calculatorInput: string, originalNumber: number, arrayLength: number) => {
   
   if (arrayLength) {
       const hasNegative = calculatorInput.includes("-")
       const numberToSquare = hasNegative
-          ? parseInt(calculatorInput.join("").replace(/,/g, "").replace("-", ""))
+          ? parseInt(calculatorInput.replace(/,/g, "").replace("-", ""))
           : originalNumber
 
       const squaredNumberString = (Math.sqrt(numberToSquare)).toFixed(2).toString()

@@ -13,10 +13,10 @@ import { solveFactorial } from "../calculations/factorialCalculation"
 import { updatePrevArray } from "../utility/updatePrevArray"
 
 interface calculationsManagerProps {
-    firstCalculatorInput: string[]
-    setFirstCalculatorInput: Dispatch<SetStateAction<string[]>>
-    secondCalculatorInput: string[]
-    setSecondCalculatorInput: Dispatch<SetStateAction<string[]>>
+  firstCalculatorInput: string
+  setFirstCalculatorInput: Dispatch<SetStateAction<string>>
+  secondCalculatorInput: string
+  setSecondCalculatorInput: Dispatch<SetStateAction<string>>
     setPrevInput: (value: string) => void
     operator: string
     setOperator: (value: string) => void
@@ -64,7 +64,7 @@ export const CalculationsManager = ({
     const [doesFirstCalculationContainTrig, setDoesFirstCalculationContainTrig] = useState<boolean>(false)
     const [doesSecondCalculationContainTrig, setDoesSecondCalculationContainTrig] = useState<boolean>(false)
     const [isOperatorInequalityCheck, setIsOperatorInequalityCheck] = useState<boolean>(false)
-    const [currentInput, setCurrentInput] = useState<string[]>(firstCalculatorInput)
+    const [currentInput, setCurrentInput] = useState<string>(firstCalculatorInput)
     const [isFactorialCalculationValid, setIsFactorialCalculationValid] = useState<boolean>(true)
 
 
@@ -142,7 +142,7 @@ export const CalculationsManager = ({
         return isFirstCalculatorInput ? firstCalculationTrigSymbol : secondCalculationTrigSymbol
     }
 
-    const getCurrentSetInput = (): Dispatch<SetStateAction<string[]>> => {
+    const getCurrentSetInput = (): Dispatch<SetStateAction<string>> => {
         return isFirstCalculatorInput ? setFirstCalculatorInput : setSecondCalculatorInput
     }
 
@@ -173,7 +173,7 @@ export const CalculationsManager = ({
             return
         }
 
-        let firstInput = firstCalculatorInput.join("")
+        let firstInput = firstCalculatorInput
 
         // replace pi with actual number
         if (doesCalculationContainPi) {
@@ -184,7 +184,7 @@ export const CalculationsManager = ({
         // Solve inequality calculation
         let firstCalcInput
         if(isOperatorInequalityCheck){
-            firstCalcInput = [solveInequalityCalculation(firstInput, secondInput) ? "Not Equal" : "Equal"]
+            firstCalcInput = solveInequalityCalculation(firstInput, secondInput) ? "Not Equal" : "Equal"
         
         // solve non inequality calculation
         } else {
@@ -196,8 +196,8 @@ export const CalculationsManager = ({
             firstInputAsFloat = parseFloat(firstInput)
             secondInputAsFloat = parseFloat(secondInput)
 
-            let answer = getAnswer(firstInputAsFloat, operator, secondInputAsFloat)!
-            firstCalcInput = removeTrailingZeros(answer).split("")
+            let answer = getAnswer(firstInputAsFloat, operator, secondInputAsFloat)
+            firstCalcInput = removeTrailingZeros(answer)
 
             } catch {
                 errorMessage("Equations could not be joined")
@@ -207,12 +207,12 @@ export const CalculationsManager = ({
         completeCalculations(firstCalcInput, newOperator, secondInput)
         }
 
-    const completeCalculations = (firstCalcInput: string[], newOperator: string, secondInput: string) => {
+    const completeCalculations = (firstCalcInput: string, newOperator: string, secondInput: string) => {
 
         setFirstCalculatorInput(firstCalcInput)
         setFirstCalculatorInputHasAnswer(true)
 
-        let prevEquationString = updatePrevArray(firstCalculatorInput, secondInput.split(""), operator)
+        let prevEquationString = updatePrevArray(firstCalculatorInput, secondInput, operator)
         setPrevInput(prevEquationString)
 
         clearNumbers(newOperator)
@@ -221,17 +221,17 @@ export const CalculationsManager = ({
     const solveFactorialEquation = () => {
 
         if(!isFactorialCalculationValid){
-            setFirstCalculatorInput(["0"])
+            setFirstCalculatorInput("0")
         }
 
         if(isFirstCalculatorInput){
-            let firstInput = firstCalculatorInput.join("") + "!"
+            let firstInput = firstCalculatorInput + "!"
             setPrevInput(firstInput)
             firstInput = solveFactorial(firstInput)
-            setFirstCalculatorInput([firstInput])
+            setFirstCalculatorInput(firstInput)
             return
         }
-        let secondInput = secondCalculatorInput.join("") + "!"
+        let secondInput = secondCalculatorInput + "!"
         secondInput = solveFactorial(secondInput)
         solveEquation("", secondInput)
     }
@@ -242,7 +242,7 @@ export const CalculationsManager = ({
             case "AC": resetCalculator()
                 break
 
-            case "=": solveEquation(userInput, secondCalculatorInput.join(""))
+            case "=": solveEquation(userInput, secondCalculatorInput)
                 break
 
             case "C": deletePrevInput()
@@ -265,15 +265,15 @@ export const CalculationsManager = ({
             setOperator("")
         }
 
-        setSecondCalculatorInput([])
+        setSecondCalculatorInput("")
     }
 
     // clear calculator input arrays
     const resetCalculator = () => {
 
-        setFirstCalculatorInput([])
+        setFirstCalculatorInput("")
         setOperator("")
-        setSecondCalculatorInput([])
+        setSecondCalculatorInput("")
         setPrevInput("")
     }
 
@@ -296,14 +296,14 @@ export const CalculationsManager = ({
         if(isCurrentcharacterTrigCalc){
 
             let inputWithoutTrigCalc = removeTrigCalculation(currentInput, getCurrentTrigSymbol())
-            currentSetInput([inputWithoutTrigCalc])
+            currentSetInput(inputWithoutTrigCalc)
 
             clearTrigInputs()
             return
         }
 
         // Remove from string and set input
-        let stringIntoArray: Array<string> = removeLastInputFromString(currentInput)
+        let stringIntoArray = removeLastInputFromString(currentInput)
         currentSetInput(stringIntoArray)
     }
 
@@ -325,19 +325,19 @@ export const CalculationsManager = ({
 
         // Overwrite is decimal added to answer
         if (overwriteNumber && userInput === ".") {
-            setFirstCalculatorInput(["0"])
+            setFirstCalculatorInput("0")
             setFirstCalculatorInputHasAnswer(false)
         }
 
         // Overwrite number and return
         if (overwriteNumber && userInput !== ".") {
-            setFirstCalculatorInput([userInput])
+            setFirstCalculatorInput(userInput)
             setFirstCalculatorInputHasAnswer(false)
             return
         }
 
-        currentSetInput(currentInput => [...currentInput, userInput])
-    }
+        currentSetInput(currentInput => currentInput + userInput)
+        }
 
     const onSquareRoot = () => {
 
@@ -352,11 +352,11 @@ export const CalculationsManager = ({
 
         // Solve equation with Pi for calculation
         if(doesCurrentCalculationHavePi){
-            input = solvePiEquation(input.join("")).split("")
+            input = solvePiEquation(input)
         }
 
         if (!input.length || (operator !== "" && !secondCalculatorInput.length)) {
-            currentSetInput(["0"])
+            currentSetInput("0")
             setPrevInput(`√ ${0}`)
             return
         }
@@ -364,12 +364,12 @@ export const CalculationsManager = ({
         // Remove negative sign from input
         if (input[0] === "-") {
             isNegative = true
-            input.shift()
+            input.split("").shift()
         }
 
-        const originalNumberAsInt = parseFloat(input.toString().replaceAll(",", ""))
+        const originalNumberAsInt = parseFloat(input.toString())
         const answer = squareNumber(input, originalNumberAsInt, input.length)
-        const roundedAnswer = removeTrailingZeros(answer.toString().replaceAll(",", ""))
+        const roundedAnswer = removeTrailingZeros(answer.toString())
 
         let roundedAnswerAsArray = roundedAnswer.split("")
 
@@ -378,7 +378,7 @@ export const CalculationsManager = ({
             roundedAnswerAsArray.unshift("-")
         }
 
-        currentSetInput(roundedAnswerAsArray)
+        currentSetInput(roundedAnswerAsArray.join(""))
         setPrevInput(`√ ${originalNumberAsInt}`)
     }
 
@@ -390,12 +390,12 @@ export const CalculationsManager = ({
 
         // Add 0 before decimal if no number is inputted
         if (currentInput.length < 1) {
-            currentSetInput(["0"])
+            currentSetInput("0")
         }
 
         // Add 0 after negative sign if no number is inputted
         if (currentInput.length < 2 && currentInput[0] === "-") {
-            currentSetInput(["-", "0"])
+            currentSetInput("-" + "0")
         }
 
         // check if decimal already exists in current array
@@ -428,7 +428,7 @@ export const CalculationsManager = ({
 
         // Equation is sufficent to solve
         if (secondCalculatorInput.length > 0 && !isFirstCalculatorInput) {
-            solveEquation(userInput, secondCalculatorInput.join(""))
+            solveEquation(userInput, secondCalculatorInput)
         }
         setOperator(userInput)
     }
@@ -548,7 +548,7 @@ export const CalculationsManager = ({
             onInputOperator(userInput)
 
         } else if (userInput === "=") {
-            solveEquation("", secondCalculatorInput.join(""))
+            solveEquation("", secondCalculatorInput)
 
         } else if (userInput === "√" && !isLastCalculationAnOperator) {
             onSquareRoot()

@@ -16,8 +16,8 @@ const Calculator: FC<CalculatorProps> = ({
     setTheme
     }) => {
 
-  const [firstCalculatorInput, setFirstCalculatorInput] = useState<string[]>([])
-  const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([])
+  const [firstCalculatorInput, setFirstCalculatorInput] = useState<string>("")
+  const [secondCalculatorInput, setSecondCalculatorInput] = useState<string>("")
   const [prevInput, setPrevInput] = useState<string>("")
   const [operator, setOperator] = useState<string>("")
   const [isScientificSymbolsArray, setScientificSymbolsArray] = useState<boolean>(true);

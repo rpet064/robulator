@@ -1,5 +1,5 @@
-export const removeLastInputFromString = (calculatorInput: string[]) => {
-        let arrayIntoString = calculatorInput.join("")
+export const removeLastInputFromString = (calculatorInput: string) => {
+        let arrayIntoString = calculatorInput
         let newArray = ""
 
         // Remove Pi from equation
@@ -8,5 +8,5 @@ export const removeLastInputFromString = (calculatorInput: string[]) => {
         } else {
                 newArray = arrayIntoString.slice(0, -1)
         }
-        return newArray.split("")
+        return newArray
 }

@@ -5,10 +5,10 @@ import { CalculationsManager } from "./calculations/CalculationsManager"
 import colours from '../styles/Colours.module.css'
 
 interface KeypadProps {
-  firstCalculatorInput: string[]
-  setFirstCalculatorInput: Dispatch<SetStateAction<string[]>>
-  secondCalculatorInput: string[]
-  setSecondCalculatorInput: Dispatch<SetStateAction<string[]>>
+  firstCalculatorInput: string
+  setFirstCalculatorInput: Dispatch<SetStateAction<string>>
+  secondCalculatorInput: string
+  setSecondCalculatorInput: Dispatch<SetStateAction<string>>
   setPrevInput: (value: string) => void
   operator: string
   setOperator: (value: string) => void
