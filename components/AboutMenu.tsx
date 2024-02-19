@@ -11,7 +11,7 @@ const AboutMenu: FC<AboutMenuProps> = ({
         theme,
         }) => {
 
-    const [aboutMenuIsOpen, setAboutMenuIsOpen] = useState(false);
+    const [aboutMenuIsOpen, setAboutMenuIsOpen] = useState<boolean>(false);
 
     const toggleMenu = () => {
         setAboutMenuIsOpen(!aboutMenuIsOpen)

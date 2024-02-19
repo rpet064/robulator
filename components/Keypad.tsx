@@ -26,14 +26,14 @@ const Keypad: FC<KeypadProps> = ({
   isScientificSymbolsArray
 }) => {
 
-  const [overwriteNumber, setOverwriteNumber] = useState(false)
-  const [isLastCalculationAnOperator, setIsLastCalculationAnOperator] = useState(false)
-  const [isDecimalUnfinished, setIsDecimalUnfinished] = useState(false)
-  const [doesCalculationExceedInput, setDoesCalculationExceedInput] = useState(false)
-  const [currentNumberOfInputs, setCurrentNumberOfInputs] = useState(0)
+  const [overwriteNumber, setOverwriteNumber] = useState<boolean>(false)
+  const [isLastCalculationAnOperator, setIsLastCalculationAnOperator] = useState<boolean>(false)
+  const [isDecimalUnfinished, setIsDecimalUnfinished] = useState<boolean>(false)
+  const [doesCalculationExceedInput, setDoesCalculationExceedInput] = useState<boolean>(false)
+  const [currentNumberOfInputs, setCurrentNumberOfInputs] = useState<number>(0)
   const [symbolsArray, setSymbolsArray] = useState<string[]>([])
-  const [buttonStyle, setButtonStyle] = useState(styles.calcBtn)
-  const [keypadContainerStyle, setKeypadContainerStyle] = useState(styles.compactCalculatorKeypad)
+  const [buttonStyle, setButtonStyle] = useState<string>(styles.calcBtn)
+  const [keypadContainerStyle, setKeypadContainerStyle] = useState<string>(styles.compactCalculatorKeypad)
 
 
   const calculationsManager = CalculationsManager({

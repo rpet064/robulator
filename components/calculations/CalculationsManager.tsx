@@ -54,17 +54,19 @@ export const CalculationsManager = ({
 
 
     const maximumNumberOfIntegers = 15
-    const [isFirstCalculatorInput, setIsFirstCalculatorInput] = useState(true)
-    const [firstCalculatorInputHasAnswer, setFirstCalculatorInputHasAnswer] = useState(false)
-    const [doesCalculationContainPi, setDoesCalculationContainPi] = useState(false)
-    const [doesFirstCalculationContainPi, setDoesFirstCalculationContainPi] = useState(false)
-    const [doesSecondCalculationContainPi, setSecondDoesCalculationContainPi] = useState(false)
-    const [firstCalculationTrigSymbol, setFirstCalculationTrigSymbol] = useState("")
-    const [secondCalculationTrigSymbol, setSecondCalculationTrigSymbol] = useState("")
-    const [doesFirstCalculationContainTrig, setDoesFirstCalculationContainTrig] = useState(false)
-    const [doesSecondCalculationContainTrig, setDoesSecondCalculationContainTrig] = useState(false)
-    const [isOperatorInequalityCheck, setIsOperatorInequalityCheck] = useState(false)
-    const [currentInput, setCurrentInput] = useState(firstCalculatorInput)
+    const [isFirstCalculatorInput, setIsFirstCalculatorInput] = useState<boolean>(true)
+    const [firstCalculatorInputHasAnswer, setFirstCalculatorInputHasAnswer] = useState<boolean>(false)
+    const [doesCalculationContainPi, setDoesCalculationContainPi] = useState<boolean>(false)
+    const [doesFirstCalculationContainPi, setDoesFirstCalculationContainPi] = useState<boolean>(false)
+    const [doesSecondCalculationContainPi, setSecondDoesCalculationContainPi] = useState<boolean>(false)
+    const [firstCalculationTrigSymbol, setFirstCalculationTrigSymbol] = useState<string>("")
+    const [secondCalculationTrigSymbol, setSecondCalculationTrigSymbol] = useState<string>("")
+    const [doesFirstCalculationContainTrig, setDoesFirstCalculationContainTrig] = useState<boolean>(false)
+    const [doesSecondCalculationContainTrig, setDoesSecondCalculationContainTrig] = useState<boolean>(false)
+    const [isOperatorInequalityCheck, setIsOperatorInequalityCheck] = useState<boolean>(false)
+    const [currentInput, setCurrentInput] = useState<string[]>(firstCalculatorInput)
+    const [isFactorialCalculationValid, setIsFactorialCalculationValid] = useState<boolean>(true)
+
 
     // check if operator is inquality check
     useEffect(() => {
@@ -217,6 +219,11 @@ export const CalculationsManager = ({
     }
 
     const solveFactorialEquation = () => {
+
+        if(!isFactorialCalculationValid){
+            setFirstCalculatorInput(["0"])
+        }
+
         if(isFirstCalculatorInput){
             let firstInput = firstCalculatorInput.join("") + "!"
             setPrevInput(firstInput)

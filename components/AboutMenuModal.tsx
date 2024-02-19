@@ -18,9 +18,9 @@ const AboutMenuModal: FC<AboutMenuProps> = ({
   }) => {
 
     const { width } = useWindowSize();
-    const [modalWidth, setModalWidth] = useState('47.5%');
-    const [modalHeight, setModalHeight] = useState('85%');
-    const [modalInset, setmModalInset] = useState('40px');
+    const [modalWidth, setModalWidth] = useState<string>('47.5%');
+    const [modalHeight, setModalHeight] = useState<string>('85%');
+    const [modalInset, setmModalInset] = useState<string>('40px');
    
     useEffect(() => {
       if (width <= 1200) {

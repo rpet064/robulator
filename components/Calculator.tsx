@@ -19,8 +19,8 @@ const Calculator: FC<CalculatorProps> = ({
   const [firstCalculatorInput, setFirstCalculatorInput] = useState<string[]>([])
   const [secondCalculatorInput, setSecondCalculatorInput] = useState<string[]>([])
   const [prevInput, setPrevInput] = useState<string>("")
-  const [operator, setOperator] = useState("")
-  const [isScientificSymbolsArray, setScientificSymbolsArray] = useState(true);
+  const [operator, setOperator] = useState<string>("")
+  const [isScientificSymbolsArray, setScientificSymbolsArray] = useState<boolean>(true);
 
   const calculatorRef = useRef(null);
   const textInputRef = useRef(null);

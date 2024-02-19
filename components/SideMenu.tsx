@@ -19,7 +19,7 @@ const SideMenu: FC<SideMenuProps> = ({
     setTheme
     }) => {
 
-  const [sideMenuIsOpen, setSideMenuIsOpen] = useState(false);
+  const [sideMenuIsOpen, setSideMenuIsOpen] = useState<boolean>(false);
 
     const toggleMenu = () => {
         setSideMenuIsOpen(!sideMenuIsOpen)
