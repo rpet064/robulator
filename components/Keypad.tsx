@@ -13,6 +13,8 @@ interface KeypadProps {
   operator: string
   setOperator: (value: string) => void
   isScientificSymbolsArray: boolean
+  prevOperationsArray: string[]
+  setPrevOperationsArray: Dispatch<SetStateAction<string[]>>
 }
 
 const Keypad: FC<KeypadProps> = ({
@@ -23,7 +25,9 @@ const Keypad: FC<KeypadProps> = ({
   setPrevInput,
   operator,
   setOperator,
-  isScientificSymbolsArray
+  isScientificSymbolsArray,
+  prevOperationsArray,
+  setPrevOperationsArray
 }) => {
 
   const [overwriteNumber, setOverwriteNumber] = useState<boolean>(false)
@@ -53,7 +57,9 @@ const Keypad: FC<KeypadProps> = ({
     doesCalculationExceedInput: doesCalculationExceedInput,
     setDoesCalculationExceedInput: setDoesCalculationExceedInput,
     currentNumberOfInputs: currentNumberOfInputs,
-    setCurrentNumberOfInputs: setCurrentNumberOfInputs
+    setCurrentNumberOfInputs: setCurrentNumberOfInputs,
+    prevOperationsArray: prevOperationsArray,
+    setPrevOperationsArray: setPrevOperationsArray,
   })
 
 

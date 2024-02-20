@@ -6,9 +6,10 @@ import sideMenuStyles from '../styles/SideMenu.module.css'
 
 interface HistorySideMenuProps {
     theme: string
+    prevOperationsArray: string[]
 }
 
-const HistorySideMenu: FC<HistorySideMenuProps> = ({ theme }) => {
+const HistorySideMenu: FC<HistorySideMenuProps> = ({ theme, prevOperationsArray }) => {
 
     const [isSideMenuOpen, setIsSideMenuOpen] = useState<boolean>(false)
     const toggleMenu = () => {
@@ -22,7 +23,9 @@ const HistorySideMenu: FC<HistorySideMenuProps> = ({ theme }) => {
                 onClick={() => toggleMenu()}
             >
                 {!isSideMenuOpen && <TbHistory className={theme === "light" ? colours.lightIcon : colours.darkIcon} />}
-                <HistoryMenuModal isSideMenuOpen={isSideMenuOpen} setIsSideMenuOpen={setIsSideMenuOpen} />
+                <HistoryMenuModal isSideMenuOpen={isSideMenuOpen} setIsSideMenuOpen={setIsSideMenuOpen} 
+                prevOperationsArray={prevOperationsArray} 
+                />
             </button>
         </div>
     )

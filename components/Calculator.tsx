@@ -22,6 +22,7 @@ const Calculator: FC<CalculatorProps> = ({
   const [prevInput, setPrevInput] = useState<string>("")
   const [operator, setOperator] = useState<string>("")
   const [isScientificSymbolsArray, setScientificSymbolsArray] = useState<boolean>(true)
+  const [prevOperationsArray, setPrevOperationsArray] = useState<string[]>([])
 
   const calculatorRef = useRef(null)
   const textInputRef = useRef(null)
@@ -41,7 +42,7 @@ const Calculator: FC<CalculatorProps> = ({
           theme={theme}
           setTheme={setTheme}
         />
-        <HistorySideMenu theme={theme} />
+        <HistorySideMenu theme={theme} prevOperationsArray={prevOperationsArray}/>
 
         <div className={styles.miniScreen}
           onClick={() => copyPreviousCalculationToClipboard(prevInput)}>
@@ -68,6 +69,8 @@ const Calculator: FC<CalculatorProps> = ({
         operator={operator}
         setOperator={setOperator}
         isScientificSymbolsArray={isScientificSymbolsArray}
+        prevOperationsArray={prevOperationsArray}
+        setPrevOperationsArray={setPrevOperationsArray}
       />
     </div>
   )

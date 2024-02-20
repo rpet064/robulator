@@ -10,11 +10,13 @@ Modal.setAppElement('#__next')
 interface HistoryMenuProps {
     isSideMenuOpen: boolean
     setIsSideMenuOpen: (value: boolean) => void
+    prevOperationsArray: string[]
 }
 
 const HistoryMenuModal: FC<HistoryMenuProps> = ({
     isSideMenuOpen,
-    setIsSideMenuOpen
+    setIsSideMenuOpen, 
+    prevOperationsArray
 }) => {
 
     const { width } = useWindowSize()
@@ -67,9 +69,15 @@ const HistoryMenuModal: FC<HistoryMenuProps> = ({
                 </div>
 
                 <div className={modalStyles.modalBody}>
-                    <p>This is the history modal</p>
+                    {prevOperationsArray.map((previousOperation, index) => {
+                        return (
+                            <div key={index}>
+                                <p>{previousOperation}</p>
+                            </div>
+                        )
+                    })}
+                    {prevOperationsArray.length <  1 && <p> No calculations yet </p>}
                 </div>
-
                 <ModalFooter />
             </Modal>
         </div>

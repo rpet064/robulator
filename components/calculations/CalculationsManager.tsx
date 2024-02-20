@@ -29,7 +29,9 @@ interface calculationsManagerProps {
     setIsLastCalculationAnOperator: (value: boolean) => void
     setCurrentNumberOfInputs: (value: number) => void
     setDoesCalculationExceedInput: (value: boolean) => void,
-    setIsDecimalUnfinished: (value: boolean) => void
+    setIsDecimalUnfinished: (value: boolean) => void,
+    prevOperationsArray: string[],
+    setPrevOperationsArray: Dispatch<SetStateAction<string[]>>
 }
 
 export const CalculationsManager = ({
@@ -50,6 +52,8 @@ export const CalculationsManager = ({
     setCurrentNumberOfInputs,
     setDoesCalculationExceedInput,
     setIsDecimalUnfinished,
+    prevOperationsArray,
+    setPrevOperationsArray
 }: calculationsManagerProps) => {
 
 
@@ -138,6 +142,13 @@ export const CalculationsManager = ({
         curentTrigSetInput("")
     }
 
+    const setPrevStringAndArray = (prevInput: string, answer: string) => {
+        setPrevInput(prevInput)
+        let answerString = `${prevInput} ${answer}`
+        prevOperationsArray.push(answerString)
+        setPrevOperationsArray(prevOperationsArray)
+    }
+
     const solveEquation = async (newOperator: string, secondInput: string) => {
 
         // Check if equation is valid
@@ -179,7 +190,7 @@ export const CalculationsManager = ({
         setFirstCalculatorInputHasAnswer(true)
 
         let prevEquationString = updatePrevArray(firstCalculatorInput, secondInput, operator)
-        setPrevInput(prevEquationString)
+        setPrevStringAndArray(prevEquationString, firstCalcInput)
 
         clearNumbers(newOperator)
     }
@@ -192,9 +203,10 @@ export const CalculationsManager = ({
 
         if(isFirstCalculatorInput){
             let firstInput = firstCalculatorInput + "!"
-            setPrevInput(firstInput)
-            firstInput = solveFactorial(firstInput)
-            setFirstCalculatorInput(firstInput)
+            let solvedFactorial = solveFactorial(firstInput)
+
+            setPrevStringAndArray(firstInput, solvedFactorial)
+            setFirstCalculatorInput(solvedFactorial)
             return
         }
         let secondInput = secondCalculatorInput + "!"
@@ -210,9 +222,9 @@ export const CalculationsManager = ({
 
         if(isFirstCalculatorInput){
             let firstInput = firstCalculatorInput + "𝝅"
-            setPrevInput(firstInput)
-
             let answer = solvePiEquation(firstInput)
+
+            setPrevStringAndArray(firstInput, answer)
             setFirstCalculatorInput(answer)
 
             return
@@ -261,6 +273,7 @@ export const CalculationsManager = ({
         setOperator("")
         setSecondCalculatorInput("")
         setPrevInput("")
+        setPrevOperationsArray([])
     }
 
     // This function checks
@@ -334,7 +347,7 @@ export const CalculationsManager = ({
 
         if (!input.length || (operator !== "" && !secondCalculatorInput.length)) {
             currentSetInput("0")
-            setPrevInput(`√ ${0}`)
+            setPrevStringAndArray(`√ ${0}`, "0")
             return
         }
 
@@ -355,8 +368,9 @@ export const CalculationsManager = ({
             roundedAnswerAsArray.unshift("-")
         }
 
-        currentSetInput(roundedAnswerAsArray.join(""))
-        setPrevInput(`√ ${originalNumberAsInt}`)
+        let joinedRoundedAnswer = roundedAnswerAsArray.join("")
+        currentSetInput(joinedRoundedAnswer)
+        setPrevStringAndArray(`√ ${originalNumberAsInt}`, joinedRoundedAnswer)
     }
 
 
