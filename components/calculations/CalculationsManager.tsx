@@ -275,7 +275,6 @@ export const CalculationsManager = ({
         setOperator("")
         setSecondCalculatorInput("")
         setPrevInput("")
-        setPrevOperationsArray([])
     }
 
     // This function checks

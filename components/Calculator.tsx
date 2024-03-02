@@ -7,6 +7,7 @@ import { useState, useRef, SetStateAction, Dispatch, FC, useEffect } from 'react
 import colours from '../styles/Colours.module.css'
 import HistorySideMenu from './HistorySideMenu'
 import { getPreviousCalculations } from './utility/localStorageManager'
+import { notifyMessage } from './utility/toastMessages'
 
 interface CalculatorProps {
   theme: string
@@ -31,16 +32,16 @@ const Calculator: FC<CalculatorProps> = ({
 
   const getPreviousOperationsOnload = (callback: any) => {
     useEffect(() => {
-       callback();
-    }, []);
-   };
+       callback()
+    }, [])
+   }
 
    getPreviousOperationsOnload(() => {
     let prevCalculationsInStorage = getPreviousCalculations()
     if(prevCalculationsInStorage){
       setPrevOperationsArray(prevCalculationsInStorage)
     }
- });
+ })
 
   return (
 

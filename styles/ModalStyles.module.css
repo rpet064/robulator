@@ -9,11 +9,32 @@
 
 .modalBody{
     border-width: 1px 0;
-    height: 82%;
+    height: 79.75%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    padding: 0 6rem;
+    padding: 0.5rem 6rem 0.5rem 6rem;
+}
+
+.modalBody .card{
+  overflow-y: auto;
+  font-size: 1.75rem;
+  background-color: aliceblue;
+  box-shadow: 0 0 0.5rem 0.25rem gray;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.modalBody .card ul{
+  width: 85%;
+  min-width: 33%;
+  padding: 2.5% 7.5%;
+}
+
+.modalBody .card .cardItem{
+  text-align: left;
+  overflow-y: none;
+  padding: 0% 0% 0.5% 3%;
 }
 
 .modalFooter{

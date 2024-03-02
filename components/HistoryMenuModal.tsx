@@ -69,14 +69,16 @@ const HistoryMenuModal: FC<HistoryMenuProps> = ({
                 </div>
 
                 <div className={modalStyles.modalBody}>
+                    <div className={modalStyles.card}>
+                        <ul>
                     {prevOperationsArray.map((previousOperation, index) => {
                         return (
-                            <div key={index}>
-                                <p>{previousOperation}</p>
-                            </div>
+                            <li className={modalStyles.cardItem} key={index}>{previousOperation}</li>
                         )
                     })}
-                    {prevOperationsArray.length <  1 && <p> No calculations yet </p>}
+                    {prevOperationsArray.length <  1 && <li> No calculations yet </li>}
+                        </ul>
+                    </div>
                 </div>
                 <ModalFooter />
             </Modal>

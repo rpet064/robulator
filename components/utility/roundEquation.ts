@@ -3,8 +3,8 @@ export const removeTrailingZeros = (answer: string): string => {
 }
 
 export const roundNumber = (value: string, decimalPlaces: number): string => {
-    let numberValue = parseFloat(value);
-    let roundedNumber = numberValue.toFixed(decimalPlaces);
-    return roundedNumber.toString();
-   };
+    let numberValue = parseFloat(value)
+    let roundedNumber = numberValue.toFixed(decimalPlaces)
+    return roundedNumber.toString()
+   }
    

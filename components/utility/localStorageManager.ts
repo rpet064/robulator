@@ -3,11 +3,8 @@ import { notifyMessage } from "./toastMessages"
 export const getPreviousCalculations = (): string[] | null => {
     let previousCalculationsInLocalStorage = localStorage.getItem('previousCalculations')
     if (previousCalculationsInLocalStorage) {
-        notifyMessage("Message coming")
-        notifyMessage(JSON.parse(previousCalculationsInLocalStorage))
         return JSON.parse(previousCalculationsInLocalStorage)
     }
-    notifyMessage("Nothing saved")
     return null
 }
 
@@ -20,9 +17,10 @@ export const setPreviousCalculations = (calculationToSave: string): void => {
     }
 
     newPreviousCalculation.push(calculationToSave)
-    localStorage.setItem('previousCalculations', JSON.stringify(newPreviousCalculation));
+    localStorage.setItem('previousCalculations', JSON.stringify(newPreviousCalculation))
 }
 
 export const clearLocalStorage = (): void=> {
-    localStorage.clear();
+    localStorage.clear()
+    notifyMessage("Calculations history has been cleared")
 }
