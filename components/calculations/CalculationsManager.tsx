@@ -11,6 +11,7 @@ import { solveInequalityCalculation } from "../calculations/solveInequalityCalcu
 import { changeSignArray } from "../utility/changeSignArray"
 import { solveFactorial } from "../calculations/factorialCalculation"
 import { updatePrevArray } from "../utility/updatePrevArray"
+import { setPreviousCalculations } from "../utility/localStorageManager"
 
 interface calculationsManagerProps {
   firstCalculatorInput: string
@@ -66,7 +67,6 @@ export const CalculationsManager = ({
     const [doesSecondCalculationContainTrig, setDoesSecondCalculationContainTrig] = useState<boolean>(false)
     const [isOperatorInequalityCheck, setIsOperatorInequalityCheck] = useState<boolean>(false)
     const [currentInput, setCurrentInput] = useState<string>(firstCalculatorInput)
-
 
     // if operator is empty, then still on first equation
     useEffect(() => {
@@ -142,11 +142,12 @@ export const CalculationsManager = ({
         curentTrigSetInput("")
     }
 
-    const setPrevStringAndArray = (prevInput: string, answer: string) => {
+    const setPrevStringAndArray = (prevInput: string, answer: string)=> {
         setPrevInput(prevInput)
         let answerString = `${prevInput} ${answer}`
         prevOperationsArray.push(answerString)
         setPrevOperationsArray(prevOperationsArray)
+        setPreviousCalculations(answerString)
     }
 
     const solveEquation = async (newOperator: string, secondInput: string) => {
@@ -191,7 +192,6 @@ export const CalculationsManager = ({
 
         let prevEquationString = updatePrevArray(firstCalculatorInput, secondInput, operator)
         setPrevStringAndArray(prevEquationString, firstCalcInput)
-
         clearNumbers(newOperator)
     }
 
@@ -530,7 +530,6 @@ export const CalculationsManager = ({
             solveEquationContainingPi()
             return
         }
-
 
         if (operatorArray.includes(userInput) && !isLastCalculationAnOperator) {
             onInputOperator(userInput)

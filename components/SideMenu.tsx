@@ -1,22 +1,24 @@
 import { useState, FC, SetStateAction, Dispatch } from "react"
 import sideMenuStyles from '../styles/SideMenu.module.css'
-import { TbAdjustmentsCog, TbMoonFilled, TbSunHigh, TbSettingsOff, TbSettings } from "react-icons/tb"
+import { TbAdjustmentsCog, TbMoonFilled, TbSunHigh, TbSettingsOff, TbSettings, TbHistoryOff } from "react-icons/tb"
 import AboutMenu from "./AboutMenu"
 import colours from '../styles/Colours.module.css'
-
+import { clearLocalStorage } from "./utility/localStorageManager"
 
 interface SideMenuProps {
     ScientificSymbolsArray: boolean
     setScientificSymbolsArray: Dispatch<SetStateAction<boolean>>
     theme: string
     setTheme: Dispatch<SetStateAction<string>>
+    setPrevOperationsArray: Dispatch<SetStateAction<string[]>>
 }
 
 const SideMenu: FC<SideMenuProps> = ({
     ScientificSymbolsArray,
     setScientificSymbolsArray,
     theme,
-    setTheme
+    setTheme,
+    setPrevOperationsArray
 }) => {
 
     const [sideMenuIsOpen, setSideMenuIsOpen] = useState<boolean>(false)
@@ -41,6 +43,11 @@ const SideMenu: FC<SideMenuProps> = ({
         setScientificSymbolsArray(!ScientificSymbolsArray)
     }
 
+    const clearHistory = () => {
+        setPrevOperationsArray([])
+        clearLocalStorage()
+    }
+
     return (
         <div>
             <button className={
@@ -60,6 +67,9 @@ const SideMenu: FC<SideMenuProps> = ({
                     </button>
                     <button className={getStyleForButton(theme)} onClick={() => toggleTheme("dark")} name="Dark Mode">
                         <TbMoonFilled className={getStyleForIcon(theme)} />
+                    </button>
+                    <button className={getStyleForButton(theme)} onClick={() => clearHistory()} name="Clear History">
+                        <TbHistoryOff className={getStyleForIcon(theme)} />
                     </button>
                     <AboutMenu theme={theme} />
                 </div>
