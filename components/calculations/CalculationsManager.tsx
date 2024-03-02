@@ -1,9 +1,9 @@
-import { solveTrigCalculation, manageTrigInput, removeTrigCalculation,  } from "./trigonometryCalculations"
+import { solveTrigCalculation, manageTrigInput, removeTrigCalculation } from "./trigonometryCalculations"
 import { useEffect, useState, Dispatch, SetStateAction } from "react"
 import { numArray, operatorArray, trigSymbolsArray } from "../utility/symbolsArray"
 import { getAnswer } from "./equationSolver"
 import { squareNumber } from "./numberSquarer"
-import { removeTrailingZeros } from "../utility/removeTrailingZeros"
+import { removeTrailingZeros } from "../utility/roundEquation"
 import { errorMessage, notifyMessage } from "../utility/toastMessages"
 import {solvePiEquation } from "./solvePiEquation"
 import { removeLastInputFromString } from "../utility/removeLastInputFromString"
@@ -223,9 +223,11 @@ export const CalculationsManager = ({
         if(isFirstCalculatorInput){
             let firstInput = firstCalculatorInput + "𝝅"
             let answer = solvePiEquation(firstInput)
+            notifyMessage(answer)
 
             setPrevStringAndArray(firstInput, answer)
             setFirstCalculatorInput(answer)
+            notifyMessage(answer)
 
             return
         }
