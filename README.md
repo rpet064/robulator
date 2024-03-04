@@ -1,4 +1,4 @@
-# Robulator - NextJs Web application
+# Robulator - NextJs calculator web application
 
 ## About
 
