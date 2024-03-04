@@ -1,6 +1,6 @@
 import { solveTrigCalculation, manageTrigInput, removeTrigCalculation } from "./trigonometryCalculations"
 import { useEffect, useState, Dispatch, SetStateAction } from "react"
-import { numArray, operatorArray, trigSymbolsArray } from "../utility/symbolsArray"
+import { numArray, operatorArray, trigSymbolsArray, exponentArray } from "../utility/symbolsArray"
 import { getAnswer } from "./equationSolver"
 import { squareNumber } from "./numberSquarer"
 import { removeTrailingZeros } from "../utility/roundEquation"
@@ -12,6 +12,7 @@ import { changeSignArray } from "../utility/changeSignArray"
 import { solveFactorial } from "../calculations/factorialCalculation"
 import { updatePrevArray } from "../utility/updatePrevArray"
 import { setPreviousCalculations } from "../utility/localStorageManager"
+import { solveExponentialCalculation} from "./exponentCalculation"
 
 interface calculationsManagerProps {
   firstCalculatorInput: string
@@ -67,6 +68,7 @@ export const CalculationsManager = ({
     const [doesSecondCalculationContainTrig, setDoesSecondCalculationContainTrig] = useState<boolean>(false)
     const [isOperatorInequalityCheck, setIsOperatorInequalityCheck] = useState<boolean>(false)
     const [currentInput, setCurrentInput] = useState<string>(firstCalculatorInput)
+    const [isExpontialCalculation, setIsExpontialCalculation] = useState<boolean>(false)
 
     // if operator is empty, then still on first equation
     useEffect(() => {
@@ -183,7 +185,7 @@ export const CalculationsManager = ({
             }
         }
         completeCalculations(firstCalcInput, newOperator, secondInput)
-        }
+    }
 
     const completeCalculations = (firstCalcInput: string, newOperator: string, secondInput: string) => {
 
@@ -193,6 +195,39 @@ export const CalculationsManager = ({
         let prevEquationString = updatePrevArray(firstCalculatorInput, secondInput, operator)
         setPrevStringAndArray(prevEquationString, firstCalcInput)
         clearNumbers(newOperator)
+    }
+
+    const exponentialManager = (userInput: string) => {
+        let currentSetInput = getCurrentSetInput()
+
+        // Current input is blank - then return 0
+        let isCurrentInputBlank = currentInput.length < 1
+        if(isCurrentInputBlank){
+            currentSetInput("0")
+            return
+        }
+
+        // User is currently inputting exponential calculation
+        if(isExpontialCalculation){
+            onInputNumber(userInput)
+            return
+        }
+
+        // get matched exponent and positon of where matched in array
+        const matchedExponent = exponentArray.find(item => item === userInput)
+        if(matchedExponent === undefined){
+            return
+        }   
+
+        if(matchedExponent === "xy"){
+            onInputNumber("x")
+            setIsExpontialCalculation(true)
+            return
+        }
+
+        // solve for current input and set answer as new input
+        let newCurrentInput = solveExponentialCalculation(currentInput, matchedExponent)
+        currentSetInput(newCurrentInput)
     }
 
     const solveFactorialEquation = () => {
@@ -223,11 +258,9 @@ export const CalculationsManager = ({
         if(isFirstCalculatorInput){
             let firstInput = firstCalculatorInput + "𝝅"
             let answer = solvePiEquation(firstInput)
-            notifyMessage(answer)
 
             setPrevStringAndArray(firstInput, answer)
             setFirstCalculatorInput(answer)
-            notifyMessage(answer)
 
             return
         }
@@ -495,6 +528,10 @@ export const CalculationsManager = ({
                 setIsDecimalUnfinished(false)
             }
             return
+        }
+
+        if (exponentArray.includes(userInput)) {
+            exponentialManager(userInput)
         }
 
         // Check last input on first number isn"t a decimal

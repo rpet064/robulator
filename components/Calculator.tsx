@@ -12,7 +12,6 @@ import { notifyMessage } from './utility/toastMessages'
 interface CalculatorProps {
   theme: string
   setTheme: Dispatch<SetStateAction<string>>
-  callback: () => void
 }
 
 const Calculator: FC<CalculatorProps> = ({
