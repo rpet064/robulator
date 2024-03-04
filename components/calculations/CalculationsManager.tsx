@@ -158,7 +158,7 @@ export const CalculationsManager = ({
         if (secondCalculatorInput.length === 0) {
             return
         }
-
+        
         let firstInput = firstCalculatorInput
 
         // Solve inequality calculation
@@ -204,12 +204,6 @@ export const CalculationsManager = ({
         let isCurrentInputBlank = currentInput.length < 1
         if(isCurrentInputBlank){
             currentSetInput("0")
-            return
-        }
-
-        // User is currently inputting exponential calculation
-        if(isExpontialCalculation){
-            onInputNumber(userInput)
             return
         }
 
@@ -571,7 +565,13 @@ export const CalculationsManager = ({
             onInputOperator(userInput)
 
         } else if (userInput === "=") {
-            solveEquation("", secondCalculatorInput)
+            // TO DO: solve first input automatically if contains exponent
+            // and then user puts in second equation
+            let currentSecondCalculatorInput = secondCalculatorInput
+            if(isExpontialCalculation){
+                currentSecondCalculatorInput = solveExponentialCalculation(currentInput, null)
+            }
+            solveEquation("", currentSecondCalculatorInput)
 
         } else if (userInput === "√" && !isLastCalculationAnOperator) {
             onSquareRoot()

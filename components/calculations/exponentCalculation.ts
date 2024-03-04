@@ -1,11 +1,24 @@
 import { notifyMessage } from "../utility/toastMessages"
 
-export const solveExponentialCalculation = (input: string, matchedExponent: string): string => {
+export const solveExponentialCalculation = (input: string, matchedExponent: string | null): string => {
     try{
-        const base = parseInt(input)
 
-        // TODO: solve exponent calculation (currently only works for x2, x3 etc)
-        const exponent = parseInt(matchedExponent.split('x')[1])
+        let base, exponent
+
+        // Calculations containing any number
+        if(!matchedExponent){
+            let splitString = input.split('x')
+
+            base = parseInt(splitString[0])
+
+            // TODO: solve for complex exponent input
+            exponent = parseInt(splitString[1])
+        
+        // simple exponent calculations
+        } else {
+            base = parseInt(input)
+            exponent = parseInt(matchedExponent.split('x')[1])
+        }
 
         let newOutput = base
         for(let i = 0; i < exponent - 1; i++){
