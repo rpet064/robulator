@@ -66,6 +66,7 @@ export const CalculationsManager = ({
     const [secondCalculationTrigSymbol, setSecondCalculationTrigSymbol] = useState<string>("")
     const [doesFirstCalculationContainTrig, setDoesFirstCalculationContainTrig] = useState<boolean>(false)
     const [doesSecondCalculationContainTrig, setDoesSecondCalculationContainTrig] = useState<boolean>(false)
+    const [doesCurrentCalculationContainTrig, setDoesCurrentCalculationContainTrig] = useState(false)
     const [isOperatorInequalityCheck, setIsOperatorInequalityCheck] = useState<boolean>(false)
     const [currentInput, setCurrentInput] = useState<string>(firstCalculatorInput)
     const [isExpontialCalculation, setIsExpontialCalculation] = useState<boolean>(false)
@@ -85,6 +86,13 @@ export const CalculationsManager = ({
         }
         isFirstCalculatorInput ? setCurrentInput(firstCalculatorInput) : setCurrentInput(secondCalculatorInput)
     }, [firstCalculatorInput, secondCalculatorInput, isLastCalculationAnOperator])
+
+
+    useEffect(() => {
+        const currentCalculationContainTrig = doesFirstCalculationContainTrig && isFirstCalculatorInput
+            || doesSecondCalculationContainTrig && !isFirstCalculatorInput
+        setDoesCurrentCalculationContainTrig(currentCalculationContainTrig)
+    }, [firstCalculatorInput, secondCalculatorInput])
 
 
     useEffect(() => {
@@ -158,7 +166,7 @@ export const CalculationsManager = ({
         if (secondCalculatorInput.length === 0) {
             return
         }
-        
+
         let firstInput = firstCalculatorInput
 
         // Solve inequality calculation
@@ -364,7 +372,7 @@ export const CalculationsManager = ({
         }
 
         currentSetInput(currentInput => currentInput + userInput)
-        }
+    }
 
     const onSquareRoot = () => {
 
@@ -428,7 +436,7 @@ export const CalculationsManager = ({
     }
 
     // takes operator input (+, -, *, /)
-    const onInputOperator = (userInput: string) => {
+    const onOperatorInput = (userInput: string) => {
 
         // Check first number is inputted before operator
         if (firstCalculatorInput.length < 1) {
@@ -534,35 +542,23 @@ export const CalculationsManager = ({
             return
         }
 
-        // Add number to calculation
-        for (let i = 0; i < trigSymbolsArray.length; i++) {
-            if (trigSymbolsArray[i] === userInput) {
-
-                if (isFirstCalculatorInput && !doesFirstCalculationContainTrig) {
-                    setFirstCalculationTrigSymbol(userInput)
-                    setDoesFirstCalculationContainTrig(true)
-                    onInputNumber(userInput + "()")
-
-                } else if (!isFirstCalculatorInput && !doesSecondCalculationContainTrig) {
-                    setSecondCalculationTrigSymbol(userInput)
-                    setDoesSecondCalculationContainTrig(true)
-                    onInputNumber(userInput + "()")
-
-                } else {
-                    notifyMessage("Only one trig calculation can be added to the equation")
-                }
-                return
-            }
+        // Add trig symbol to current input
+        if(trigSymbolsArray.includes(userInput) && !doesCurrentCalculationContainTrig){
+            isFirstCalculatorInput ? setDoesFirstCalculationContainTrig(true) : setDoesSecondCalculationContainTrig(true)
+            onInputNumber(userInput + "()")
         }
 
-        // Add pi to array
         if (userInput === "𝝅") {
             solveEquationContainingPi()
             return
         }
 
         if (operatorArray.includes(userInput) && !isLastCalculationAnOperator) {
-            onInputOperator(userInput)
+            if(isExpontialCalculation){
+                let firstCalculatorInput = solveExponentialCalculation(currentInput, null)
+                setFirstCalculatorInput(firstCalculatorInput)
+            }
+            onOperatorInput(userInput)
 
         } else if (userInput === "=") {
             // TO DO: solve first input automatically if contains exponent
