@@ -133,15 +133,24 @@ export const CalculationsManager = ({
 
     // Check if first input contains trug symbol
     useEffect(() => {
-        let containsTrigSymbol = checkContainsTrigSymbol(firstCalculatorInput)
-        setDoesFirstCalculationContainTrig(containsTrigSymbol)
+        if(firstCalculatorInput.length > 0){
+            let containsTrigSymbol = checkContainsTrigSymbol(firstCalculatorInput)
+            setDoesFirstCalculationContainTrig(containsTrigSymbol)
+            return
+        }
+        setDoesFirstCalculationContainTrig(false)
     },[firstCalculatorInput])
 
-    // Check if second symbol contains trig symbol
+
     useEffect(() => {
-        let containsTrigSymbol = checkContainsTrigSymbol(firstCalculatorInput)
-        setDoesFirstCalculationContainTrig(containsTrigSymbol)
+        if(secondCalculatorInput.length > 0){
+            let containsTrigSymbol = checkContainsTrigSymbol(secondCalculatorInput)
+            setDoesSecondCalculationContainTrig(containsTrigSymbol)
+            return
+        }
+        setDoesSecondCalculationContainTrig(false)
     },[secondCalculatorInput])
+
 
     const getCurrentTrigSymbol = (): string => {
         return isFirstCalculatorInput ? firstCalculationTrigSymbol : secondCalculationTrigSymbol
@@ -159,7 +168,7 @@ export const CalculationsManager = ({
         return isFirstCalculatorInput ? setFirstCalculationTrigSymbol : setSecondCalculationTrigSymbol
     }
 
-    const calculationCanAddSymbol = (): boolean => {
+    const calculationCanAddExponent = (): boolean => {
         return currentInput.length > 0
         && !isDecimalUnfinished && !isLastCalculationAnOperator
     }
@@ -194,8 +203,8 @@ export const CalculationsManager = ({
         if(isOperatorInequalityCheck){
             let equalityMessage = solveInequalityCalculation(firstInput, secondInput) ? "Not Equal" : "Equal"
             setEqualityMessage(equalityMessage)
-            resetCalculator()
-            return
+            firstCalcInput = firstCalculatorInput
+
         // solve non inequality calculation
         } else {
 
@@ -219,13 +228,16 @@ export const CalculationsManager = ({
 
     const completeCalculations = (firstCalcInput: string, newOperator: string, secondInput: string) => {
 
-        setFirstCalculatorInput(firstCalcInput)
-
-        let prevEquationString = updatePrevArray(firstCalculatorInput, secondInput, operator)
+        if(isOperatorInequalityCheck){
+            setIsOperatorInequalityCheck(false)
+            setFirstCalculatorInput("")
+        } else {
+            setFirstCalculatorInput(firstCalcInput)
+            setFirstCalculatorInputHasAnswer(true)
+        }
+        let prevEquationString = updatePrevArray(firstCalcInput, secondInput, operator)
         setPrevStringAndArray(prevEquationString, firstCalcInput)
         clearNumbers(newOperator)
-
-        setFirstCalculatorInputHasAnswer(true)
     }
 
     const exponentialManager = (userInput: string) => {
@@ -257,7 +269,7 @@ export const CalculationsManager = ({
 
     const solveFactorialEquation = () => {
 
-        if(!calculationCanAddSymbol()){
+        if(!calculationCanAddExponent()){
             return
         }
 
@@ -276,10 +288,6 @@ export const CalculationsManager = ({
     }
 
     const solveEquationContainingPi = () => {
-
-        if(!calculationCanAddSymbol()){
-            return
-        }
 
         if(currentCalculationContainTrigInput){
             onInputNumber("𝝅")
@@ -340,6 +348,7 @@ export const CalculationsManager = ({
         setPrevInput("")
         clearTrigInputs()
         setIsOperatorInequalityCheck(false)
+        setEqualityMessage("")
     }
 
     const deletePrevInput = () => {

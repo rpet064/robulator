@@ -31,16 +31,23 @@ const Calculator: FC<CalculatorProps> = ({
 
   const getPreviousOperationsOnload = (callback: any) => {
     useEffect(() => {
-       callback()
+      callback()
     }, [])
-   }
+  }
 
-   getPreviousOperationsOnload(() => {
+  getPreviousOperationsOnload(() => {
     let prevCalculationsInStorage = getPreviousCalculations()
-    if(prevCalculationsInStorage){
+    if (prevCalculationsInStorage) {
       setPrevOperationsArray(prevCalculationsInStorage)
     }
- })
+  })
+
+  // Reset setEqualityMessage when user inputs a number
+  useEffect(() => {
+    if(firstCalculatorInput.length > 0){
+      setEqualityMessage("")
+    }
+  }, [firstCalculatorInput])
 
   return (
 
@@ -58,7 +65,7 @@ const Calculator: FC<CalculatorProps> = ({
           setTheme={setTheme}
           setPrevOperationsArray={setPrevOperationsArray}
         />
-        <HistorySideMenu theme={theme} prevOperationsArray={prevOperationsArray}/>
+        <HistorySideMenu theme={theme} prevOperationsArray={prevOperationsArray} />
 
         <div className={styles.miniScreen}
           onClick={() => copyPreviousCalculationToClipboard(prevInput)}>
