@@ -7,7 +7,6 @@ import { useState, useRef, SetStateAction, Dispatch, FC, useEffect } from 'react
 import colours from '../styles/Colours.module.css'
 import HistorySideMenu from './HistorySideMenu'
 import { getPreviousCalculations } from './utility/localStorageManager'
-import { notifyMessage } from './utility/toastMessages'
 
 interface CalculatorProps {
   theme: string
@@ -25,6 +24,7 @@ const Calculator: FC<CalculatorProps> = ({
   const [operator, setOperator] = useState<string>("")
   const [isScientificSymbolsArray, setScientificSymbolsArray] = useState<boolean>(true)
   const [prevOperationsArray, setPrevOperationsArray] = useState<string[]>([])
+  const [equalityMessage, setEqualityMessage] = useState<string>("")
 
   const calculatorRef = useRef(null)
   const textInputRef = useRef(null)
@@ -70,6 +70,8 @@ const Calculator: FC<CalculatorProps> = ({
         <div className={styles.mainScreen}
           onClick={() => copyCurrentCalculationToClipboard(firstCalculatorInput, operator, secondCalculatorInput)}>
           <span className="mainScreenTextInput" ref={textInputRef}>
+            {/* Displays equals/not equals message */}
+            {firstCalculatorInput.length < 1 && equalityMessage}
             {firstCalculatorInput}{operator}{secondCalculatorInput}
           </span>
         </div>
@@ -87,6 +89,7 @@ const Calculator: FC<CalculatorProps> = ({
         isScientificSymbolsArray={isScientificSymbolsArray}
         prevOperationsArray={prevOperationsArray}
         setPrevOperationsArray={setPrevOperationsArray}
+        setEqualityMessage={setEqualityMessage}
       />
     </div>
   )

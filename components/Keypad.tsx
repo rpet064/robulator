@@ -15,6 +15,7 @@ interface KeypadProps {
   isScientificSymbolsArray: boolean
   prevOperationsArray: string[]
   setPrevOperationsArray: Dispatch<SetStateAction<string[]>>
+  setEqualityMessage: Dispatch<SetStateAction<string>>
 }
 
 const Keypad: FC<KeypadProps> = ({
@@ -27,7 +28,8 @@ const Keypad: FC<KeypadProps> = ({
   setOperator,
   isScientificSymbolsArray,
   prevOperationsArray,
-  setPrevOperationsArray
+  setPrevOperationsArray,
+  setEqualityMessage
 }) => {
 
   const [overwriteNumber, setOverwriteNumber] = useState<boolean>(false)
@@ -60,6 +62,7 @@ const Keypad: FC<KeypadProps> = ({
     setCurrentNumberOfInputs: setCurrentNumberOfInputs,
     prevOperationsArray: prevOperationsArray,
     setPrevOperationsArray: setPrevOperationsArray,
+    setEqualityMessage: setEqualityMessage
   })
 
 
