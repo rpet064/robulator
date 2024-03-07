@@ -1,4 +1,4 @@
-import { notifyMessage } from "./toastMessages"
+import { successMessage } from "./toastMessages"
 
 export const getPreviousCalculations = (): string[] | null => {
     let previousCalculationsInLocalStorage = localStorage.getItem('previousCalculations')
@@ -22,5 +22,5 @@ export const setPreviousCalculations = (calculationToSave: string): void => {
 
 export const clearLocalStorage = (): void=> {
     localStorage.clear()
-    notifyMessage("Calculations history has been cleared")
+    successMessage("Calculations history has been cleared")
 }

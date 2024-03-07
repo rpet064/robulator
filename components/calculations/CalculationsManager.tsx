@@ -68,6 +68,7 @@ export const CalculationsManager = ({
     const [doesSecondCalculationContainTrig, setDoesSecondCalculationContainTrig] = useState<boolean>(false)
     const [doesCurrentCalculationContainTrig, setDoesCurrentCalculationContainTrig] = useState(false)
     const [isOperatorInequalityCheck, setIsOperatorInequalityCheck] = useState<boolean>(false)
+    const [inputNumberInsideBrackets, setInputNumberInsideBrackets] = useState<boolean>(false)
     const [currentInput, setCurrentInput] = useState<string>(firstCalculatorInput)
     const [isExpontialCalculation, setIsExpontialCalculation] = useState<boolean>(false)
 
@@ -89,6 +90,13 @@ export const CalculationsManager = ({
 
 
     useEffect(() => {
+        let inputNumberInsideBrackets = doesFirstCalculationContainTrig && isFirstCalculatorInput
+        || doesSecondCalculationContainTrig && !isFirstCalculatorInput
+        setInputNumberInsideBrackets(inputNumberInsideBrackets)
+    })
+
+
+    useEffect(() => {
         const currentCalculationContainTrig = doesFirstCalculationContainTrig && isFirstCalculatorInput
             || doesSecondCalculationContainTrig && !isFirstCalculatorInput
         setDoesCurrentCalculationContainTrig(currentCalculationContainTrig)
@@ -96,11 +104,8 @@ export const CalculationsManager = ({
 
 
     useEffect(() => {
-        if (firstCalculatorInputHasAnswer) {
-            setOverwriteNumber(true)
-            return
-        }
-        setOverwriteNumber(false)
+        let overwriteNumber = firstCalculatorInputHasAnswer
+        setOverwriteNumber(overwriteNumber)
     }, [firstCalculatorInputHasAnswer, firstCalculatorInput, secondCalculatorInput])
 
 
@@ -244,6 +249,7 @@ export const CalculationsManager = ({
 
             setPrevStringAndArray(firstInput, solvedFactorial)
             setFirstCalculatorInput(solvedFactorial)
+            setFirstCalculatorInputHasAnswer(true)
             return
         }
         let secondInput = secondCalculatorInput + "!"
@@ -263,6 +269,7 @@ export const CalculationsManager = ({
 
             setPrevStringAndArray(firstInput, answer)
             setFirstCalculatorInput(answer)
+            setFirstCalculatorInputHasAnswer(true)
 
             return
         }
@@ -346,31 +353,22 @@ export const CalculationsManager = ({
         let currentSetInput = getCurrentSetInput()
 
         // put number inside first trig brackets
-        if(doesFirstCalculationContainTrig && isFirstCalculatorInput){
-            let newInput = manageTrigInput(userInput, currentInput)
-            currentSetInput(newInput)
-            return
-
-        // put number inside second trig brackets
-        } else if(doesSecondCalculationContainTrig && !isFirstCalculatorInput){
+        if(inputNumberInsideBrackets){
             let newInput = manageTrigInput(userInput, currentInput)
             currentSetInput(newInput)
             return
         }
 
-        // Overwrite is decimal added to answer
+        // Overwrite is decimal added tox answer
         if (overwriteNumber && userInput === ".") {
             setFirstCalculatorInput("0")
             setFirstCalculatorInputHasAnswer(false)
-        }
 
-        // Overwrite number and return
-        if (overwriteNumber && userInput !== ".") {
+        } else if(overwriteNumber && userInput !== "." && trigSymbolsArray.includes(userInput)){
             setFirstCalculatorInput(userInput)
             setFirstCalculatorInputHasAnswer(false)
             return
         }
-
         currentSetInput(currentInput => currentInput + userInput)
     }
 
@@ -553,7 +551,7 @@ export const CalculationsManager = ({
             return
         }
 
-        // Solve first input before adding opertator
+        // Solve first input before adding operator
         if (operatorArray.includes(userInput) && !isLastCalculationAnOperator) {
 
             if(doesCurrentCalculationContainTrig){
@@ -568,9 +566,6 @@ export const CalculationsManager = ({
             onOperatorInput(userInput)
 
         } else if (userInput === "=") {
-
-            // TO DO: solve first input automatically if contains exponent
-            // and then user puts in second equation
 
             let currentSecondCalculatorInput = secondCalculatorInput
             if(doesCurrentCalculationContainTrig){
