@@ -3,7 +3,7 @@ import { useEffect, useState, Dispatch, SetStateAction } from "react"
 import { numArray, operatorArray, trigSymbolsArray, exponentArray } from "../utility/symbolsArray"
 import { getAnswer } from "./equationSolver"
 import { squareNumber } from "./numberSquarer"
-import { removeTrailingZeros } from "../utility/roundEquation"
+import { removeTrailingZeros } from "../utility/removeTrailingZeros"
 import { errorMessage, notifyMessage } from "../utility/toastMessages"
 import {solvePiEquation } from "./solvePiEquation"
 import { removeLastInputFromString } from "../utility/removeLastInputFromString"
@@ -553,7 +553,14 @@ export const CalculationsManager = ({
             return
         }
 
+        // Solve first input before adding opertator
         if (operatorArray.includes(userInput) && !isLastCalculationAnOperator) {
+
+            if(doesCurrentCalculationContainTrig){
+                let firstCalculatorInput = solveTrigCalculation(currentInput)
+                setFirstCalculatorInput(firstCalculatorInput)
+            }
+
             if(isExpontialCalculation){
                 let firstCalculatorInput = solveExponentialCalculation(currentInput, null)
                 setFirstCalculatorInput(firstCalculatorInput)
@@ -561,12 +568,19 @@ export const CalculationsManager = ({
             onOperatorInput(userInput)
 
         } else if (userInput === "=") {
+
             // TO DO: solve first input automatically if contains exponent
             // and then user puts in second equation
+
             let currentSecondCalculatorInput = secondCalculatorInput
+            if(doesCurrentCalculationContainTrig){
+                currentSecondCalculatorInput = solveTrigCalculation(currentInput)
+            }
+
             if(isExpontialCalculation){
                 currentSecondCalculatorInput = solveExponentialCalculation(currentInput, null)
             }
+
             solveEquation("", currentSecondCalculatorInput)
 
         } else if (userInput === "√" && !isLastCalculationAnOperator) {
