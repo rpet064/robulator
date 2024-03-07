@@ -1,10 +1,11 @@
 import { trigSymbolsArray } from "../utility/symbolsArray"
 import { splitStringByBrackers } from "../utility/splitStringByBrackers"
 import { round } from "mathjs"
+import {solvePiEquation } from "./solvePiEquation"
 
 export const solveTrigCalculation = (inputToSolve: string) => {
 
-    let containingTrigSymbol = containsTrigSymbol(inputToSolve)
+    let containingTrigSymbol = getContainingTrigSymbol(inputToSolve)
     let trigFunction = getTrigFunction(containingTrigSymbol)
 
     // Cannot solve equation if these are null
@@ -18,16 +19,25 @@ export const solveTrigCalculation = (inputToSolve: string) => {
 
         let coefficent = 1
         let degrees = 0
+        let secondPartOfEquation = ""
         
         if(doesInputContainCoefficent){
 
             coefficent = parseInt(inputToSolve.split(containingTrigSymbol)[0])
-            let secondPartOfEquation = inputToSolve.split(containingTrigSymbol)[1].slice(1, -1)
+            secondPartOfEquation = inputToSolve.split(containingTrigSymbol)[1].slice(1, -1)
 
+            if(secondPartOfEquation.includes("𝝅")){
+                secondPartOfEquation = solvePiEquation(secondPartOfEquation)
+            }
             degrees = parseInt(secondPartOfEquation)
 
         } else {
-            degrees = parseInt(inputToSolve.slice(4, -1))
+            secondPartOfEquation = inputToSolve.slice(4, -1)
+
+            if(secondPartOfEquation.includes("𝝅")){
+                secondPartOfEquation = solvePiEquation(secondPartOfEquation)
+            }
+            degrees = parseInt(secondPartOfEquation)
         }
 
         // Change to radians
@@ -67,7 +77,16 @@ const degreesToRadians  = (degrees: number) => {
     return degrees * (Math.PI / 180);
 }
 
-const containsTrigSymbol = (str: string): string | null => {
+export const checkContainsTrigSymbol = (str: string): boolean => {
+    for (const symbol of trigSymbolsArray) {
+        if (str.includes(symbol)) {
+            return true
+        }
+    }
+    return false
+}
+
+const getContainingTrigSymbol = (str: string): string | null => {
     for (const symbol of trigSymbolsArray) {
         if (str.includes(symbol)) {
             return symbol
@@ -86,12 +105,14 @@ const getTrigFunction = (symbol: string | null): ((x: number) => number) | null 
             return Math.cos;
         case "tan":
             return Math.tan;
+        case "log":
+            return Math.log;
         default:
             return null;
     }
 }
 
-function startsWithTrigSymbol(input: string) {
+const startsWithTrigSymbol = (input: string) => {
     return trigSymbolsArray.some(symbol => input.startsWith(symbol));
 }
 
