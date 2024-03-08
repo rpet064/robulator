@@ -4,14 +4,9 @@ import modalStyles from '../styles/ModalStyles.module.css'
 import useWindowSize from './utility/windowSize'
 import colours from '../styles/Colours.module.css'
 import ModalFooter from './ModalFooter'
+import { HistoryMenuProps } from './utility/interfacePropsManager'
 
 Modal.setAppElement('#__next')
-
-interface HistoryMenuProps {
-    isSideMenuOpen: boolean
-    setIsSideMenuOpen: (value: boolean) => void
-    prevOperationsArray: string[]
-}
 
 const HistoryMenuModal: FC<HistoryMenuProps> = ({
     isSideMenuOpen,

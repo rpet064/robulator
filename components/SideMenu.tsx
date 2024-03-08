@@ -1,17 +1,10 @@
-import { useState, FC, SetStateAction, Dispatch } from "react"
+import { useState, FC } from "react"
 import sideMenuStyles from '../styles/SideMenu.module.css'
 import { TbAdjustmentsCog, TbMoonFilled, TbSunHigh, TbSettingsOff, TbSettings, TbHistoryOff } from "react-icons/tb"
 import AboutMenu from "./AboutMenu"
 import colours from '../styles/Colours.module.css'
 import { clearLocalStorage } from "./utility/localStorageManager"
-
-interface SideMenuProps {
-    ScientificSymbolsArray: boolean
-    setScientificSymbolsArray: Dispatch<SetStateAction<boolean>>
-    theme: string
-    setTheme: Dispatch<SetStateAction<string>>
-    setPrevOperationsArray: Dispatch<SetStateAction<string[]>>
-}
+import { SideMenuProps } from './utility/interfacePropsManager'
 
 const SideMenu: FC<SideMenuProps> = ({
     ScientificSymbolsArray,

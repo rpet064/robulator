@@ -1,22 +1,9 @@
-import { useEffect, useState, Dispatch, SetStateAction, FC } from 'react'
+import { useEffect, useState, FC } from 'react'
 import styles from '../styles/Keypad.module.css'
 import { regularSymbolsArray, scientificSymbolsArray } from './utility/symbolsArray'
 import { CalculationsManager } from "./calculations/CalculationsManager"
 import colours from '../styles/Colours.module.css'
-
-interface KeypadProps {
-  firstCalculatorInput: string
-  setFirstCalculatorInput: Dispatch<SetStateAction<string>>
-  secondCalculatorInput: string
-  setSecondCalculatorInput: Dispatch<SetStateAction<string>>
-  setPrevInput: (value: string) => void
-  operator: string
-  setOperator: (value: string) => void
-  isScientificSymbolsArray: boolean
-  prevOperationsArray: string[]
-  setPrevOperationsArray: Dispatch<SetStateAction<string[]>>
-  setEqualityMessage: Dispatch<SetStateAction<string>>
-}
+import { KeypadProps } from './utility/interfacePropsManager'
 
 const Keypad: FC<KeypadProps> = ({
   firstCalculatorInput,

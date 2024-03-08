@@ -3,15 +3,11 @@ import SideMenu from './SideMenu'
 import { Toaster } from 'react-hot-toast'
 import { copyPreviousCalculationToClipboard, copyCurrentCalculationToClipboard } from './utility/clipboardUtils'
 import Keypad from './Keypad'
-import { useState, useRef, SetStateAction, Dispatch, FC, useEffect } from 'react'
+import { useState, useRef, FC, useEffect } from 'react'
 import colours from '../styles/Colours.module.css'
 import HistorySideMenu from './HistorySideMenu'
 import { getPreviousCalculations } from './utility/localStorageManager'
-
-interface CalculatorProps {
-  theme: string
-  setTheme: Dispatch<SetStateAction<string>>
-}
+import { CalculatorProps } from './utility/interfacePropsManager'
 
 const Calculator: FC<CalculatorProps> = ({
   theme,

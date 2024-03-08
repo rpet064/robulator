@@ -4,15 +4,11 @@ import modalStyles from '../styles/ModalStyles.module.css'
 import useWindowSize from './utility/windowSize'
 import colours from '../styles/Colours.module.css'
 import ModalFooter from './ModalFooter'
+import { AboutMenuModalProps } from './utility/interfacePropsManager'
 
 Modal.setAppElement('#__next')
 
-interface AboutMenuProps {
-  aboutMenuIsOpen: boolean
-  setAboutMenuIsOpen: (value: boolean) => void
-}
-
-const AboutMenuModal: FC<AboutMenuProps> = ({
+const AboutMenuModal: FC<AboutMenuModalProps> = ({
   aboutMenuIsOpen,
   setAboutMenuIsOpen
 }) => {

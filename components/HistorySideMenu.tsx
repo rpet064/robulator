@@ -3,11 +3,7 @@ import colours from '../styles/Colours.module.css'
 import { useState, FC } from 'react'
 import HistoryMenuModal from './HistoryMenuModal'
 import sideMenuStyles from '../styles/SideMenu.module.css'
-
-interface HistorySideMenuProps {
-    theme: string
-    prevOperationsArray: string[]
-}
+import { HistorySideMenuProps } from './utility/interfacePropsManager'
 
 const HistorySideMenu: FC<HistorySideMenuProps> = ({ theme, prevOperationsArray }) => {
 
