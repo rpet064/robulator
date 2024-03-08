@@ -13,29 +13,7 @@ import { solveFactorial } from "../calculations/factorialCalculation"
 import { updatePrevArray } from "../utility/updatePrevArray"
 import { setPreviousCalculations } from "../utility/localStorageManager"
 import { solveExponentialCalculation} from "./exponentCalculation"
-
-interface calculationsManagerProps {
-  firstCalculatorInput: string
-  setFirstCalculatorInput: Dispatch<SetStateAction<string>>
-  secondCalculatorInput: string
-  setSecondCalculatorInput: Dispatch<SetStateAction<string>>
-    setPrevInput: (value: string) => void
-    operator: string
-    setOperator: (value: string) => void
-    isLastCalculationAnOperator: boolean
-    isDecimalUnfinished: boolean
-    doesCalculationExceedInput: boolean
-    currentNumberOfInputs: number
-    overwriteNumber: boolean
-    setOverwriteNumber: (value: boolean) => void
-    setIsLastCalculationAnOperator: (value: boolean) => void
-    setCurrentNumberOfInputs: (value: number) => void
-    setDoesCalculationExceedInput: (value: boolean) => void,
-    setIsDecimalUnfinished: (value: boolean) => void,
-    prevOperationsArray: string[],
-    setPrevOperationsArray: Dispatch<SetStateAction<string[]>>,
-    setEqualityMessage: Dispatch<SetStateAction<string>>
-}
+import { calculationsManagerProps } from "../utility/interfacePropsManager"
 
 export const CalculationsManager = ({
     firstCalculatorInput,
