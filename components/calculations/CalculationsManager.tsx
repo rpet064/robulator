@@ -1,4 +1,5 @@
-import { solveTrigCalculation, manageTrigInput, removeTrigCalculation, checkContainsTrigSymbol } from "./trigonometryCalculations"
+import { solveTrigCalculation, manageTrigInput, removeTrigCalculation, 
+    checkContainsTrigSymbol } from "./trigonometryCalculations"
 import { useEffect, useState, Dispatch, SetStateAction } from "react"
 import { numArray, operatorArray, trigSymbolsArray, exponentArray } from "../utility/symbolsArray"
 import { getAnswer } from "./equationSolver"
@@ -230,9 +231,9 @@ export const CalculationsManager = ({
 
         // get matched exponent and positon of where matched in array
         const matchedExponent = exponentArray.find(item => item === userInput)
-        if(matchedExponent === undefined){
+        if(!matchedExponent){
             return
-        }   
+        }
 
         if(matchedExponent === "xy"){
             onInputNumber("x")
@@ -240,19 +241,34 @@ export const CalculationsManager = ({
             return
         }
 
+        let updatedCurrentInput = currentInput
+
+        // solve trig equation before solving exponent
+        if(currentCalculationContainTrigInput && isCurrentTrigCalculationValid ){
+            updatedCurrentInput = solveTrigCalculation(currentInput)
+            currentSetInput(updatedCurrentInput)
+        }
+
         // solve for current input and set answer as new input
-        let newCurrentInput = solveExponentialCalculation(currentInput, matchedExponent)
+        let newCurrentInput = solveExponentialCalculation(updatedCurrentInput, matchedExponent)
         currentSetInput(newCurrentInput)
     }
 
     const solveFactorialEquation = () => {
+        let currentSetInput = getCurrentSetInput()
+        let updatedCurrentInput = currentInput
 
         if(!calculationCanAddExponent()){
             return
         }
 
+        if(currentCalculationContainTrigInput && isCurrentTrigCalculationValid ){
+            updatedCurrentInput = solveTrigCalculation(currentInput)
+            currentSetInput(updatedCurrentInput)
+        }
+
         if(isFirstCalculatorInput){
-            let firstInput = firstCalculatorInput + "!"
+            let firstInput = updatedCurrentInput + "!"
             let solvedFactorial = solveFactorial(firstInput)
 
             setPrevStringAndArray(firstInput, solvedFactorial)
@@ -260,7 +276,7 @@ export const CalculationsManager = ({
             setFirstCalculatorInputHasAnswer(true)
             return
         }
-        let secondInput = secondCalculatorInput + "!"
+        let secondInput = updatedCurrentInput + "!"
         secondInput = solveFactorial(secondInput)
         solveEquation("", secondInput)
     }
@@ -369,7 +385,7 @@ export const CalculationsManager = ({
             return
         }
 
-        // Overwrite is decimal added tox answer
+        // Overwrite is decimal added to answer
         if (overwriteNumber && userInput === ".") {
             setFirstCalculatorInput("0")
             setFirstCalculatorInputHasAnswer(false)
@@ -483,44 +499,35 @@ export const CalculationsManager = ({
 
         switch (userInput) {
             case "AC":
-                calculationComplete = true
-
                 resetCalculator()
+                calculationComplete = true
                 break
 
             case "C":
-                calculationComplete = true
-
                 deletePrevInput()
+                calculationComplete = true
                 break
 
             case ".":
-                calculationComplete = true
                 setIsDecimalUnfinished(true)
-
                 onInputDecimal(userInput)
+
+                calculationComplete = true
                 break
 
             case "+/-":
-                calculationComplete = true
-
-                if (isLastCalculationAnOperator) {
-                    break
+                if (!isLastCalculationAnOperator) {
+                    changeSign()
                 }
-                changeSign()
+                calculationComplete = true
+                break
 
             case "!":
-                if(currentCalculationContainTrigInput && !isCurrentTrigCalculationValid){
-                    errorMessage("Please complete trig calculation")
-                    return
+                if (!isExpontialCalculation){
+                    solveFactorialEquation()
                 }
-
                 calculationComplete = true
-
-                if (isLastCalculationAnOperator) {
-                    break
-                }
-            solveFactorialEquation()
+                break
         }
 
         if (calculationComplete) {
@@ -576,14 +583,15 @@ export const CalculationsManager = ({
         // Solve first input before adding operator
         if (operatorArray.includes(userInput) && !isLastCalculationAnOperator) {
 
+            let updatedInput = null
             if(currentCalculationContainTrigInput && isCurrentTrigCalculationValid){
-                let firstCalculatorInput = solveTrigCalculation(currentInput)
-                setFirstCalculatorInput(firstCalculatorInput)
+                updatedInput = solveTrigCalculation(currentInput)
+                setFirstCalculatorInput(updatedInput)
             }
 
             if(isExpontialCalculation){
-                let firstCalculatorInput = solveExponentialCalculation(currentInput, null)
-                setFirstCalculatorInput(firstCalculatorInput)
+                updatedInput = solveExponentialCalculation(currentInput, null)
+                setFirstCalculatorInput(updatedInput)
             }
 
             if(userInput === "≠"){
@@ -594,16 +602,15 @@ export const CalculationsManager = ({
 
         } else if (userInput === "=") {
 
-            let currentSecondCalculatorInput = secondCalculatorInput
+            let updatedInput = secondCalculatorInput
             if(currentCalculationContainTrigInput && isCurrentTrigCalculationValid){
-                currentSecondCalculatorInput = solveTrigCalculation(currentInput)
+                updatedInput = solveTrigCalculation(currentInput)
             }
 
             if(isExpontialCalculation){
-                currentSecondCalculatorInput = solveExponentialCalculation(currentInput, null)
+                updatedInput = solveExponentialCalculation(currentInput, null)
             }
-
-            solveEquation("", currentSecondCalculatorInput)
+            solveEquation("", updatedInput)
 
         } else if (userInput === "√" && !isLastCalculationAnOperator) {
             onSquareRoot()
