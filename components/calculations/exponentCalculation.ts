@@ -1,4 +1,5 @@
 import { notifyMessage } from "../utility/toastMessages"
+import { round } from "mathjs"
 
 export const solveExponentialCalculation = (input: string, matchedExponent: string | null): string => {
     try{
@@ -9,14 +10,12 @@ export const solveExponentialCalculation = (input: string, matchedExponent: stri
         if(!matchedExponent){
             let splitString = input.split('x')
 
-            base = parseInt(splitString[0])
-
-            // TODO: solve for complex exponent input
-            exponent = parseInt(splitString[1])
+            base = parseFloat(splitString[0])
+            exponent = parseFloat(splitString[1])
         
         // simple exponent calculations
         } else {
-            base = parseInt(input)
+            base = parseFloat(input)
             exponent = parseInt(matchedExponent.split('x')[1])
         }
 
@@ -24,7 +23,8 @@ export const solveExponentialCalculation = (input: string, matchedExponent: stri
         for(let i = 0; i < exponent - 1; i++){
             newOutput *= base
         }
-        return newOutput.toString()
+        let roundedOutput = round(newOutput, 5)
+        return roundedOutput.toString()
     } catch (e) {
         notifyMessage("Invalid exponent" + matchedExponent + e)
         return "0"

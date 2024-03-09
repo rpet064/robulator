@@ -1,12 +1,13 @@
 import { notifyMessage } from "../utility/toastMessages"
 import { countSubstringOccurrences } from "../utility/substringOccurences"
+import { round } from "mathjs"
 
 export const solveFactorial = (input: string) => {
 
     // Split input by factorial, then get first number
     let operand = 0
     try{
-        operand = parseInt(input.split('!')[0])
+        operand = parseFloat(input.split('!')[0])
     } catch (e) {
         notifyMessage(`Cannot solve factorial calculation ${e}`)
         return input.toString()
@@ -32,5 +33,6 @@ export const solveFactorial = (input: string) => {
         }
         numOfFactorials--
     }
-    return inputTotal.toString()
+    let roundedOutput = round(inputTotal, 5)
+    return roundedOutput.toString()
 }
