@@ -54,19 +54,15 @@ export const CalculationsManager = ({
     const [isExpontialCalculation, setIsExpontialCalculation] = useState<boolean>(false)
     const [isCurrentTrigCalculationValid, setIsCurrentTrigCalculationValid] = useState<boolean>(true)
 
-    // if operator is empty, then still on first equation
+    // if operator is empty or contains first answer, then still on first equation
     useEffect(() => {
         let isFirstEquation = operator.trim() === ""
         setIsFirstCalculatorInput(isFirstEquation)
-    }, [operator])
+    }, [operator, firstCalculatorInput])
 
 
-    // Track if first or second equation
+    // Track if first or second equations
     useEffect(() => {
-        if(isLastCalculationAnOperator){
-            setCurrentInput(firstCalculatorInput)
-            return
-        }
         isFirstCalculatorInput ? setCurrentInput(firstCalculatorInput) : setCurrentInput(secondCalculatorInput)
     }, [firstCalculatorInput, secondCalculatorInput, isLastCalculationAnOperator])
 
@@ -86,7 +82,9 @@ export const CalculationsManager = ({
 
 
     useEffect(() => {
-        let overwriteNumber = firstCalculatorInputHasAnswer
+        let overwriteNumber = firstCalculatorInputHasAnswer 
+        || firstCalculatorInput[0] === "0" && firstCalculatorInput.length < 2
+        || firstCalculatorInput[0] === "-" && firstCalculatorInput[1] === "0"
         setOverwriteNumber(overwriteNumber)
     }, [firstCalculatorInputHasAnswer, firstCalculatorInput, secondCalculatorInput])
 
@@ -110,7 +108,7 @@ export const CalculationsManager = ({
     }, [firstCalculatorInput, secondCalculatorInput, operator])
 
 
-    // Check if first input contains trug symbol
+    // Check if first input contains trig symbol
     useEffect(() => {
         if(firstCalculatorInput.length > 0){
             let containsTrigSymbol = checkContainsTrigSymbol(firstCalculatorInput)
@@ -148,8 +146,9 @@ export const CalculationsManager = ({
     }
 
     const calculationCanAddExponent = (): boolean => {
-        return currentInput.length > 0
-        && !isDecimalUnfinished && !isLastCalculationAnOperator
+        return currentInput.length > 0 && !isDecimalUnfinished 
+        && !isLastCalculationAnOperator || firstCalculatorInputHasAnswer
+        
     }
 
     const clearTrigInputs = () => {
@@ -213,6 +212,7 @@ export const CalculationsManager = ({
         } else {
             setFirstCalculatorInput(firstCalcInput)
             setFirstCalculatorInputHasAnswer(true)
+            setIsFirstCalculatorInput(true)
         }
         let prevEquationString = updatePrevArray(firstCalcInput, secondInput, operator)
         setPrevStringAndArray(prevEquationString, firstCalcInput)
@@ -225,7 +225,6 @@ export const CalculationsManager = ({
         // Current input is blank - then return 0
         let isCurrentInputBlank = currentInput.length < 1
         if(isCurrentInputBlank){
-            currentSetInput("0")
             return
         }
 
@@ -390,7 +389,7 @@ export const CalculationsManager = ({
             setFirstCalculatorInput("0")
             setFirstCalculatorInputHasAnswer(false)
 
-        } else if(overwriteNumber && userInput !== "." && trigSymbolsArray.includes(userInput)){
+        } else if(overwriteNumber && userInput !== "."){
             setFirstCalculatorInput(userInput)
             setFirstCalculatorInputHasAnswer(false)
             return
@@ -566,7 +565,7 @@ export const CalculationsManager = ({
             exponentialManager(userInput)
         }
 
-        // Check last input on first number isn"t a decimal
+        // Check last input on first number isn't a decimal
         if (isDecimalUnfinished) {
             errorMessage("please enter a number first")
             return
