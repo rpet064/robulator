@@ -4,7 +4,7 @@ export const removeLastInputFromString = (calculatorInput: string) => {
 
         // Remove Pi from equation
         if (arrayIntoString.endsWith("𝝅")) {
-                newArray = arrayIntoString.replace(/𝝅$/, '')
+                newArray = arrayIntoString.replace(/𝝅$/, "")
         } else {
                 newArray = arrayIntoString.slice(0, -1)
         }

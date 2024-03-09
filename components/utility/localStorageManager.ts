@@ -1,7 +1,7 @@
 import { successMessage } from "./toastMessages"
 
 export const getPreviousCalculations = (): string[] | null => {
-    let previousCalculationsInLocalStorage = localStorage.getItem('previousCalculations')
+    let previousCalculationsInLocalStorage = localStorage.getItem("previousCalculations")
     if (previousCalculationsInLocalStorage) {
         return JSON.parse(previousCalculationsInLocalStorage)
     }
@@ -17,7 +17,7 @@ export const setPreviousCalculations = (calculationToSave: string): void => {
     }
 
     newPreviousCalculation.push(calculationToSave)
-    localStorage.setItem('previousCalculations', JSON.stringify(newPreviousCalculation))
+    localStorage.setItem("previousCalculations", JSON.stringify(newPreviousCalculation))
 }
 
 export const clearLocalStorage = (): void=> {

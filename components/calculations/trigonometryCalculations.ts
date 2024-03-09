@@ -63,7 +63,7 @@ export const manageTrigInput = (userInput: string, currentInput: string) => {
         return splitString.join("")
 
         } catch (e) {
-        throw new Error(`This equation doesn't contain brackets ${e}`)
+        throw new Error(`This equation doesn"t contain brackets ${e}`)
     }
 }
 

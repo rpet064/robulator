@@ -1,8 +1,8 @@
-const math = require('mathjs')
+const math = require("mathjs")
 const parser = new math.Parser()
 
 export const solvePiEquation = (equation: string): string => {
-    let equationReplacedPi = replacePiSymbol(equation, 'pi')
+    let equationReplacedPi = replacePiSymbol(equation, "pi")
     return math.round(parser.evaluate(equationReplacedPi), 5)
 }
 

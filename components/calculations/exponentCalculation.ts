@@ -8,7 +8,7 @@ export const solveExponentialCalculation = (input: string, matchedExponent: stri
 
         // Calculations containing any number
         if(!matchedExponent){
-            let splitString = input.split('x')
+            let splitString = input.split("x")
 
             base = parseFloat(splitString[0])
             exponent = parseFloat(splitString[1])
@@ -16,7 +16,7 @@ export const solveExponentialCalculation = (input: string, matchedExponent: stri
         // simple exponent calculations
         } else {
             base = parseFloat(input)
-            exponent = parseInt(matchedExponent.split('x')[1])
+            exponent = parseInt(matchedExponent.split("x")[1])
         }
 
         let newOutput = base

@@ -8,7 +8,7 @@ export const squareNumber = (calculatorInput: string, originalNumber: number, ar
           : originalNumber
 
       const squaredNumberString = (Math.sqrt(numberToSquare)).toFixed(2).toString()
-      const squaredNumberArray = squaredNumberString.split('')
+      const squaredNumberArray = squaredNumberString.split("")
 
       if (hasNegative) {
           squaredNumberArray.unshift("-")

@@ -7,14 +7,14 @@ export const solveFactorial = (input: string) => {
     // Split input by factorial, then get first number
     let operand = 0
     try{
-        operand = parseFloat(input.split('!')[0])
+        operand = parseFloat(input.split("!")[0])
     } catch (e) {
         notifyMessage(`Cannot solve factorial calculation ${e}`)
         return input.toString()
     }
 
     // get number of times need to calculate factorial
-    let numOfFactorials = countSubstringOccurrences(input, '!')
+    let numOfFactorials = countSubstringOccurrences(input, "!")
     if(numOfFactorials < 1){
         return operand.toString()
     }
