@@ -4,7 +4,7 @@ export const updatePrevArray = (
     const secondOperand = secondCalculatorInput
 
     // Construct the equation string
-    const equationString = `${firstOperand} ${operator} ${secondOperand} =`
+    const equationString = `${firstOperand} ${operator} ${secondOperand}`
 
     // Convert the array to a string and remove commas
     return equationString.replace(/,/g, "")

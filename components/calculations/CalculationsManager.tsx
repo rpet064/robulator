@@ -15,6 +15,7 @@ import { updatePrevArray } from "../utility/updatePrevArray"
 import { setPreviousCalculations } from "../utility/localStorageManager"
 import { solveExponentialCalculation} from "./exponentCalculation"
 import { calculationsManagerProps } from "../utility/interfacePropsManager"
+import { not } from "mathjs"
 
 export const CalculationsManager = ({
     firstCalculatorInput,
@@ -159,9 +160,9 @@ export const CalculationsManager = ({
         curentTrigSetInput("")
     }
 
-    const setPrevStringAndArray = (prevInput: string, answer: string)=> {
+    const updatePreviousCalculationArray = (prevInput: string, answer: string)=> {
         setPrevInput(prevInput)
-        let answerString = `${prevInput} ${answer}`
+        let answerString = `${prevInput} = ${answer}`
         prevOperationsArray.push(answerString)
         setPrevOperationsArray(prevOperationsArray)
         setPreviousCalculations(answerString)
@@ -215,7 +216,7 @@ export const CalculationsManager = ({
             setIsFirstCalculatorInput(true)
         }
         let prevEquationString = updatePrevArray(firstCalcInput, secondInput, operator)
-        setPrevStringAndArray(prevEquationString, firstCalcInput)
+        updatePreviousCalculationArray(prevEquationString, firstCalcInput)
         clearNumbers(newOperator)
     }
 
@@ -270,7 +271,7 @@ export const CalculationsManager = ({
             let firstInput = updatedCurrentInput + "!"
             let solvedFactorial = solveFactorial(firstInput)
 
-            setPrevStringAndArray(firstInput, solvedFactorial)
+            updatePreviousCalculationArray(firstInput, solvedFactorial)
             setFirstCalculatorInput(solvedFactorial)
             setFirstCalculatorInputHasAnswer(true)
             return
@@ -291,7 +292,7 @@ export const CalculationsManager = ({
             let firstInput = firstCalculatorInput + "𝝅"
             let answer = solvePiEquation(firstInput)
 
-            setPrevStringAndArray(firstInput, answer)
+            updatePreviousCalculationArray(firstInput, answer)
             setFirstCalculatorInput(answer)
             setFirstCalculatorInputHasAnswer(true)
 
@@ -399,37 +400,20 @@ export const CalculationsManager = ({
 
     const onSquareRoot = () => {
 
-        let isNegative = false
-
         let input = currentInput
         let currentSetInput = getCurrentSetInput()
 
-        if (!input.length || (operator !== "" && !secondCalculatorInput.length)) {
+        if (currentInput.length < 1) {
             currentSetInput("0")
-            setPrevStringAndArray(`√ ${0}`, "0")
+            updatePreviousCalculationArray(`√ ${0}`, "0")
             return
         }
 
-        // Remove negative sign from input
-        if (input[0] === "-") {
-            isNegative = true
-            input.split("").shift()
-        }
+        const answer = squareNumber(input)
+        const roundedAnswer = removeTrailingZeros(answer)
 
-        const originalNumberAsInt = parseFloat(input.toString())
-        const answer = squareNumber(input, originalNumberAsInt, input.length)
-        const roundedAnswer = removeTrailingZeros(answer.toString())
-
-        let roundedAnswerAsArray = roundedAnswer.split("")
-
-        // Add negative sign back to input
-        if (isNegative) {
-            roundedAnswerAsArray.unshift("-")
-        }
-
-        let joinedRoundedAnswer = roundedAnswerAsArray.join("")
-        currentSetInput(joinedRoundedAnswer)
-        setPrevStringAndArray(`√ ${originalNumberAsInt}`, joinedRoundedAnswer)
+        currentSetInput(roundedAnswer)
+        updatePreviousCalculationArray(`√ ${input}`, roundedAnswer)
     }
 
 
