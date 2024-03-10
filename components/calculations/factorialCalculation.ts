@@ -4,6 +4,11 @@ import { round } from "mathjs"
 
 export const solveFactorial = (input: string) => {
 
+    const hasNegative = input[0] === "-"
+    if(hasNegative){
+        input = input.replace("-", "")
+    }
+
     // Split input by factorial, then get first number
     let operand = 0
     try{
@@ -33,6 +38,9 @@ export const solveFactorial = (input: string) => {
         }
         numOfFactorials--
     }
-    let roundedOutput = round(inputTotal, 5)
-    return roundedOutput.toString()
+    let roundedOutput = round(inputTotal, 5).toString()
+    if (hasNegative) {
+        roundedOutput = "-" + roundedOutput
+      }
+    return roundedOutput
 }

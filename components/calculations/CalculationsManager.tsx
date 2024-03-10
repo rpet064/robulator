@@ -15,7 +15,6 @@ import { updatePrevArray } from "../utility/updatePrevArray"
 import { setPreviousCalculations } from "../utility/localStorageManager"
 import { solveExponentialCalculation} from "./exponentCalculation"
 import { calculationsManagerProps } from "../utility/interfacePropsManager"
-import { not } from "mathjs"
 
 export const CalculationsManager = ({
     firstCalculatorInput,
@@ -546,6 +545,9 @@ export const CalculationsManager = ({
         }
 
         if (exponentArray.includes(userInput)) {
+            if(currentInput.length < 2 && currentInput[0] === "-"){
+                return
+            }
             exponentialManager(userInput)
         }
 
@@ -567,6 +569,12 @@ export const CalculationsManager = ({
         if (operatorArray.includes(userInput) && !isLastCalculationAnOperator) {
 
             let updatedInput = null
+
+            const hasNegative = currentInput[0] === "-"
+            if(hasNegative){
+                updatedInput = currentInput.replace("-", "")
+            }
+
             if(currentCalculationContainTrigInput && isCurrentTrigCalculationValid){
                 updatedInput = solveTrigCalculation(currentInput)
                 setFirstCalculatorInput(updatedInput)
@@ -581,11 +589,20 @@ export const CalculationsManager = ({
                 setIsOperatorInequalityCheck(true)
             }
 
+            if (hasNegative) {
+                updatedInput = "-" + updatedInput
+              }
+
             onOperatorInput(userInput)
 
         } else if (userInput === "=") {
 
             let updatedInput = secondCalculatorInput
+            const hasNegative = currentInput[0] === "-"
+            if(hasNegative){
+                updatedInput = currentInput.replace("-", "")
+            }
+
             if(currentCalculationContainTrigInput && isCurrentTrigCalculationValid){
                 updatedInput = solveTrigCalculation(currentInput)
             }
@@ -593,6 +610,11 @@ export const CalculationsManager = ({
             if(isExpontialCalculation){
                 updatedInput = solveExponentialCalculation(currentInput, null)
             }
+
+            if (hasNegative) {
+                userInput = "-" + userInput
+              }
+
             solveEquation("", updatedInput)
 
         } else if (userInput === "√" && !isLastCalculationAnOperator) {
