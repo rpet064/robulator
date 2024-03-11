@@ -3,15 +3,15 @@ import { errorMessage } from "../utility/toastMessages"
 
 export const squareNumber = (calculatorInput: string): string => {
     try{
-        const hasNegative = calculatorInput[0] === "-"
-        if(hasNegative){
+        const isNegative = calculatorInput[0] === "-"
+        if(isNegative){
             calculatorInput = calculatorInput.replace("-", "")
         }
 
         let answer = Math.sqrt(Number(calculatorInput))
         let roundedAnswer = round(answer, 5).toString()
     
-          if (hasNegative) {
+          if (isNegative) {
             roundedAnswer = "-" + roundedAnswer
           }
           return roundedAnswer

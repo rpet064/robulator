@@ -5,8 +5,8 @@ import {solvePiEquation } from "./solvePiEquation"
 
 export const solveTrigCalculation = (inputToSolve: string) => {
 
-    const hasNegative = inputToSolve[0] === "-"
-    if(hasNegative){
+    const isNegative = inputToSolve[0] === "-"
+    if(isNegative){
         inputToSolve = inputToSolve.replace("-", "")
     }
 
@@ -53,7 +53,7 @@ export const solveTrigCalculation = (inputToSolve: string) => {
         let answer = (coefficent * trigValue)
         let roundedAnswer = round(answer, 5).toString()
 
-        if (hasNegative) {
+        if (isNegative) {
             roundedAnswer = "-" + roundedAnswer
           }
 

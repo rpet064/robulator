@@ -74,3 +74,7 @@ export interface WindowSizeProps {
   width: number
   height: number
 }
+
+export interface ExponentDictionary {
+  [key: string]: string
+ }

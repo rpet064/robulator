@@ -4,8 +4,8 @@ import { round } from "mathjs"
 
 export const solveFactorial = (input: string) => {
 
-    const hasNegative = input[0] === "-"
-    if(hasNegative){
+    const isNegative = input[0] === "-"
+    if(isNegative){
         input = input.replace("-", "")
     }
 
@@ -39,7 +39,7 @@ export const solveFactorial = (input: string) => {
         numOfFactorials--
     }
     let roundedOutput = round(inputTotal, 5).toString()
-    if (hasNegative) {
+    if (isNegative) {
         roundedOutput = "-" + roundedOutput
       }
     return roundedOutput
