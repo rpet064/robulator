@@ -3,7 +3,7 @@ import { solveTrigCalculation, manageTrigInput, removeTrigCalculation,
 import { useEffect, useState, Dispatch, SetStateAction } from "react"
 import { numArray, operatorArray, trigSymbolsArray, exponentInputArray, exponentDictionary } from "../utility/symbolsArray"
 import { getAnswer } from "./equationSolver"
-import { squareNumber } from "./numberSquarer"
+import { squareRootNumber } from "./squareRootManager"
 import { removeTrailingZeros } from "../utility/removeTrailingZeros"
 import { errorMessage, notifyMessage } from "../utility/toastMessages"
 import {solvePiEquation } from "./solvePiEquation"
@@ -27,11 +27,9 @@ export const CalculationsManager = ({
     isLastCalculationAnOperator,
     isDecimalUnfinished,
     doesCalculationExceedInput,
-    currentNumberOfInputs,
     setOverwriteNumber,
     overwriteNumber,
     setIsLastCalculationAnOperator,
-    setCurrentNumberOfInputs,
     setDoesCalculationExceedInput,
     setIsDecimalUnfinished,
     prevOperationsArray,
@@ -59,6 +57,10 @@ export const CalculationsManager = ({
         let isFirstEquation = operator.trim() === ""
         setIsFirstCalculatorInput(isFirstEquation)
     }, [operator, firstCalculatorInput])
+
+
+    useEffect(() => {
+    }, [firstCalculatorInput])
 
 
     // Track if first or second equations
@@ -99,7 +101,7 @@ export const CalculationsManager = ({
 
     // Check if current number of inputs exceeds maximum input
     useEffect(() => {
-        setCurrentNumberOfInputs(firstCalculatorInput.length + secondCalculatorInput.length + operator.length)
+        let currentNumberOfInputs = firstCalculatorInput.length + secondCalculatorInput.length + operator.length
         if (currentNumberOfInputs > maximumNumberOfIntegers) {
             setDoesCalculationExceedInput(true)
             return
@@ -159,9 +161,11 @@ export const CalculationsManager = ({
     }
 
     const updatePreviousCalculationArray = (prevInput: string, answer: string)=> {
-        setPrevInput(prevInput)
         let answerString = `${prevInput} = ${answer}`
         prevOperationsArray.push(answerString)
+
+        // Update previous calculations
+        setPrevInput(prevInput)
         setPrevOperationsArray(prevOperationsArray)
         setPreviousCalculations(answerString)
     }
@@ -215,6 +219,11 @@ export const CalculationsManager = ({
         }
         let prevEquationString = updatePrevArray(firstCalcInput, secondInput, operator)
         updatePreviousCalculationArray(prevEquationString, firstCalcInput)
+
+        if(newOperator === "="){
+            clearNumbers("")
+            return
+        }
         clearNumbers(newOperator)
     }
 
@@ -326,13 +335,7 @@ export const CalculationsManager = ({
     // this function will clear the second input and check if user has already
     // inputted operator for new equation
     const clearNumbers = (newOperator: string) => {
-
-        if (newOperator !== "") {
-            setOperator(newOperator)
-        } else {
-            setOperator("")
-        }
-
+        setOperator(newOperator)
         setSecondCalculatorInput("")
     }
 
@@ -414,8 +417,8 @@ export const CalculationsManager = ({
             input = solveTrigCalculation(input)
         }
 
-        const answer = squareNumber(input)
-        const roundedAnswer = removeTrailingZeros(answer)
+        let answer = squareRootNumber(input)
+        let roundedAnswer = removeTrailingZeros(answer)
 
         currentSetInput(roundedAnswer)
         updatePreviousCalculationArray(`√ ${input}`, roundedAnswer)

@@ -11,11 +11,9 @@ export interface calculationsManagerProps {
       isLastCalculationAnOperator: boolean
       isDecimalUnfinished: boolean
       doesCalculationExceedInput: boolean
-      currentNumberOfInputs: number
       overwriteNumber: boolean
       setOverwriteNumber: (value: boolean) => void
       setIsLastCalculationAnOperator: (value: boolean) => void
-      setCurrentNumberOfInputs: (value: number) => void
       setDoesCalculationExceedInput: (value: boolean) => void,
       setIsDecimalUnfinished: (value: boolean) => void,
       prevOperationsArray: string[],

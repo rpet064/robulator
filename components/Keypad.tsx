@@ -23,7 +23,6 @@ const Keypad: FC<KeypadProps> = ({
   const [isLastCalculationAnOperator, setIsLastCalculationAnOperator] = useState<boolean>(false)
   const [isDecimalUnfinished, setIsDecimalUnfinished] = useState<boolean>(false)
   const [doesCalculationExceedInput, setDoesCalculationExceedInput] = useState<boolean>(false)
-  const [currentNumberOfInputs, setCurrentNumberOfInputs] = useState<number>(0)
   const [symbolsArray, setSymbolsArray] = useState<string[]>([])
   const [buttonStyle, setButtonStyle] = useState<string>(styles.calcBtn)
   const [keypadContainerStyle, setKeypadContainerStyle] = useState<string>(styles.compactCalculatorKeypad)
@@ -45,8 +44,6 @@ const Keypad: FC<KeypadProps> = ({
     setIsDecimalUnfinished: setIsDecimalUnfinished,
     doesCalculationExceedInput: doesCalculationExceedInput,
     setDoesCalculationExceedInput: setDoesCalculationExceedInput,
-    currentNumberOfInputs: currentNumberOfInputs,
-    setCurrentNumberOfInputs: setCurrentNumberOfInputs,
     prevOperationsArray: prevOperationsArray,
     setPrevOperationsArray: setPrevOperationsArray,
     setEqualityMessage: setEqualityMessage
