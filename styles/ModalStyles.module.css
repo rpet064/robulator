@@ -38,7 +38,7 @@
 }
 
 .modalFooter{
-    height: 8%;
+    height: 8.5%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -92,5 +92,11 @@
   @media (max-width: 575px){
     .modalBody p, .modalBody h3, .modalBody h4, .modalBody li {
       scale: 0.85;
+    }
+  }
+
+  @media (max-width: 575px){
+    .moddalFooter {
+      height: 10.25%;
     }
   }

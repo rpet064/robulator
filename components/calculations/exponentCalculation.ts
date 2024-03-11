@@ -21,7 +21,7 @@ export const solveExponentialCalculation = (input: string, exponentToCalculate: 
         // handle simple exponents
         } else {
             base = parseFloat(input);
-            exponentAsString = findKeyByValue(exponentToCalculate[1]);
+            exponentAsString = findKeyByValue(exponentToCalculate);
         }
 
         exponent = parseFloat(exponentAsString);

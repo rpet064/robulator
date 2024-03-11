@@ -82,11 +82,11 @@ export const CalculationsManager = ({
 
 
     useEffect(() => {
-        let overwriteNumber = firstCalculatorInputHasAnswer 
-        || firstCalculatorInput[0] === "0" && firstCalculatorInput.length < 2
-        || firstCalculatorInput[0] === "-" && firstCalculatorInput[1] === "0"
+        let overwriteNumber = firstCalculatorInputHasAnswer
+        || firstCalculatorInput[0] === "0" && operator === "" && firstCalculatorInput.length < 2
+        || firstCalculatorInput[0] === "-" && firstCalculatorInput[1] === "0" && firstCalculatorInput.length < 3
         setOverwriteNumber(overwriteNumber)
-    }, [firstCalculatorInputHasAnswer, firstCalculatorInput, secondCalculatorInput])
+    }, [firstCalculatorInputHasAnswer, firstCalculatorInput, operator])
 
 
     // this function checks if the last input was an operator
@@ -148,7 +148,6 @@ export const CalculationsManager = ({
     const calculationCanAddExponent = (): boolean => {
         return currentInput.length > 0 && !isDecimalUnfinished 
         && !isLastCalculationAnOperator || firstCalculatorInputHasAnswer
-        
     }
 
     const clearTrigInputs = () => {
@@ -219,6 +218,12 @@ export const CalculationsManager = ({
         clearNumbers(newOperator)
     }
 
+    const completeCalculationForFirstInput = (firstInput: string, answer: string): void => {
+        updatePreviousCalculationArray(firstInput, answer)
+        setFirstCalculatorInput(answer)
+        setFirstCalculatorInputHasAnswer(true)
+    }
+
     const exponentManager = (userInput: string) => {
         let currentSetInput = getCurrentSetInput()
 
@@ -243,7 +248,13 @@ export const CalculationsManager = ({
         }
 
         // solve for current input and set answer as new input
-        let newCurrentInput = solveExponentialCalculation(updatedCurrentInput, userInput, positionOfExponent)
+        let newCurrentInput = solveExponentialCalculation(updatedCurrentInput, userInput[1], positionOfExponent)
+
+        if(isFirstCalculatorInput){
+            let firstInput = `${firstCalculatorInput}${userInput[1]}`
+            completeCalculationForFirstInput(firstInput, newCurrentInput)
+            return
+        }
         currentSetInput(newCurrentInput)
     }
 
@@ -262,11 +273,8 @@ export const CalculationsManager = ({
 
         if(isFirstCalculatorInput){
             let firstInput = updatedCurrentInput + "!"
-            let solvedFactorial = solveFactorial(firstInput)
-
-            updatePreviousCalculationArray(firstInput, solvedFactorial)
-            setFirstCalculatorInput(solvedFactorial)
-            setFirstCalculatorInputHasAnswer(true)
+            let answer = solveFactorial(firstInput)
+            completeCalculationForFirstInput(firstInput, answer)
             return
         }
         let secondInput = updatedCurrentInput + "!"
@@ -371,7 +379,7 @@ export const CalculationsManager = ({
         let currentSetInput = getCurrentSetInput()
 
         // put number inside first trig brackets
-        if(inputNumberInsideBrackets){
+        if(inputNumberInsideBrackets && positionOfExponent === null){
             let newInput = manageTrigInput(userInput, currentInput)
             currentSetInput(newInput)
             setIsCurrentTrigCalculationValid(true)
@@ -379,7 +387,7 @@ export const CalculationsManager = ({
         }
 
         // Overwrite is decimal added to answer
-        if (overwriteNumber && userInput === ".") {
+        if (overwriteNumber && userInput === "." && firstCalculatorInputHasAnswer) {
             setFirstCalculatorInput("0")
             setFirstCalculatorInputHasAnswer(false)
 
@@ -396,10 +404,14 @@ export const CalculationsManager = ({
         let input = currentInput
         let currentSetInput = getCurrentSetInput()
 
-        if (currentInput.length < 1) {
+        if (input.length < 1) {
             currentSetInput("0")
             updatePreviousCalculationArray(`√ ${0}`, "0")
             return
+        }
+
+        if(isCurrentTrigCalculationValid && currentCalculationContainTrigInput){
+            input = solveTrigCalculation(input)
         }
 
         const answer = squareNumber(input)
