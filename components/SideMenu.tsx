@@ -1,10 +1,10 @@
-import { useState, FC } from "react"
-import sideMenuStyles from '../styles/SideMenu.module.css'
-import { TbAdjustmentsCog, TbMoonFilled, TbSunHigh, TbSettingsOff, TbSettings, TbHistoryOff } from "react-icons/tb"
-import AboutMenu from "./AboutMenu"
-import colours from '../styles/Colours.module.css'
-import { clearLocalStorage } from "./utility/localStorageManager"
-import { SideMenuProps } from './utility/interfacePropsManager'
+import { useState, FC } from "react";
+import sideMenuStyles from '../styles/SideMenu.module.css';
+import { TbAdjustmentsCog, TbMoonFilled, TbSunHigh, TbSettingsOff, TbSettings, TbHistoryOff } from "react-icons/tb";
+import AboutMenu from "./AboutMenu";
+import colours from '../styles/Colours.module.css';
+import { clearLocalStorage } from "./utility/localStorageManager";
+import { SideMenuProps } from './utility/interfacePropsManager';
 
 const SideMenu: FC<SideMenuProps> = ({
     ScientificSymbolsArray,
@@ -14,32 +14,32 @@ const SideMenu: FC<SideMenuProps> = ({
     setPrevOperationsArray
 }) => {
 
-    const [sideMenuIsOpen, setSideMenuIsOpen] = useState<boolean>(false)
+    const [sideMenuIsOpen, setSideMenuIsOpen] = useState<boolean>(false);
 
     const toggleMenu = () => {
-        setSideMenuIsOpen(!sideMenuIsOpen)
-    }
+        setSideMenuIsOpen(!sideMenuIsOpen);
+    };
 
     const toggleTheme = (currentTheme: string) => {
-        setTheme(currentTheme)
-    }
+        setTheme(currentTheme);
+    };
 
     const getStyleForButton = (theme: string) => {
-        return theme === "light" ? colours.darkButton : colours.lightButton
-    }
+        return theme === "light" ? colours.darkButton : colours.lightButton;
+    };
 
     const getStyleForIcon = (theme: string) => {
-        return theme === "light" ? colours.lightIcon : colours.darkIcon
-    }
+        return theme === "light" ? colours.lightIcon : colours.darkIcon;
+    };
 
     const toggleCalculationsMode = () => {
-        setScientificSymbolsArray(!ScientificSymbolsArray)
-    }
+        setScientificSymbolsArray(!ScientificSymbolsArray);
+    };
 
     const clearHistory = () => {
-        setPrevOperationsArray([])
-        clearLocalStorage()
-    }
+        setPrevOperationsArray([]);
+        clearLocalStorage();
+    };
 
     return (
         <div>
@@ -71,4 +71,4 @@ const SideMenu: FC<SideMenuProps> = ({
     )
 }
 
-export default SideMenu
+export default SideMenu;

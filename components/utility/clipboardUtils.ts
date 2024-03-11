@@ -1,17 +1,17 @@
-import { successMessage } from "./toastMessages"
+import { successMessage } from "./toastMessages";
 
 const copyToClipboard = (text: string) => {
-  navigator.clipboard.writeText(text)
-  successMessage("Copied to clipboard")
-}
+  navigator.clipboard.writeText(text);
+  successMessage("Copied to clipboard");
+};
 
 export const copyPreviousCalculationToClipboard = (prevInput:string) => {
-  copyToClipboard(prevInput)
-}
+  copyToClipboard(prevInput);
+};
 
 export const copyCurrentCalculationToClipboard = 
 (firstInput: string, operator: string, secondInput: string) => {
 
-  let textToCopy = firstInput + operator + secondInput
-  copyToClipboard(textToCopy)
-}
+  let textToCopy = firstInput + operator + secondInput;
+  copyToClipboard(textToCopy);
+};

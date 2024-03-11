@@ -1,6 +1,6 @@
-import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi'
-import modalStyles from '../styles/ModalStyles.module.css'
-import colours from '../styles/Colours.module.css'
+import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
+import modalStyles from '../styles/ModalStyles.module.css';
+import colours from '../styles/Colours.module.css';
 
 const ModalFooter = () => {
     return (
@@ -18,4 +18,4 @@ const ModalFooter = () => {
     )
 }
 
-export default ModalFooter
+export default ModalFooter;

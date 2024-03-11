@@ -1,16 +1,16 @@
-import { TbHistory } from "react-icons/tb"
-import colours from '../styles/Colours.module.css'
-import { useState, FC } from 'react'
-import HistoryMenuModal from './HistoryMenuModal'
-import sideMenuStyles from '../styles/SideMenu.module.css'
-import { HistorySideMenuProps } from './utility/interfacePropsManager'
+import { TbHistory } from "react-icons/tb";
+import colours from '../styles/Colours.module.css';
+import { useState, FC } from 'react';
+import HistoryMenuModal from './HistoryMenuModal';
+import sideMenuStyles from '../styles/SideMenu.module.css';
+import { HistorySideMenuProps } from './utility/interfacePropsManager';
 
 const HistorySideMenu: FC<HistorySideMenuProps> = ({ theme, prevOperationsArray }) => {
 
-    const [isSideMenuOpen, setIsSideMenuOpen] = useState<boolean>(false)
+    const [isSideMenuOpen, setIsSideMenuOpen] = useState<boolean>(false);
     const toggleMenu = () => {
-        setIsSideMenuOpen(!isSideMenuOpen)
-    }
+        setIsSideMenuOpen(!isSideMenuOpen);
+    };
 
     return (
         <div>
@@ -27,4 +27,4 @@ const HistorySideMenu: FC<HistorySideMenuProps> = ({ theme, prevOperationsArray 
     )
 }
 
-export default HistorySideMenu
+export default HistorySideMenu;

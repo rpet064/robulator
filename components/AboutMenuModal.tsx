@@ -1,48 +1,48 @@
-import { FC, useEffect, useState } from 'react'
-import Modal from 'react-modal'
-import modalStyles from '../styles/ModalStyles.module.css'
-import useWindowSize from './utility/windowSize'
-import colours from '../styles/Colours.module.css'
-import ModalFooter from './ModalFooter'
-import { AboutMenuModalProps } from './utility/interfacePropsManager'
+import { FC, useEffect, useState } from 'react';
+import Modal from 'react-modal';
+import modalStyles from '../styles/ModalStyles.module.css';
+import useWindowSize from './utility/windowSize';
+import colours from '../styles/Colours.module.css';
+import ModalFooter from './ModalFooter';
+import { AboutMenuModalProps } from './utility/interfacePropsManager';
 
-Modal.setAppElement('#__next')
+Modal.setAppElement('#__next');
 
 const AboutMenuModal: FC<AboutMenuModalProps> = ({
-  aboutMenuIsOpen,
-  setAboutMenuIsOpen
+ aboutMenuIsOpen,
+ setAboutMenuIsOpen
 }) => {
 
-  const { width } = useWindowSize()
-  const [modalWidth, setModalWidth] = useState<string>('47.5%')
-  const [modalHeight, setModalHeight] = useState<string>('85%')
-  const [modalInset, setModalInset] = useState<string>('40px')
+ const { width } = useWindowSize();
+ const [modalWidth, setModalWidth] = useState<string>('47.5%');
+ const [modalHeight, setModalHeight] = useState<string>('85%');
+ const [modalInset, setModalInset] = useState<string>('40px');
 
-  useEffect(() => {
+ useEffect(() => {
     if (width <= 1200) {
-      setModalWidth('85%')
+      setModalWidth('85%');
     } else {
-      setModalWidth('50%')
+      setModalWidth('50%');
     }
-  }, [width])
+ }, [width]);
 
-  useEffect(() => {
+ useEffect(() => {
     if (width <= 768) {
-      setModalHeight('97.5%')
+      setModalHeight('97.5%');
     } else {
-      setModalHeight('85%')
+      setModalHeight('85%');
     }
-  }, [width])
+ }, [width]);
 
-  useEffect(() => {
+ useEffect(() => {
     if (width <= 568) {
-      setModalInset('1px')
+      setModalInset('1px');
     } else {
-      setModalInset('40px')
+      setModalInset('40px');
     }
-  }, [width])
+ }, [width]);
 
-  return (
+ return (
     <div>
       <Modal
         isOpen={aboutMenuIsOpen}
@@ -63,7 +63,7 @@ const AboutMenuModal: FC<AboutMenuModalProps> = ({
         </div>
 
         <div className={modalStyles.modalBody}>
-          <h4>"Struggling with complex equations? Our advanced calculator is here to save the day!</h4>
+          <h4>"Struggling with complex equations? Our advanced calculator is here to save the day!"</h4>
           <p>With its powerful features and user-friendly interface, designed for students, professionals and everyone in-between
             you can tackle any mathematical challenge with ease.
           </p>
@@ -89,7 +89,7 @@ const AboutMenuModal: FC<AboutMenuModalProps> = ({
         <ModalFooter />
       </Modal>
     </div>
-  )
-}
+ );
+};
 
-export default AboutMenuModal
+export default AboutMenuModal;

@@ -1,12 +1,12 @@
-import { FC, useEffect, useState } from 'react'
-import Modal from 'react-modal'
-import modalStyles from '../styles/ModalStyles.module.css'
-import useWindowSize from './utility/windowSize'
-import colours from '../styles/Colours.module.css'
-import ModalFooter from './ModalFooter'
-import { HistoryMenuProps } from './utility/interfacePropsManager'
+import { FC, useEffect, useState } from 'react';
+import Modal from 'react-modal';
+import modalStyles from '../styles/ModalStyles.module.css';
+import useWindowSize from './utility/windowSize';
+import colours from '../styles/Colours.module.css';
+import ModalFooter from './ModalFooter';
+import { HistoryMenuProps } from './utility/interfacePropsManager';
 
-Modal.setAppElement('#__next')
+Modal.setAppElement('#__next');
 
 const HistoryMenuModal: FC<HistoryMenuProps> = ({
     isSideMenuOpen,
@@ -14,34 +14,34 @@ const HistoryMenuModal: FC<HistoryMenuProps> = ({
     prevOperationsArray
 }) => {
 
-    const { width } = useWindowSize()
-    const [modalWidth, setModalWidth] = useState<string>('47.5%')
-    const [modalHeight, setModalHeight] = useState<string>('85%')
-    const [modalInset, setModalInset] = useState<string>('40px')
+    const { width } = useWindowSize();
+    const [modalWidth, setModalWidth] = useState<string>('47.5%');
+    const [modalHeight, setModalHeight] = useState<string>('85%');
+    const [modalInset, setModalInset] = useState<string>('40px');
 
     useEffect(() => {
         if (width <= 1200) {
-            setModalWidth('85%')
+            setModalWidth('85%');
         } else {
-            setModalWidth('50%')
+            setModalWidth('50%');
         }
-    }, [width])
+    }, [width]);
 
     useEffect(() => {
         if (width <= 768) {
-            setModalHeight('97.5%')
+            setModalHeight('97.5%');
         } else {
-            setModalHeight('85%')
+            setModalHeight('85%');
         }
-    }, [width])
+    }, [width]);
 
     useEffect(() => {
         if (width <= 568) {
-            setModalInset('1px')
+            setModalInset('1px');
         } else {
-            setModalInset('40px')
+            setModalInset('40px');
         }
-    }, [width])
+    }, [width]);
 
     return (
         <div>
@@ -60,7 +60,8 @@ const HistoryMenuModal: FC<HistoryMenuProps> = ({
             >
                 <div className={` ${modalStyles.modalHeader} ${colours.blueBackground} ${colours.lightText}`}>
                     <p>History</p>
-                    <button className={`${modalStyles.closeModalButton} ${colours.lightText}`} onClick={() => setIsSideMenuOpen(false)}>X</button>
+                    <button className={`${modalStyles.closeModalButton} ${colours.lightText}`} 
+                    onClick={() => setIsSideMenuOpen(false)}>X</button>
                 </div>
 
                 <div className={modalStyles.modalBody}>
@@ -81,4 +82,4 @@ const HistoryMenuModal: FC<HistoryMenuProps> = ({
     )
 }
 
-export default HistoryMenuModal
+export default HistoryMenuModal;

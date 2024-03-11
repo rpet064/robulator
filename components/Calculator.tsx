@@ -1,52 +1,51 @@
-import styles from '../styles/Home.module.css'
-import SideMenu from './SideMenu'
-import { Toaster } from 'react-hot-toast'
-import { copyPreviousCalculationToClipboard, copyCurrentCalculationToClipboard } from './utility/clipboardUtils'
-import Keypad from './Keypad'
-import { useState, useRef, FC, useEffect } from 'react'
-import colours from '../styles/Colours.module.css'
-import HistorySideMenu from './HistorySideMenu'
-import { getPreviousCalculations } from './utility/localStorageManager'
-import { CalculatorProps } from './utility/interfacePropsManager'
+import styles from '../styles/Home.module.css';
+import SideMenu from './SideMenu';
+import { Toaster } from 'react-hot-toast';
+import { copyPreviousCalculationToClipboard, copyCurrentCalculationToClipboard } from './utility/clipboardUtils';
+import Keypad from './Keypad';
+import { useState, useRef, FC, useEffect } from 'react';
+import colours from '../styles/Colours.module.css';
+import HistorySideMenu from './HistorySideMenu';
+import { getPreviousCalculations } from './utility/localStorageManager';
+import { CalculatorProps } from './utility/interfacePropsManager';
 
 const Calculator: FC<CalculatorProps> = ({
-  theme,
-  setTheme
+ theme,
+ setTheme
 }) => {
 
-  const [firstCalculatorInput, setFirstCalculatorInput] = useState<string>("")
-  const [secondCalculatorInput, setSecondCalculatorInput] = useState<string>("")
-  const [prevInput, setPrevInput] = useState<string>("")
-  const [operator, setOperator] = useState<string>("")
-  const [isScientificSymbolsArray, setScientificSymbolsArray] = useState<boolean>(true)
-  const [prevOperationsArray, setPrevOperationsArray] = useState<string[]>([])
-  const [equalityMessage, setEqualityMessage] = useState<string>("")
+ const [firstCalculatorInput, setFirstCalculatorInput] = useState<string>("");
+ const [secondCalculatorInput, setSecondCalculatorInput] = useState<string>("");
+ const [prevInput, setPrevInput] = useState<string>("");
+ const [operator, setOperator] = useState<string>("");
+ const [isScientificSymbolsArray, setScientificSymbolsArray] = useState<boolean>(true);
+ const [prevOperationsArray, setPrevOperationsArray] = useState<string[]>([]);
+ const [equalityMessage, setEqualityMessage] = useState<string>("");
 
-  const calculatorRef = useRef(null)
-  const textInputRef = useRef(null)
+ const calculatorRef = useRef(null);
+ const textInputRef = useRef(null);
 
-  const getPreviousOperationsOnload = (callback: any) => {
+ const getPreviousOperationsOnload = (callback: any) => {
     useEffect(() => {
-      callback()
-    }, [])
-  }
+      callback();
+    }, []);
+ };
 
-  getPreviousOperationsOnload(() => {
-    let prevCalculationsInStorage = getPreviousCalculations()
+ getPreviousOperationsOnload(() => {
+    let prevCalculationsInStorage = getPreviousCalculations();
     if (prevCalculationsInStorage) {
-      setPrevOperationsArray(prevCalculationsInStorage)
+      setPrevOperationsArray(prevCalculationsInStorage);
     }
-  })
+ });
 
-  // Reset setEqualityMessage when user inputs a number
-  useEffect(() => {
+ // Reset setEqualityMessage when user inputs a number
+ useEffect(() => {
     if(firstCalculatorInput.length > 0){
-      setEqualityMessage("")
+      setEqualityMessage("");
     }
-  }, [firstCalculatorInput])
+ }, [firstCalculatorInput]);
 
-  return (
-
+ return (
     // Calculator Screen
     <div className={`${styles.calculator} ${theme === 'light' ? colours.lightText : colours.darkText}`} ref={calculatorRef}>
       <Toaster />
@@ -95,7 +94,7 @@ const Calculator: FC<CalculatorProps> = ({
         setEqualityMessage={setEqualityMessage}
       />
     </div>
-  )
-}
+ );
+};
 
-export default Calculator
+export default Calculator;

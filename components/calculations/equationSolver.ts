@@ -1,18 +1,17 @@
 export const getAnswer = (firstNumber: number, operator: string, secondNumber:number) => {
-    let answer = 0
+    let answer = 0;
 
     if (operator === "+"){
-        answer = firstNumber + secondNumber
+        answer = firstNumber + secondNumber;
 
     } else if (operator === "-"){
-        answer = firstNumber - secondNumber
+        answer = firstNumber - secondNumber;
 
     } else if (operator === "÷"){
-        answer = firstNumber / secondNumber
+        answer = firstNumber / secondNumber;
 
     } else if (operator === "×"){
-        answer = firstNumber * secondNumber
+        answer = firstNumber * secondNumber;
     }
-
-    return answer.toFixed(5).toString()
-}
+    return answer.toFixed(5).toString();
+};

@@ -1,15 +1,15 @@
-import { useState, FC } from "react"
-import { FiHelpCircle } from 'react-icons/fi'
-import AboutMenuModal from "./AboutMenuModal"
-import colours from '../styles/Colours.module.css'
-import { AboutMenuProps } from './utility/interfacePropsManager'
+import { useState, FC } from "react";
+import { FiHelpCircle } from 'react-icons/fi';
+import AboutMenuModal from "./AboutMenuModal";
+import colours from '../styles/Colours.module.css';
+import { AboutMenuProps } from './utility/interfacePropsManager';
 
 const AboutMenu: FC<AboutMenuProps> = ({ theme }) => {
 
-    const [aboutMenuIsOpen, setAboutMenuIsOpen] = useState<boolean>(false)
+    const [aboutMenuIsOpen, setAboutMenuIsOpen] = useState<boolean>(false);
     const toggleMenu = () => {
-        setAboutMenuIsOpen(!aboutMenuIsOpen)
-    }
+        setAboutMenuIsOpen(!aboutMenuIsOpen);
+    };
 
     return (
         <div>
@@ -22,4 +22,4 @@ const AboutMenu: FC<AboutMenuProps> = ({ theme }) => {
     )
 }
 
-export default AboutMenu
+export default AboutMenu;

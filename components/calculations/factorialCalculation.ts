@@ -1,46 +1,46 @@
-import { notifyMessage } from "../utility/toastMessages"
-import { countSubstringOccurrences } from "../utility/substringOccurences"
-import { round } from "mathjs"
+import { notifyMessage } from "../utility/toastMessages";
+import { countSubstringOccurrences } from "../utility/substringOccurences";
+import { round } from "mathjs";
 
 export const solveFactorial = (input: string) => {
 
-    const isNegative = input[0] === "-"
+    const isNegative = input[0] === "-";
     if(isNegative){
-        input = input.replace("-", "")
+        input = input.replace("-", "");
     }
 
     // Split input by factorial, then get first number
-    let operand = 0
+    let operand = 0;
     try{
-        operand = parseFloat(input.split("!")[0])
+        operand = parseFloat(input.split("!")[0]);
     } catch (e) {
-        notifyMessage(`Cannot solve factorial calculation ${e}`)
-        return input.toString()
+        notifyMessage(`Cannot solve factorial calculation ${e}`);
+        return input.toString();
     }
 
     // get number of times need to calculate factorial
-    let numOfFactorials = countSubstringOccurrences(input, "!")
+    let numOfFactorials = countSubstringOccurrences(input, "!");
     if(numOfFactorials < 1){
-        return operand.toString()
+        return operand.toString();
     }
 
-    let inputTotal = operand, numOfIterations = operand
+    let inputTotal = operand, numOfIterations = operand;
 
     // Number of factorials
     while (numOfFactorials > 0) {
 
-        numOfIterations = inputTotal
+        numOfIterations = inputTotal;
 
         // factorial starts from highest nunber and multiplies down
         while (numOfIterations > 1){
-            numOfIterations--
-            inputTotal *= numOfIterations
+            numOfIterations--;
+            inputTotal *= numOfIterations;
         }
-        numOfFactorials--
+        numOfFactorials--;
     }
-    let roundedOutput = round(inputTotal, 5).toString()
+    let roundedOutput = round(inputTotal, 5).toString();
     if (isNegative) {
-        roundedOutput = "-" + roundedOutput
+        roundedOutput = "-" + roundedOutput;
       }
-    return roundedOutput
-}
+    return roundedOutput;
+};

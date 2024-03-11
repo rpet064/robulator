@@ -1,20 +1,22 @@
-import { solveTrigCalculation, manageTrigInput, removeTrigCalculation, 
-    checkContainsTrigSymbol } from "./trigonometryCalculations"
-import { useEffect, useState, Dispatch, SetStateAction } from "react"
-import { numArray, operatorArray, trigSymbolsArray, exponentInputArray, exponentDictionary } from "../utility/symbolsArray"
-import { getAnswer } from "./equationSolver"
-import { squareRootNumber } from "./squareRootManager"
-import { removeTrailingZeros } from "../utility/removeTrailingZeros"
-import { errorMessage, notifyMessage } from "../utility/toastMessages"
-import {solvePiEquation } from "./solvePiEquation"
-import { removeLastInputFromString } from "../utility/removeLastInputFromString"
-import { solveInequalityCalculation } from "../calculations/solveInequalityCalculation"
-import { changeSignArray } from "../utility/changeSignArray"
-import { solveFactorial } from "../calculations/factorialCalculation"
-import { updatePrevArray } from "../utility/updatePrevArray"
-import { setPreviousCalculations } from "../utility/localStorageManager"
-import { solveExponentialCalculation} from "./exponentCalculation"
-import { calculationsManagerProps } from "../utility/interfacePropsManager"
+import {
+    solveTrigCalculation, manageTrigInput, removeTrigCalculation,
+    checkContainsTrigSymbol
+} from "./trigonometryCalculations";
+import { useEffect, useState, Dispatch, SetStateAction } from "react";
+import { numArray, operatorArray, trigSymbolsArray, exponentInputArray, exponentDictionary } from "../utility/symbolsArray";
+import { getAnswer } from "./equationSolver";
+import { squareRootNumber } from "./squareRootManager";
+import { removeTrailingZeros } from "../utility/removeTrailingZeros";
+import { errorMessage, notifyMessage } from "../utility/toastMessages";
+import { solvePiEquation } from "./solvePiEquation";
+import { removeLastInputFromString } from "../utility/removeLastInputFromString";
+import { solveInequalityCalculation } from "../calculations/solveInequalityCalculation";
+import { changeSignArray } from "../utility/changeSignArray";
+import { solveFactorial } from "../calculations/factorialCalculation";
+import { updatePrevArray } from "../utility/updatePrevArray";
+import { setPreviousCalculations } from "../utility/localStorageManager";
+import { solveExponentialCalculation } from "./exponentCalculation";
+import { calculationsManagerProps } from "../utility/interfacePropsManager";
 
 export const CalculationsManager = ({
     firstCalculatorInput,
@@ -37,190 +39,178 @@ export const CalculationsManager = ({
     setEqualityMessage
 }: calculationsManagerProps) => {
 
-
-    const maximumNumberOfIntegers = 15
-    const [isFirstCalculatorInput, setIsFirstCalculatorInput] = useState<boolean>(true)
-    const [firstCalculatorInputHasAnswer, setFirstCalculatorInputHasAnswer] = useState<boolean>(false)
-    const [firstCalculationTrigSymbol, setFirstCalculationTrigSymbol] = useState<string>("")
-    const [secondCalculationTrigSymbol, setSecondCalculationTrigSymbol] = useState<string>("")
-    const [doesFirstCalculationContainTrig, setDoesFirstCalculationContainTrig] = useState<boolean>(false)
-    const [doesSecondCalculationContainTrig, setDoesSecondCalculationContainTrig] = useState<boolean>(false)
-    const [currentCalculationContainTrigInput, setCurrentCalculationContainTrigInput] = useState(false)
-    const [isOperatorInequalityCheck, setIsOperatorInequalityCheck] = useState<boolean>(false)
-    const [inputNumberInsideBrackets, setInputNumberInsideBrackets] = useState<boolean>(false)
-    const [currentInput, setCurrentInput] = useState<string>(firstCalculatorInput)
-    const [positionOfExponent, setPositionOfExponent] = useState<number | null>(null)
-    const [isCurrentTrigCalculationValid, setIsCurrentTrigCalculationValid] = useState<boolean>(true)
+    const maximumNumberOfIntegers = 15;
+    const [isFirstCalculatorInput, setIsFirstCalculatorInput] = useState<boolean>(true);
+    const [firstCalculatorInputHasAnswer, setFirstCalculatorInputHasAnswer] = useState<boolean>(false);
+    const [firstCalculationTrigSymbol, setFirstCalculationTrigSymbol] = useState<string>("");
+    const [secondCalculationTrigSymbol, setSecondCalculationTrigSymbol] = useState<string>("");
+    const [doesFirstCalculationContainTrig, setDoesFirstCalculationContainTrig] = useState<boolean>(false);
+    const [doesSecondCalculationContainTrig, setDoesSecondCalculationContainTrig] = useState<boolean>(false);
+    const [currentCalculationContainTrigInput, setCurrentCalculationContainTrigInput] = useState(false);
+    const [isOperatorInequalityCheck, setIsOperatorInequalityCheck] = useState<boolean>(false);
+    const [inputNumberInsideBrackets, setInputNumberInsideBrackets] = useState<boolean>(false);
+    const [currentInput, setCurrentInput] = useState<string>(firstCalculatorInput);
+    const [positionOfExponent, setPositionOfExponent] = useState<number | null>(null);
+    const [isCurrentTrigCalculationValid, setIsCurrentTrigCalculationValid] = useState<boolean>(true);
 
     // if operator is empty or contains first answer, then still on first equation
     useEffect(() => {
-        let isFirstEquation = operator.trim() === ""
-        setIsFirstCalculatorInput(isFirstEquation)
-    }, [operator, firstCalculatorInput])
+        let isFirstEquation = operator.trim() === "";
+        setIsFirstCalculatorInput(isFirstEquation);
+    }, [operator, firstCalculatorInput]);
 
-
-    useEffect(() => {
-    }, [firstCalculatorInput])
-
+    useEffect(() => { }, [firstCalculatorInput]);
 
     // Track if first or second equations
     useEffect(() => {
-        isFirstCalculatorInput ? setCurrentInput(firstCalculatorInput) : setCurrentInput(secondCalculatorInput)
-    }, [firstCalculatorInput, secondCalculatorInput, isLastCalculationAnOperator])
-
+        isFirstCalculatorInput ? setCurrentInput(firstCalculatorInput) : setCurrentInput(secondCalculatorInput);
+    }, [firstCalculatorInput, secondCalculatorInput, isLastCalculationAnOperator]);
 
     useEffect(() => {
         let inputNumberInsideBrackets = doesFirstCalculationContainTrig && isFirstCalculatorInput
-        || doesSecondCalculationContainTrig && !isFirstCalculatorInput
-        setInputNumberInsideBrackets(inputNumberInsideBrackets)
-    })
-
+            || doesSecondCalculationContainTrig && !isFirstCalculatorInput;
+        setInputNumberInsideBrackets(inputNumberInsideBrackets);
+    }, []);
 
     useEffect(() => {
         const currentCalculationContainTrig = doesFirstCalculationContainTrig && isFirstCalculatorInput
-            || doesSecondCalculationContainTrig && !isFirstCalculatorInput
-        setCurrentCalculationContainTrigInput(currentCalculationContainTrig)
-    }, [firstCalculatorInput, secondCalculatorInput])
-
+            || doesSecondCalculationContainTrig && !isFirstCalculatorInput;
+        setCurrentCalculationContainTrigInput(currentCalculationContainTrig);
+    }, [firstCalculatorInput, secondCalculatorInput]);
 
     useEffect(() => {
         let overwriteNumber = firstCalculatorInputHasAnswer
-        || firstCalculatorInput[0] === "0" && operator === "" && firstCalculatorInput.length < 2
-        || firstCalculatorInput[0] === "-" && firstCalculatorInput[1] === "0" && firstCalculatorInput.length < 3
-        setOverwriteNumber(overwriteNumber)
-    }, [firstCalculatorInputHasAnswer, firstCalculatorInput, operator])
-
+            || firstCalculatorInput[0] === "0" && operator === "" && firstCalculatorInput.length < 2
+            || firstCalculatorInput[0] === "-" && firstCalculatorInput[1] === "0" && firstCalculatorInput.length < 3;
+        setOverwriteNumber(overwriteNumber);
+    }, [firstCalculatorInputHasAnswer, firstCalculatorInput, operator]);
 
     // this function checks if the last input was an operator
     useEffect(() => {
         let lastCalculatorIsOperator = operator !== "" && secondCalculatorInput.length < 1
-        || firstCalculatorInput[0] === "-" && firstCalculatorInput.length < 2
-        setIsLastCalculationAnOperator(lastCalculatorIsOperator)
-    }, [firstCalculatorInput, operator, secondCalculatorInput])
-
+            || firstCalculatorInput[0] === "-" && firstCalculatorInput.length < 2;
+        setIsLastCalculationAnOperator(lastCalculatorIsOperator);
+    }, [firstCalculatorInput, operator, secondCalculatorInput]);
 
     // Check if current number of inputs exceeds maximum input
     useEffect(() => {
-        let currentNumberOfInputs = firstCalculatorInput.length + secondCalculatorInput.length + operator.length
+        let currentNumberOfInputs = firstCalculatorInput.length + secondCalculatorInput.length + operator.length;
         if (currentNumberOfInputs > maximumNumberOfIntegers) {
-            setDoesCalculationExceedInput(true)
-            return
+            setDoesCalculationExceedInput(true);
+            return;
         }
-        setDoesCalculationExceedInput(false)
-    }, [firstCalculatorInput, secondCalculatorInput, operator])
-
+        setDoesCalculationExceedInput(false);
+    }, [firstCalculatorInput, secondCalculatorInput, operator]);
 
     // Check if first input contains trig symbol
     useEffect(() => {
-        if(firstCalculatorInput.length > 0){
-            let containsTrigSymbol = checkContainsTrigSymbol(firstCalculatorInput)
-            setDoesFirstCalculationContainTrig(containsTrigSymbol)
-            return
+        if (firstCalculatorInput.length > 0) {
+            let containsTrigSymbol = checkContainsTrigSymbol(firstCalculatorInput);
+            setDoesFirstCalculationContainTrig(containsTrigSymbol);
+            return;
         }
-        setDoesFirstCalculationContainTrig(false)
-    },[firstCalculatorInput])
-
+        setDoesFirstCalculationContainTrig(false);
+    }, [firstCalculatorInput]);
 
     useEffect(() => {
-        if(secondCalculatorInput.length > 0){
-            let containsTrigSymbol = checkContainsTrigSymbol(secondCalculatorInput)
-            setDoesSecondCalculationContainTrig(containsTrigSymbol)
-            return
+        if (secondCalculatorInput.length > 0) {
+            let containsTrigSymbol = checkContainsTrigSymbol(secondCalculatorInput);
+            setDoesSecondCalculationContainTrig(containsTrigSymbol);
+            return;
         }
-        setDoesSecondCalculationContainTrig(false)
-    },[secondCalculatorInput])
-
+        setDoesSecondCalculationContainTrig(false);
+    }, [secondCalculatorInput]);
 
     const getCurrentTrigSymbol = (): string => {
-        return isFirstCalculatorInput ? firstCalculationTrigSymbol : secondCalculationTrigSymbol
-    }
+        return isFirstCalculatorInput ? firstCalculationTrigSymbol : secondCalculationTrigSymbol;
+    };
 
     const getCurrentSetInput = (): Dispatch<SetStateAction<string>> => {
-        return isFirstCalculatorInput ? setFirstCalculatorInput : setSecondCalculatorInput
-    }
+        return isFirstCalculatorInput ? setFirstCalculatorInput : setSecondCalculatorInput;
+    };
 
     const getCurrentTrigBooleanInput = (): Dispatch<SetStateAction<boolean>> => {
-        return isFirstCalculatorInput ? setDoesFirstCalculationContainTrig : setDoesSecondCalculationContainTrig
-    }
+        return isFirstCalculatorInput ? setDoesFirstCalculationContainTrig : setDoesSecondCalculationContainTrig;
+    };
 
     const getCurrentTrigSetInput = (): Dispatch<SetStateAction<string>> => {
-        return isFirstCalculatorInput ? setFirstCalculationTrigSymbol : setSecondCalculationTrigSymbol
-    }
+        return isFirstCalculatorInput ? setFirstCalculationTrigSymbol : setSecondCalculationTrigSymbol;
+    };
 
     const calculationCanAddExponent = (): boolean => {
-        return currentInput.length > 0 && !isDecimalUnfinished 
-        && !isLastCalculationAnOperator || firstCalculatorInputHasAnswer
-    }
+        return currentInput.length > 0 && !isDecimalUnfinished
+            && !isLastCalculationAnOperator || firstCalculatorInputHasAnswer;
+    };
 
     const clearTrigInputs = () => {
-        let currentTrigBooleanInput = getCurrentTrigBooleanInput()
-        currentTrigBooleanInput(false)
+        let currentTrigBooleanInput = getCurrentTrigBooleanInput();
+        currentTrigBooleanInput(false);
 
-        let curentTrigSetInput = getCurrentTrigSetInput()
-        curentTrigSetInput("")
-    }
+        let curentTrigSetInput = getCurrentTrigSetInput();
+        curentTrigSetInput("");
+    };
 
-    const updatePreviousCalculationArray = (prevInput: string, answer: string)=> {
-        let answerString = `${prevInput} = ${answer}`
-        prevOperationsArray.push(answerString)
+    const updatePreviousCalculationArray = (prevInput: string, answer: string) => {
+        let answerString = `${prevInput} = ${answer}`;
+        prevOperationsArray.push(answerString);
 
         // Update previous calculations
-        setPrevInput(prevInput)
-        setPrevOperationsArray(prevOperationsArray)
-        setPreviousCalculations(answerString)
-    }
+        setPrevInput(prevInput);
+        setPrevOperationsArray(prevOperationsArray);
+        setPreviousCalculations(answerString);
+    };
 
     const solveEquation = async (newOperator: string, secondInput: string) => {
 
         // Check if equation is valid
         if (secondCalculatorInput.length === 0) {
-            return
+            return;
         }
 
-        let firstInput = firstCalculatorInput
+        let firstInput = firstCalculatorInput;
 
         // Solve inequality calculation
-        let firstCalcInput
-        if(isOperatorInequalityCheck){
-            let equalityMessage = solveInequalityCalculation(firstInput, secondInput) ? "Not Equal" : "Equal"
-            setEqualityMessage(equalityMessage)
-            firstCalcInput = firstCalculatorInput
+        let firstCalcInput;
+        if (isOperatorInequalityCheck) {
+            let equalityMessage = solveInequalityCalculation(firstInput, secondInput) ? "Not Equal" : "Equal";
+            setEqualityMessage(equalityMessage);
+            firstCalcInput = firstCalculatorInput;
 
-        // solve non inequality calculation
+            // solve non inequality calculation
         } else {
 
-       // join array of strings into String, then change strings into numbers
-        let firstInputAsFloat , secondInputAsFloat
+            // join array of strings into String, then change strings into numbers
+            let firstInputAsFloat, secondInputAsFloat;
 
-        try{
-            firstInputAsFloat = parseFloat(firstInput)
-            secondInputAsFloat = parseFloat(secondInput)
+            try {
+                firstInputAsFloat = parseFloat(firstInput);
+                secondInputAsFloat = parseFloat(secondInput);
 
-            let answer = getAnswer(firstInputAsFloat, operator, secondInputAsFloat)
-            firstCalcInput = removeTrailingZeros(answer)
+                let answer = getAnswer(firstInputAsFloat, operator, secondInputAsFloat);
+                firstCalcInput = removeTrailingZeros(answer);
 
             } catch {
-                errorMessage("Equations could not be joined")
-                return
+                errorMessage("Equations could not be joined");
+                return;
             }
         }
-        completeCalculations(firstCalcInput, newOperator, secondInput)
-    }
+        completeCalculations(firstCalcInput, newOperator, secondInput);
+    };
 
     const completeCalculations = (firstCalcInput: string, newOperator: string, secondInput: string) => {
 
-        if(isOperatorInequalityCheck){
-            setIsOperatorInequalityCheck(false)
-            setFirstCalculatorInput("")
+        if (isOperatorInequalityCheck) {
+            setIsOperatorInequalityCheck(false);
+            setFirstCalculatorInput("");
         } else {
-            setFirstCalculatorInput(firstCalcInput)
-            setFirstCalculatorInputHasAnswer(true)
-            setIsFirstCalculatorInput(true)
+            setFirstCalculatorInput(firstCalcInput);
+            setFirstCalculatorInputHasAnswer(true);
+            setIsFirstCalculatorInput(true);
         }
         let prevEquationString = updatePrevArray(firstCalcInput, secondInput, operator)
         updatePreviousCalculationArray(prevEquationString, firstCalcInput)
 
-        if(newOperator === "="){
+        if (newOperator === "=") {
             clearNumbers("")
             return
         }
@@ -228,414 +218,412 @@ export const CalculationsManager = ({
     }
 
     const completeCalculationForFirstInput = (firstInput: string, answer: string): void => {
-        updatePreviousCalculationArray(firstInput, answer)
-        setFirstCalculatorInput(answer)
-        setFirstCalculatorInputHasAnswer(true)
-    }
+        updatePreviousCalculationArray(firstInput, answer);
+        setFirstCalculatorInput(answer);
+        setFirstCalculatorInputHasAnswer(true);
+    };
 
     const exponentManager = (userInput: string) => {
-        let currentSetInput = getCurrentSetInput()
+        let currentSetInput = getCurrentSetInput();
 
         // Current input is blank - then return 0
-        let isCurrentInputBlank = currentInput.length < 1
-        if(isCurrentInputBlank){
-            currentSetInput("0")
-            return
+        let isCurrentInputBlank = currentInput.length < 1;
+        if (isCurrentInputBlank) {
+            currentSetInput("0");
+            return;
         }
 
-        if(userInput === "xʸ"){
-            let positonOfCurrentInput = currentInput.length
-            setPositionOfExponent(positonOfCurrentInput)
-            return
+        if (userInput === "xʸ") {
+            let positonOfCurrentInput = currentInput.length;
+            setPositionOfExponent(positonOfCurrentInput);
+            return;
         }
 
         // solve trig equation before solving exponent
-        let updatedCurrentInput = currentInput
-        if(currentCalculationContainTrigInput && isCurrentTrigCalculationValid ){
-            updatedCurrentInput = solveTrigCalculation(currentInput)
-            currentSetInput(updatedCurrentInput)
+        let updatedCurrentInput = currentInput;
+        if (currentCalculationContainTrigInput && isCurrentTrigCalculationValid) {
+            updatedCurrentInput = solveTrigCalculation(currentInput);
+            currentSetInput(updatedCurrentInput);
         }
 
         // solve for current input and set answer as new input
-        let newCurrentInput = solveExponentialCalculation(updatedCurrentInput, userInput[1], positionOfExponent)
+        let newCurrentInput = solveExponentialCalculation(updatedCurrentInput, userInput[1], positionOfExponent);
 
-        if(isFirstCalculatorInput){
-            let firstInput = `${firstCalculatorInput}${userInput[1]}`
-            completeCalculationForFirstInput(firstInput, newCurrentInput)
-            return
+        if (isFirstCalculatorInput) {
+            let firstInput = `${firstCalculatorInput}${userInput[1]}`;
+            completeCalculationForFirstInput(firstInput, newCurrentInput);
+            return;
         }
-        currentSetInput(newCurrentInput)
-    }
+        currentSetInput(newCurrentInput);
+    };
 
     const solveFactorialEquation = () => {
-        let currentSetInput = getCurrentSetInput()
-        let updatedCurrentInput = currentInput
+        let currentSetInput = getCurrentSetInput();
+        let updatedCurrentInput = currentInput;
 
-        if(!calculationCanAddExponent()){
-            return
+        if (!calculationCanAddExponent()) {
+            return;
         }
 
-        if(currentCalculationContainTrigInput && isCurrentTrigCalculationValid ){
-            updatedCurrentInput = solveTrigCalculation(currentInput)
-            currentSetInput(updatedCurrentInput)
+        if (currentCalculationContainTrigInput && isCurrentTrigCalculationValid) {
+            updatedCurrentInput = solveTrigCalculation(currentInput);
+            currentSetInput(updatedCurrentInput);
         }
 
-        if(isFirstCalculatorInput){
-            let firstInput = updatedCurrentInput + "!"
-            let answer = solveFactorial(firstInput)
-            completeCalculationForFirstInput(firstInput, answer)
-            return
+        if (isFirstCalculatorInput) {
+            let firstInput = updatedCurrentInput + "!";
+            let answer = solveFactorial(firstInput);
+            completeCalculationForFirstInput(firstInput, answer);
+            return;
         }
-        let secondInput = updatedCurrentInput + "!"
-        secondInput = solveFactorial(secondInput)
-        solveEquation("", secondInput)
-    }
+        let secondInput = updatedCurrentInput + "!";
+        secondInput = solveFactorial(secondInput);
+        solveEquation("", secondInput);
+    };
 
     const solveEquationContainingPi = () => {
 
-        if(currentCalculationContainTrigInput){
-            onInputNumber("𝝅")
-            return
+        if (currentCalculationContainTrigInput) {
+            onInputNumber("𝝅");
+            return;
         }
 
-        if(isFirstCalculatorInput){
-            let firstInput = firstCalculatorInput + "𝝅"
-            let answer = solvePiEquation(firstInput)
+        if (isFirstCalculatorInput) {
+            let firstInput = firstCalculatorInput + "𝝅";
+            let answer = solvePiEquation(firstInput);
 
-            updatePreviousCalculationArray(firstInput, answer)
-            setFirstCalculatorInput(answer)
-            setFirstCalculatorInputHasAnswer(true)
+            updatePreviousCalculationArray(firstInput, answer);
+            setFirstCalculatorInput(answer);
+            setFirstCalculatorInputHasAnswer(true);
 
-            return
+            return;
         }
-        let secondInput = secondCalculatorInput + "𝝅"
-        secondInput = solvePiEquation(secondInput)
-        solveEquation("", secondInput)
-    }
+        let secondInput = secondCalculatorInput + "𝝅";
+        secondInput = solvePiEquation(secondInput);
+        solveEquation("", secondInput);
+    };
 
     // manages the app inputs when the screen is full (max is 15 integers excl an operator)
     const handleInputExceedsMaximum = (userInput: string) => {
         switch (userInput) {
-            case "AC": resetCalculator()
-                break
+            case "AC": resetCalculator();
+                break;
 
-            case "=": solveEquation(userInput, secondCalculatorInput)
-                break
+            case "=": solveEquation(userInput, secondCalculatorInput);
+                break;
 
-            case "C": deletePrevInput()
-                break
+            case "C": deletePrevInput();
+                break;
 
-            case "√": onSquareRoot()
-                break
+            case "√": onSquareRoot();
+                break;
 
-            default: notifyMessage("Cannot add anymore numbers")
+            default: notifyMessage("Cannot add anymore numbers");
         }
-    }
+    };
 
     // this function will clear the second input and check if user has already
     // inputted operator for new equation
     const clearNumbers = (newOperator: string) => {
-        setOperator(newOperator)
-        setSecondCalculatorInput("")
-    }
+        setOperator(newOperator);
+        setSecondCalculatorInput("");
+    };
 
     const resetCalculator = () => {
-        setFirstCalculatorInput("")
-        setOperator("")
-        setSecondCalculatorInput("")
-        setPrevInput("")
-        clearTrigInputs()
-        setIsOperatorInequalityCheck(false)
-        setEqualityMessage("")
-    }
+        setFirstCalculatorInput("");
+        setOperator("");
+        setSecondCalculatorInput("");
+        setPrevInput("");
+        clearTrigInputs();
+        setIsOperatorInequalityCheck(false);
+        setEqualityMessage("");
+    };
 
     const deletePrevInput = () => {
 
-        if(currentInput.length < 2){
-            resetCalculator()
+        if (currentInput.length < 2) {
+            resetCalculator();
         }
 
         // Clear operator
-        if(isLastCalculationAnOperator){
-            setOperator("")
-            return
+        if (isLastCalculationAnOperator) {
+            setOperator("");
+            return;
         }
 
-        let currentSetInput = getCurrentSetInput()
+        let currentSetInput = getCurrentSetInput();
 
-        let isCurrentcharacterTrigCalc = currentInput[currentInput.length -  1] === ")"
-        if(isCurrentcharacterTrigCalc){
+        let isCurrentcharacterTrigCalc = currentInput[currentInput.length - 1] === ")";
+        if (isCurrentcharacterTrigCalc) {
 
-            let inputWithoutTrigCalc = removeTrigCalculation(currentInput, getCurrentTrigSymbol())
-            currentSetInput(inputWithoutTrigCalc)
+            let inputWithoutTrigCalc = removeTrigCalculation(currentInput, getCurrentTrigSymbol());
+            currentSetInput(inputWithoutTrigCalc);
 
-            clearTrigInputs()
-            return
+            clearTrigInputs();
+            return;
         }
 
         // Remove from string and set input
-        let stringIntoArray = removeLastInputFromString(currentInput)
-        currentSetInput(stringIntoArray)
-    }
+        let stringIntoArray = removeLastInputFromString(currentInput);
+        currentSetInput(stringIntoArray);
+    };
 
     const onInputNumber = (userInput: string) => {
-        let currentSetInput = getCurrentSetInput()
+        let currentSetInput = getCurrentSetInput();
 
         // put number inside first trig brackets
-        if(inputNumberInsideBrackets && positionOfExponent === null){
-            let newInput = manageTrigInput(userInput, currentInput)
-            currentSetInput(newInput)
-            setIsCurrentTrigCalculationValid(true)
-            return
+        if (inputNumberInsideBrackets && positionOfExponent === null) {
+            let newInput = manageTrigInput(userInput, currentInput);
+            currentSetInput(newInput);
+            setIsCurrentTrigCalculationValid(true);
+            return;
         }
 
         // Overwrite is decimal added to answer
         if (overwriteNumber && userInput === "." && firstCalculatorInputHasAnswer) {
-            setFirstCalculatorInput("0")
-            setFirstCalculatorInputHasAnswer(false)
+            setFirstCalculatorInput("0");
+            setFirstCalculatorInputHasAnswer(false);
 
-        } else if(overwriteNumber && userInput !== "."){
-            setFirstCalculatorInput(userInput)
-            setFirstCalculatorInputHasAnswer(false)
-            return
+        } else if (overwriteNumber && userInput !== ".") {
+            setFirstCalculatorInput(userInput);
+            setFirstCalculatorInputHasAnswer(false);
+            return;
         }
-        currentSetInput(currentInput => currentInput + userInput)
-    }
+        currentSetInput(currentInput => currentInput + userInput);
+    };
 
     const onSquareRoot = () => {
 
-        let input = currentInput
-        let currentSetInput = getCurrentSetInput()
+        let input = currentInput;
+        let currentSetInput = getCurrentSetInput();
 
         if (input.length < 1) {
-            currentSetInput("0")
-            updatePreviousCalculationArray(`√ ${0}`, "0")
-            return
+            currentSetInput("0");
+            updatePreviousCalculationArray(`√ ${0}`, "0");
+            return;
         }
 
-        if(isCurrentTrigCalculationValid && currentCalculationContainTrigInput){
-            input = solveTrigCalculation(input)
+        if (isCurrentTrigCalculationValid && currentCalculationContainTrigInput) {
+            input = solveTrigCalculation(input);
         }
 
-        let answer = squareRootNumber(input)
-        let roundedAnswer = removeTrailingZeros(answer)
+        let answer = squareRootNumber(input);
+        let roundedAnswer = removeTrailingZeros(answer);
 
-        currentSetInput(roundedAnswer)
-        updatePreviousCalculationArray(`√ ${input}`, roundedAnswer)
-    }
-
+        currentSetInput(roundedAnswer);
+        updatePreviousCalculationArray(`√ ${input}`, roundedAnswer);
+    };
 
     // handle decimal input logic
     const onInputDecimal = (userInput: string) => {
 
-        let currentSetInput = getCurrentSetInput()
+        let currentSetInput = getCurrentSetInput();
 
         // Add 0 before decimal if no number is inputted
         if (currentInput.length < 1) {
-            currentSetInput("0")
+            currentSetInput("0");
         }
 
         // Add 0 after negative sign if no number is inputted
         if (currentInput.length < 2 && currentInput[0] === "-") {
-            currentSetInput("-" + "0")
+            currentSetInput("-" + "0");
         }
 
         // check if decimal already exists in current array
         if (isFirstCalculatorInput && firstCalculatorInput.includes(".")) {
-            return
-
+            return;
         } else if (!isFirstCalculatorInput && secondCalculatorInput.includes(".")) {
-            return
+            return;
         }
-        onInputNumber(userInput)
-    }
+        onInputNumber(userInput);
+    };
 
     // takes operator input (+, -, *, /)
     const onOperatorInput = (userInput: string) => {
 
         // Check first number is inputted before operator
         if (firstCalculatorInput.length < 1) {
-            errorMessage("please enter a number first")
-            return
+            errorMessage("please enter a number first");
+            return;
         }
 
         // Check second number is inputted before solving equation
         if (secondCalculatorInput.length < 1 && !isFirstCalculatorInput) {
-            errorMessage("please enter a number first")
-            return
+            errorMessage("please enter a number first");
+            return;
         }
 
         // Reset overwrite number
-        setFirstCalculatorInputHasAnswer(false)
+        setFirstCalculatorInputHasAnswer(false);
 
-        // Equation is sufficent to solve
+        // Equation is sufficient to solve
         if (secondCalculatorInput.length > 0 && !isFirstCalculatorInput) {
-            solveEquation(userInput, secondCalculatorInput)
+            solveEquation(userInput, secondCalculatorInput);
         }
-        setOperator(userInput)
-    }
+        setOperator(userInput);
+    };
 
     // handle changing number to negative/positive - sign logic
     const changeSign = () => {
-        let updatedArray = changeSignArray(currentInput)
-        let currentSetInput = getCurrentSetInput()
-        currentSetInput(updatedArray)
-    }
+        let updatedArray = changeSignArray(currentInput);
+        let currentSetInput = getCurrentSetInput();
+        currentSetInput(updatedArray);
+    };
 
     // this const catches userinput from button and triggers correct function accordingly
     const handleUserInput = (userInput: string) => {
 
-        // Calculations don"t need validation
-        let calculationComplete = false
+        // Calculations don't need validation
+        let calculationComplete = false;
 
         switch (userInput) {
             case "AC":
-                resetCalculator()
-                calculationComplete = true
-                break
+                resetCalculator();
+                calculationComplete = true;
+                break;
 
             case "C":
-                deletePrevInput()
-                calculationComplete = true
-                break
+                deletePrevInput();
+                calculationComplete = true;
+                break;
 
             case ".":
-                setIsDecimalUnfinished(true)
-                onInputDecimal(userInput)
+                setIsDecimalUnfinished(true);
+                onInputDecimal(userInput);
 
-                calculationComplete = true
-                break
+                calculationComplete = true;
+                break;
 
             case "+/-":
                 if (!isLastCalculationAnOperator) {
-                    changeSign()
+                    changeSign();
                 }
-                calculationComplete = true
-                break
+                calculationComplete = true;
+                break;
 
             case "!":
-                if (!positionOfExponent){
-                    solveFactorialEquation()
+                if (!positionOfExponent) {
+                    solveFactorialEquation();
                 }
-                calculationComplete = true
-                break
+                calculationComplete = true;
+                break;
         }
 
         if (calculationComplete) {
-            return
+            return;
         }
 
         // check current size of input
         if (doesCalculationExceedInput) {
-            handleInputExceedsMaximum(userInput)
-            return
+            handleInputExceedsMaximum(userInput);
+            return;
         }
-        
+
         // Add number to calculation
         if (numArray.includes(userInput)) {
-            if(positionOfExponent !== null){
-                userInput = exponentDictionary[userInput]
+            if (positionOfExponent !== null) {
+                userInput = exponentDictionary[userInput];
             }
-            onInputNumber(userInput)
+            onInputNumber(userInput);
 
             // after number is inputted, decimal is finished
             if (isDecimalUnfinished) {
-                setIsDecimalUnfinished(false)
+                setIsDecimalUnfinished(false);
             }
-            return
+            return;
         }
 
         if (userInput === "𝝅") {
-            solveEquationContainingPi()
-            return
+            solveEquationContainingPi();
+            return;
         }
 
-        if(currentCalculationContainTrigInput && !isCurrentTrigCalculationValid){
-            errorMessage("Please complete trig calculation")
-            return
+        if (currentCalculationContainTrigInput && !isCurrentTrigCalculationValid) {
+            errorMessage("Please complete trig calculation");
+            return;
         }
 
         if (exponentInputArray.includes(userInput)) {
-            if(currentInput.length < 2 && currentInput[0] === "-"){
-                return
+            if (currentInput.length < 2 && currentInput[0] === "-") {
+                return;
             }
-            exponentManager(userInput)
+            exponentManager(userInput);
         }
 
         // Check last input on first number isn't a decimal
         if (isDecimalUnfinished) {
-            errorMessage("please enter a number first")
-            return
+            errorMessage("please enter a number first");
+            return;
         }
 
         // Add trig symbol to current input
-        if(trigSymbolsArray.includes(userInput) && !currentCalculationContainTrigInput){
-            isFirstCalculatorInput ? setDoesFirstCalculationContainTrig(true) : setDoesSecondCalculationContainTrig(true)
-            onInputNumber(userInput + "()")
-            setIsCurrentTrigCalculationValid(false)
-            return
+        if (trigSymbolsArray.includes(userInput) && !currentCalculationContainTrigInput) {
+            isFirstCalculatorInput ? setDoesFirstCalculationContainTrig(true) : setDoesSecondCalculationContainTrig(true);
+            onInputNumber(userInput + "()");
+            setIsCurrentTrigCalculationValid(false);
+            return;
         }
 
         // Solve first input before adding operator
         if (operatorArray.includes(userInput) && !isLastCalculationAnOperator) {
 
-            let updatedInput = null
+            let updatedInput = null;
 
-            const isNegative = currentInput[0] === "-"
-            if(isNegative){
-                updatedInput = currentInput.replace("-", "")
+            const isNegative = currentInput[0] === "-";
+            if (isNegative) {
+                updatedInput = currentInput.replace("-", "");
             }
 
-            if(currentCalculationContainTrigInput && isCurrentTrigCalculationValid){
-                updatedInput = solveTrigCalculation(currentInput)
-                setFirstCalculatorInput(updatedInput)
+            if (currentCalculationContainTrigInput && isCurrentTrigCalculationValid) {
+                updatedInput = solveTrigCalculation(currentInput);
+                setFirstCalculatorInput(updatedInput);
             }
 
-            if(positionOfExponent !== null){
-                updatedInput = solveExponentialCalculation(currentInput, null, positionOfExponent)
-                setFirstCalculatorInput(updatedInput)
-                setPositionOfExponent(null)
+            if (positionOfExponent !== null) {
+                updatedInput = solveExponentialCalculation(currentInput, null, positionOfExponent);
+                setFirstCalculatorInput(updatedInput);
+                setPositionOfExponent(null);
             }
 
-            if(userInput === "≠"){
-                setIsOperatorInequalityCheck(true)
+            if (userInput === "≠") {
+                setIsOperatorInequalityCheck(true);
             }
 
             if (isNegative) {
-                updatedInput = "-" + updatedInput
-              }
+                updatedInput = "-" + updatedInput;
+            }
 
-            onOperatorInput(userInput)
+            onOperatorInput(userInput);
 
         } else if (userInput === "=") {
 
-            let updatedInput = secondCalculatorInput
-            const isNegative = currentInput[0] === "-"
-            if(isNegative){
-                updatedInput = currentInput.replace("-", "")
+            let updatedInput = secondCalculatorInput;
+            const isNegative = currentInput[0] === "-";
+            if (isNegative) {
+                updatedInput = currentInput.replace("-", "");
             }
 
-            if(currentCalculationContainTrigInput && isCurrentTrigCalculationValid){
-                updatedInput = solveTrigCalculation(currentInput)
+            if (currentCalculationContainTrigInput && isCurrentTrigCalculationValid) {
+                updatedInput = solveTrigCalculation(currentInput);
             }
 
-            if(positionOfExponent !== null){
-                updatedInput = solveExponentialCalculation(currentInput, null, positionOfExponent)
-                setPositionOfExponent(null)
+            if (positionOfExponent !== null) {
+                updatedInput = solveExponentialCalculation(currentInput, null, positionOfExponent);
+                setPositionOfExponent(null);
             }
 
             if (isNegative) {
-                userInput = "-" + userInput
-              }
+                userInput = "-" + userInput;
+            }
 
-            solveEquation("", updatedInput)
+            solveEquation("", updatedInput);
 
         } else if (userInput === "√" && !isLastCalculationAnOperator) {
-            onSquareRoot()
+            onSquareRoot();
         }
-        return
-    }
+        return;
+    };
     return (
         handleUserInput
-    )
-}
+    );
+};
