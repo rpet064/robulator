@@ -1,7 +1,7 @@
 import { solveTrigCalculation, manageTrigInput, removeTrigCalculation, 
     checkContainsTrigSymbol } from "./trigonometryCalculations"
 import { useEffect, useState, Dispatch, SetStateAction } from "react"
-import { numArray, operatorArray, trigSymbolsArray, exponentArray } from "../utility/symbolsArray"
+import { numArray, operatorArray, trigSymbolsArray, exponentInputArray, exponentDictionary } from "../utility/symbolsArray"
 import { getAnswer } from "./equationSolver"
 import { squareNumber } from "./numberSquarer"
 import { removeTrailingZeros } from "../utility/removeTrailingZeros"
@@ -51,7 +51,7 @@ export const CalculationsManager = ({
     const [isOperatorInequalityCheck, setIsOperatorInequalityCheck] = useState<boolean>(false)
     const [inputNumberInsideBrackets, setInputNumberInsideBrackets] = useState<boolean>(false)
     const [currentInput, setCurrentInput] = useState<string>(firstCalculatorInput)
-    const [isExpontialCalculation, setIsExpontialCalculation] = useState<boolean>(false)
+    const [positionOfExponent, setPositionOfExponent] = useState<number | null>(null)
     const [isCurrentTrigCalculationValid, setIsCurrentTrigCalculationValid] = useState<boolean>(true)
 
     // if operator is empty or contains first answer, then still on first equation
@@ -219,37 +219,31 @@ export const CalculationsManager = ({
         clearNumbers(newOperator)
     }
 
-    const exponentialManager = (userInput: string) => {
+    const exponentManager = (userInput: string) => {
         let currentSetInput = getCurrentSetInput()
 
         // Current input is blank - then return 0
         let isCurrentInputBlank = currentInput.length < 1
         if(isCurrentInputBlank){
+            currentSetInput("0")
             return
         }
 
-        // get matched exponent and positon of where matched in array
-        const matchedExponent = exponentArray.find(item => item === userInput)
-        if(!matchedExponent){
+        if(userInput === "xʸ"){
+            let positonOfCurrentInput = currentInput.length
+            setPositionOfExponent(positonOfCurrentInput)
             return
         }
-
-        if(matchedExponent === "xy"){
-            onInputNumber("x")
-            setIsExpontialCalculation(true)
-            return
-        }
-
-        let updatedCurrentInput = currentInput
 
         // solve trig equation before solving exponent
+        let updatedCurrentInput = currentInput
         if(currentCalculationContainTrigInput && isCurrentTrigCalculationValid ){
             updatedCurrentInput = solveTrigCalculation(currentInput)
             currentSetInput(updatedCurrentInput)
         }
 
         // solve for current input and set answer as new input
-        let newCurrentInput = solveExponentialCalculation(updatedCurrentInput, matchedExponent)
+        let newCurrentInput = solveExponentialCalculation(updatedCurrentInput, userInput, positionOfExponent)
         currentSetInput(newCurrentInput)
     }
 
@@ -505,7 +499,7 @@ export const CalculationsManager = ({
                 break
 
             case "!":
-                if (!isExpontialCalculation){
+                if (!positionOfExponent){
                     solveFactorialEquation()
                 }
                 calculationComplete = true
@@ -524,7 +518,9 @@ export const CalculationsManager = ({
         
         // Add number to calculation
         if (numArray.includes(userInput)) {
-
+            if(positionOfExponent !== null){
+                userInput = exponentDictionary[userInput]
+            }
             onInputNumber(userInput)
 
             // after number is inputted, decimal is finished
@@ -544,11 +540,11 @@ export const CalculationsManager = ({
             return
         }
 
-        if (exponentArray.includes(userInput)) {
+        if (exponentInputArray.includes(userInput)) {
             if(currentInput.length < 2 && currentInput[0] === "-"){
                 return
             }
-            exponentialManager(userInput)
+            exponentManager(userInput)
         }
 
         // Check last input on first number isn't a decimal
@@ -570,8 +566,8 @@ export const CalculationsManager = ({
 
             let updatedInput = null
 
-            const hasNegative = currentInput[0] === "-"
-            if(hasNegative){
+            const isNegative = currentInput[0] === "-"
+            if(isNegative){
                 updatedInput = currentInput.replace("-", "")
             }
 
@@ -580,16 +576,17 @@ export const CalculationsManager = ({
                 setFirstCalculatorInput(updatedInput)
             }
 
-            if(isExpontialCalculation){
-                updatedInput = solveExponentialCalculation(currentInput, null)
+            if(positionOfExponent !== null){
+                updatedInput = solveExponentialCalculation(currentInput, null, positionOfExponent)
                 setFirstCalculatorInput(updatedInput)
+                setPositionOfExponent(null)
             }
 
             if(userInput === "≠"){
                 setIsOperatorInequalityCheck(true)
             }
 
-            if (hasNegative) {
+            if (isNegative) {
                 updatedInput = "-" + updatedInput
               }
 
@@ -598,8 +595,8 @@ export const CalculationsManager = ({
         } else if (userInput === "=") {
 
             let updatedInput = secondCalculatorInput
-            const hasNegative = currentInput[0] === "-"
-            if(hasNegative){
+            const isNegative = currentInput[0] === "-"
+            if(isNegative){
                 updatedInput = currentInput.replace("-", "")
             }
 
@@ -607,11 +604,12 @@ export const CalculationsManager = ({
                 updatedInput = solveTrigCalculation(currentInput)
             }
 
-            if(isExpontialCalculation){
-                updatedInput = solveExponentialCalculation(currentInput, null)
+            if(positionOfExponent !== null){
+                updatedInput = solveExponentialCalculation(currentInput, null, positionOfExponent)
+                setPositionOfExponent(null)
             }
 
-            if (hasNegative) {
+            if (isNegative) {
                 userInput = "-" + userInput
               }
 
