@@ -6,7 +6,6 @@
 - Includes standard and scientific calculations mode.
 - Users can toggle between light and dark mode.
 - Previous calculations stored in browser local storage
-- Has offline mode thanks to next-offline (https://github.com/hanford/next-offline)
 
 ## Technologies
 
