@@ -161,54 +161,50 @@ export const CalculationsManager = ({
     };
 
     const solveEquation = async (newOperator: string, secondInput: string) => {
-
         // Check if equation is valid
         if (secondCalculatorInput.length === 0) {
             return;
         }
 
-        let firstInput = firstCalculatorInput;
+        let firstInputAsFloat, secondInputAsFloat, answer;
 
         // Solve inequality calculation
-        let firstCalcInput;
         if (isOperatorInequalityCheck) {
-            let equalityMessage = solveInequalityCalculation(firstInput, secondInput) ? "Not Equal" : "Equal";
+            let equalityMessage = solveInequalityCalculation(firstCalculatorInput, secondInput) ? "Not Equal" : "Equal";
             setEqualityMessage(equalityMessage);
-            firstCalcInput = firstCalculatorInput;
 
             // solve non inequality calculation
         } else {
 
             // join array of strings into String, then change strings into numbers
-            let firstInputAsFloat, secondInputAsFloat;
-
             try {
-                firstInputAsFloat = parseFloat(firstInput);
+                firstInputAsFloat = parseFloat(firstCalculatorInput);
                 secondInputAsFloat = parseFloat(secondInput);
-
-                let answer = getAnswer(firstInputAsFloat, operator, secondInputAsFloat);
-                firstCalcInput = removeTrailingZeros(answer);
 
             } catch {
                 errorMessage("Equations could not be joined");
                 return;
             }
+            answer = getAnswer(firstInputAsFloat, operator, secondInputAsFloat);
+            answer = removeTrailingZeros(answer);
         }
-        completeCalculations(firstCalcInput, newOperator, secondInput);
+        completeCalculations(firstCalculatorInput, newOperator, secondInput, answer);
     };
 
-    const completeCalculations = (firstCalcInput: string, newOperator: string, secondInput: string) => {
+    const completeCalculations = (firstCalcInput: string, newOperator: string, secondInput: string, answer?: string) => {
 
         if (isOperatorInequalityCheck) {
             setIsOperatorInequalityCheck(false);
             setFirstCalculatorInput("");
         } else {
-            setFirstCalculatorInput(firstCalcInput);
+            let input = answer ? answer : firstCalcInput;
+            setFirstCalculatorInput(input);
             setFirstCalculatorInputHasAnswer(true);
             setIsFirstCalculatorInput(true);
         }
         let prevEquationString = updatePrevArray(firstCalcInput, secondInput, operator)
-        updatePreviousCalculationArray(prevEquationString, firstCalcInput)
+        let input = answer ? answer : firstCalcInput;
+        updatePreviousCalculationArray(prevEquationString, input)
 
         if (newOperator === "=") {
             clearNumbers("")
