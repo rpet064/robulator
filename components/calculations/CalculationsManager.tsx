@@ -70,7 +70,7 @@ export const CalculationsManager = ({
         let inputNumberInsideBrackets = doesFirstCalculationContainTrig && isFirstCalculatorInput
             || doesSecondCalculationContainTrig && !isFirstCalculatorInput;
         setInputNumberInsideBrackets(inputNumberInsideBrackets);
-    }, []);
+    }, [firstCalculatorInput, secondCalculatorInput]);
 
     useEffect(() => {
         const currentCalculationContainTrig = doesFirstCalculationContainTrig && isFirstCalculatorInput
@@ -104,7 +104,7 @@ export const CalculationsManager = ({
 
     // Check if first input contains trig symbol
     useEffect(() => {
-        if (firstCalculatorInput.length > 0) {
+        if (firstCalculatorInput.length > 0 && operator.length < 1) {
             let containsTrigSymbol = checkContainsTrigSymbol(firstCalculatorInput);
             setDoesFirstCalculationContainTrig(containsTrigSymbol);
             return;
@@ -333,6 +333,7 @@ export const CalculationsManager = ({
         clearTrigInputs();
         setIsOperatorInequalityCheck(false);
         setEqualityMessage("");
+        setFirstCalculatorInputHasAnswer(false);
     };
 
     const deletePrevInput = () => {
@@ -436,6 +437,7 @@ export const CalculationsManager = ({
 
     // takes operator input (+, -, *, /)
     const onOperatorInput = (userInput: string) => {
+        setIsFirstCalculatorInput(false);
 
         // Check first number is inputted before operator
         if (firstCalculatorInput.length < 1) {
